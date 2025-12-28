@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('reservation', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('patient_id')->constrained('patient')->cascadeOnDelete();
+            $table->foreignId('patient_id')->constrained('patient')->cascadeOnDelete()->unique();
             $table->foreignId('employee_id')->constrained('employee')->cascadeOnDelete();
             $table->date('date');
             $table->time('time');

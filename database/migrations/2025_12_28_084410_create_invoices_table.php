@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('invoices', function (Blueprint $table) {
             $table->id();
             $table->foreignId('patient_id')->constrained('patient')->cascadeOnDelete();
-            $table->foreignId('appointment_id')->constrained('appointments')->cascadeOnDelete();
+            $table->foreignId('appointment_id')->constrained('appointments')->cascadeOnDelete()->unique();
             $table->integer('tax');
             $table->integer('discount');
             $table->enum('status',['paid','unpaid']);
