@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('rating', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('patient_id')->constrained('patient')->cascadeOnDelete();
-            $table->foreignId('doctor_id')->constrained('doctor')->cascadeOnDelete();
+            $table->foreignId('patient_id')->constrained('patient')->cascadeOnDelete()->unique();
+            $table->foreignId('doctor_id')->constrained('doctor')->cascadeOnDelete()->unique();
             $table->tinyInteger('rating'); // 1–5
             $table->date('date')->nullable();
             $table->text('notes')->nullable();
