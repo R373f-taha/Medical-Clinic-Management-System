@@ -3,63 +3,59 @@
 namespace App\Http\Controllers\Doctor;
 
 use App\Http\Controllers\Controller;
+use App\Models\Prescription;
 use Illuminate\Http\Request;
 
 class PrescriptionController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $prescriptions = Prescription::with('patient')->latest()->get();
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+       $data= $request->validate([
+            'patient_id'  => 'required|exists:users,id',
+            'medicines'   => 'required|string',
+            'notes'       => 'nullable|string',
+        ]);
+
+        Prescription::create($data);
+
+        return redirect()->route('doctor.prescriptions.index')
+            ->with('success', 'تم إضافة الوصفة بنجاح');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function show(Prescription $prescription)
     {
-        //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function edit(Prescription $prescription)
     {
-        //
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Prescription $prescription)
     {
-        //
+      $data=  $request->validate([
+            'patient_id'  => 'required|exists:users,id',
+            'medicines'   => 'required|string',
+            'notes'       => 'nullable|string',
+        ]);
+
+        $prescription->update($data);
+
+        return redirect()->route('doctor.prescriptions.index')
+            ->with('success', 'تم تعديل الوصفة');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function destroy(Prescription $prescription)
     {
-        //
+        $prescription->delete();
+        return back()->with('success', 'تم حذف الوصفة');
     }
 }

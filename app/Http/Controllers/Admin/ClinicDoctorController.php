@@ -3,63 +3,74 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Clinic;
+use App\Models\Doctor;
+use App\Models\Clinic_Doctor;
 use Illuminate\Http\Request;
 
 class ClinicDoctorController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+  
     public function index()
     {
-        //
+        $clinicDoctors = Clinic_Doctor::with(['clinic', 'doctor'])->latest()->get();
+
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
+ 
     public function create()
     {
-        //
+        $clinics = Clinic::all();
+        $doctors = Doctor::all();
+
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'clinic_id' => 'required|exists:clinic,id',
+            'doctor_id' => 'required|exists:doctor,id',
+        ]);
+
+        Clinic_Doctor::create($request->all());
+
+        return redirect()
+            ->route('admin.clinic-doctors.index')
+            ->with('success', 'تم ربط الطبيب بالعيادة بنجاح');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+
+    public function show(Clinic_Doctor $clinicDoctor)
     {
-        //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+  
+    public function edit(Clinic_Doctor $clinicDoctor)
     {
-        //
+        $clinics = Clinic::all();
+        $doctors = Doctor::all();
+
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Clinic_Doctor $clinicDoctor)
     {
-        //
+        $request->validate([
+            'clinic_id' => 'required|exists:clinic,id',
+            'doctor_id' => 'required|exists:doctor,id',
+        ]);
+
+        $clinicDoctor->update($request->all());
+
+        return redirect()
+            ->route('admin.clinic-doctors.index')
+            ->with('success', 'تم تعديل الرابط');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+   
+    public function destroy(Clinic_Doctor $clinicDoctor)
     {
-        //
+        $clinicDoctor->delete();
+
+        return back()->with('success', 'تم حذف الرابط');
     }
 }

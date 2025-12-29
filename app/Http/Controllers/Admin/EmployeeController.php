@@ -3,63 +3,70 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Employee;
 use Illuminate\Http\Request;
 
 class EmployeeController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+  
     public function index()
     {
-        //
+        $employees = Employee::latest()->get();
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
+
     public function create()
     {
-        //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+  
     public function store(Request $request)
     {
-        //
+    $data = $request->validate([
+    'name'  => 'required|string|max:255',
+    'email' => 'required|email|unique:employee,email',
+    'phone' => 'required|string|max:20',
+    'role'  => 'required|string|max:50',
+]);
+
+Employee::create($data);
+
+
+        return redirect()
+            ->route('admin.employees.index')
+            ->with('success', 'تم إضافة الموظف بنجاح');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+
+    public function show(Employee $employee)
     {
-        //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+
+    public function edit(Employee $employee)
     {
-        //
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+  
+    public function update(Request $request, Employee $employee)
     {
-        //
+     $data = $request->validate([
+    'name'  => 'required|string|max:255',
+    'email' => 'required|email|unique:employees,email,' . $employee->id, // اسم الجدول غالباً employees
+    'phone' => 'required|string|max:20',
+    'role'  => 'required|string|max:50',
+]);
+
+$employee->update($data);
+        return redirect()
+            ->route('admin.employees.index')
+            ->with('success', 'تم تعديل بيانات الموظف');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+ 
+    public function destroy(Employee $employee)
     {
-        //
+        $employee->delete();
+        return back()->with('success', 'تم حذف الموظف');
     }
 }

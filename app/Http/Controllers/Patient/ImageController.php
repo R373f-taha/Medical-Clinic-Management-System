@@ -3,63 +3,57 @@
 namespace App\Http\Controllers\Patient;
 
 use App\Http\Controllers\Controller;
+use App\Models\Image;
 use Illuminate\Http\Request;
 
 class ImageController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        return response()->json(Image::latest()->get());
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+       $data= $request->validate([
+            'file_path' => 'required|string',
+            'description' => 'nullable|string',
+        ]);
+
+        $image = Image::create($data());
+
+        return response()->json([
+            'message' => 'تم رفع الصورة بنجاح',
+            'data' => $image
+        ]);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function show(Image $image)
     {
-        //
+        return response()->json($image);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function update(Request $request, Image $image)
     {
-        //
+         $data=$request->validate([
+            'file_path' => 'required|string',
+            'description' => 'nullable|string',
+        ]);
+
+        $image->update($data());
+
+        return response()->json([
+            'message' => 'تم تعديل بيانات الصورة',
+            'data' => $image
+        ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function destroy(Image $image)
     {
-        //
-    }
+        $image->delete();
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        return response()->json([
+            'message' => 'تم حذف الصورة'
+        ]);
     }
 }

@@ -3,63 +3,81 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Invoice;
+use App\Models\Patient;
+use App\Models\Doctor;
 use Illuminate\Http\Request;
 
 class InvoiceController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+ 
     public function index()
     {
-        //
+        $invoices = Invoice::with(['patient', 'doctor'])->latest()->get();
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
+ 
     public function create()
     {
-        //
+        $patients = Patient::all();
+        $doctors = Doctor::all();
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+  
     public function store(Request $request)
     {
-        //
+       $data = $request->validate([
+            'patient_id' => 'required|exists:patient,id',
+            'doctor_id'  => 'required|exists:doctor,id',
+            'amount'     => 'required|numeric',
+            'status'     => 'required|string|max:50',
+            'date'       => 'required|date',
+        ]);
+
+   Invoice::create($data);
+       
+
+        return redirect()
+            ->route('admin.invoices.index')
+            ->with('success', 'تم إنشاء الفاتورة بنجاح');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+ 
+    public function show(Invoice $invoice)
     {
-        //
+        $invoice->load(['patient','doctor']);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+   
+    public function edit(Invoice $invoice)
     {
-        //
+        $patients = Patient::all();
+        $doctors = Doctor::all();
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+
+    public function update(Request $request, Invoice $invoice)
     {
-        //
+        $data = $request->validate([
+            'patient_id' => 'required|exists:patient,id',
+            'doctor_id'  => 'required|exists:doctor,id',
+            'amount'     => 'required|numeric',
+            'status'     => 'required|string|max:50',
+            'date'       => 'required|date',
+        ]);
+
+        $invoice->update($data);
+  
+
+        return redirect()
+            ->route('admin.invoices.index')
+            ->with('success', 'تم تعديل الفاتورة');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+
+    public function destroy(Invoice $invoice)
     {
-        //
+        $invoice->delete();
+        return back()->with('success', 'تم حذف الفاتورة');
     }
 }

@@ -3,63 +3,59 @@
 namespace App\Http\Controllers\Doctor;
 
 use App\Http\Controllers\Controller;
+use App\Models\Rating;
 use Illuminate\Http\Request;
 
 class RatingController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $ratings = Rating::with('patient')->latest()->get();
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+       $data= $request->validate([
+            'patient_id' => 'required|exists:users,id',
+            'rating'     => 'required|numeric|min:1|max:5',
+            'comment'    => 'nullable|string',
+        ]);
+
+        Rating::create($data);
+
+        return redirect()->route('doctor.ratings.index')
+            ->with('success', 'تم إضافة التقييم بنجاح');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function show(Rating $rating)
     {
-        //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function edit(Rating $rating)
     {
-        //
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Rating $rating)
     {
-        //
+       $data= $request->validate([
+            'patient_id' => 'required|exists:users,id',
+            'rating'     => 'required|numeric|min:1|max:5',
+            'comment'    => 'nullable|string',
+        ]);
+
+        $rating->update($data);
+
+        return redirect()->route('doctor.ratings.index')
+            ->with('success', 'تم تعديل التقييم');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function destroy(Rating $rating)
     {
-        //
+        $rating->delete();
+        return back()->with('success', 'تم حذف التقييم');
     }
 }

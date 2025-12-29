@@ -3,63 +3,80 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Notification;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class NotificationController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $notifications = Notification::with('user')->latest()->get();
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
+ 
     public function create()
     {
-        //
+        $users = User::all();
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+ 
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'title'   => 'required|string|max:255',
+            'message' => 'required|string',
+            'user_id' => 'required|exists:users,id',
+        ]);
+
+        Notification::create([
+            'title'   => $request->title,
+            'message' => $request->message,
+            'user_id' => $request->user_id,
+        ]);
+
+        return redirect()
+            ->route('admin.notifications.index')
+            ->with('success', 'تم إرسال الإشعار بنجاح');
+    }
+
+
+    public function show(Notification $notification)
+    {
+    }
+
+
+    public function edit(Notification $notification)
+    {
+        $users = User::all();
+    }
+
+
+    public function update(Request $request, Notification $notification)
+    {
+        $request->validate([
+            'title'   => 'required|string|max:255',
+            'message' => 'required|string',
+            'user_id' => 'required|exists:users,id',
+        ]);
+
+        $notification->update([
+            'title'   => $request->title,
+            'message' => $request->message,
+            'user_id' => $request->user_id,
+        ]);
+
+        return redirect()
+            ->route('admin.notifications.index')
+            ->with('success', 'تم تعديل الإشعار');
     }
 
     /**
-     * Display the specified resource.
+     * حذف الإشعار
      */
-    public function show(string $id)
+    public function destroy(Notification $notification)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        $notification->delete();
+        return back()->with('success', 'تم حذف الإشعار');
     }
 }

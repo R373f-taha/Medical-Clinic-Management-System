@@ -3,63 +3,61 @@
 namespace App\Http\Controllers\Doctor;
 
 use App\Http\Controllers\Controller;
+use App\Models\MedicalRecord;
 use Illuminate\Http\Request;
 
 class MedicalRecordController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $records = MedicalRecord::with('patient')->latest()->get();
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $data=$request->validate([
+            'patient_id'   => 'required|exists:users,id',
+            'description'  => 'required|string',
+            'diagnosis'    => 'nullable|string',
+            'treatment'    => 'nullable|string',
+        ]);
+
+        MedicalRecord::create($data);
+
+        return redirect()->route('doctor.medical-records.index')
+            ->with('success', 'تم إضافة السجل الطبي بنجاح');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function show(MedicalRecord $medicalRecord)
     {
-        //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function edit(MedicalRecord $medicalRecord)
     {
-        //
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function update(Request $request, MedicalRecord $medicalRecord)
     {
-        //
+       $data= $request->validate([
+            'patient_id'   => 'required|exists:users,id',
+            'description'  => 'required|string',
+            'diagnosis'    => 'nullable|string',
+            'treatment'    => 'nullable|string',
+        ]);
+
+        $medicalRecord->update($data);
+
+        return redirect()->route('doctor.medical-records.index')
+            ->with('success', 'تم تعديل السجل الطبي');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function destroy(MedicalRecord $medicalRecord)
     {
-        //
+        $medicalRecord->delete();
+        return back()->with('success', 'تم حذف السجل الطبي');
     }
 }

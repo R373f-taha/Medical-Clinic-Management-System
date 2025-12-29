@@ -3,63 +3,61 @@
 namespace App\Http\Controllers\Doctor;
 
 use App\Http\Controllers\Controller;
+use App\Models\Reservation;
 use Illuminate\Http\Request;
 
 class ReservationController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $reservations = Reservation::with('patient')->latest()->get();
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $data=$request->validate([
+            'patient_id' => 'required|exists:users,id',
+            'date'       => 'required|date',
+            'time'       => 'required',
+            'status'     => 'required|string|max:50',
+        ]);
+
+        Reservation::create($data());
+
+        return redirect()->route('doctor.reservations.index')
+            ->with('success', 'تم إضافة الحجز بنجاح');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function show(Reservation $reservation)
     {
-        //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function edit(Reservation $reservation)
     {
-        //
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Reservation $reservation)
     {
-        //
+       $data= $request->validate([
+            'patient_id' => 'required|exists:users,id',
+            'date'       => 'required|date',
+            'time'       => 'required',
+            'status'     => 'required|string|max:50',
+        ]);
+
+        $reservation->update($data);
+
+        return redirect()->route('doctor.reservations.index')
+            ->with('success', 'تم تعديل الحجز');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function destroy(Reservation $reservation)
     {
-        //
+        $reservation->delete();
+        return back()->with('success', 'تم حذف الحجز');
     }
 }

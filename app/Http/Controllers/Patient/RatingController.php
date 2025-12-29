@@ -3,63 +3,59 @@
 namespace App\Http\Controllers\Patient;
 
 use App\Http\Controllers\Controller;
+use App\Models\Rating;
 use Illuminate\Http\Request;
 
 class RatingController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        return response()->json(Rating::latest()->get());
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+      $data=  $request->validate([
+            'doctor_id' => 'required|exists:doctor,id',
+            'rating'    => 'required|numeric|min:1|max:5',
+            'comment'   => 'nullable|string',
+        ]);
+
+        $rating = Rating::create($data);
+
+        return response()->json([
+            'message' => 'تم إضافة التقييم',
+            'data' => $rating
+        ]);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function show(Rating $rating)
     {
-        //
+        return response()->json($rating);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function update(Request $request, Rating $rating)
     {
-        //
+       $data= $request->validate([
+            'doctor_id' => 'required|exists:doctor,id',
+            'rating'    => 'required|numeric|min:1|max:5',
+            'comment'   => 'nullable|string',
+        ]);
+
+        $rating->update($data());
+
+        return response()->json([
+            'message' => 'تم تعديل التقييم',
+            'data' => $rating
+        ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function destroy(Rating $rating)
     {
-        //
-    }
+        $rating->delete();
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        return response()->json([
+            'message' => 'تم حذف التقييم'
+        ]);
     }
 }

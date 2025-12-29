@@ -3,63 +3,73 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Doctor;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class DoctorController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+ 
     public function index()
     {
-        //
+        $doctors = Doctor::with('user')->latest()->get();
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
+  
     public function create()
     {
-        //
+        $users = User::all(); 
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+ 
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'user_id'   => 'required|exists:users,id',
+            'specialty' => 'required|string|max:255',
+            'phone'     => 'required|string|max:20',
+            'address'   => 'required|string',
+        ]);
+
+        Doctor::create($request->all());
+
+        return redirect()
+            ->route('admin.doctors.index')
+            ->with('success', 'تم إضافة الطبيب بنجاح');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+  
+    public function show(Doctor $doctor)
     {
-        //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+ 
+    public function edit(Doctor $doctor)
     {
-        //
+        $users = User::all();
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+   
+    public function update(Request $request, Doctor $doctor)
     {
-        //
+        $request->validate([
+            'user_id'   => 'required|exists:users,id',
+            'specialty' => 'required|string|max:255',
+            'phone'     => 'required|string|max:20',
+            'address'   => 'required|string',
+        ]);
+
+        $doctor->update($request->all());
+
+        return redirect()
+            ->route('admin.doctors.index')
+            ->with('success', 'تم تعديل بيانات الطبيب');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+  
+    public function destroy(Doctor $doctor)
     {
-        //
+        $doctor->delete();
+        return back()->with('success', 'تم حذف الطبيب');
     }
 }
