@@ -4,15 +4,21 @@ namespace App\Http\Controllers\Patient;
 
 use App\Http\Controllers\Controller;
 use App\Models\Patient;
+use App\Services\Patient\PatientService;
 use Illuminate\Http\Request;
 
 class PatientController extends Controller
 {
+    protected $patientService;
+
+    public function __construct(PatientService $patientService)
+    {
+        $this->patientService = $patientService;
+    }
 
     public function index()
     {
-        $patients = Patient::all(); 
-        return response()->json($patients);
+        return response()->json($this->patientService->getAll());
     }
 
 
@@ -34,7 +40,7 @@ class PatientController extends Controller
             'phone' => 'required|string|max:20',
         ]);
 
-        $patient->update($data);
+        $patient = $this->patientService->update($patient, $data);
 
         return response()->json([
             'message' => 'تم تحديث بيانات المريض',

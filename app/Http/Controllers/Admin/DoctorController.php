@@ -5,20 +5,27 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Doctor;
 use App\Models\User;
+use App\Services\Admin\DoctorService;
 use Illuminate\Http\Request;
 
 class DoctorController extends Controller
 {
+    protected $doctorService;
+
+    public function __construct(DoctorService $doctorService)
+    {
+        $this->doctorService = $doctorService;
+    }
  
     public function index()
     {
-        $doctors = Doctor::with('user')->latest()->get();
+        $doctors = $this->doctorService->getAll();
     }
 
   
     public function create()
     {
-        $users = User::all(); 
+        $users = $this->doctorService->getUsers();
     }
 
  
@@ -31,7 +38,7 @@ class DoctorController extends Controller
             'address'   => 'required|string',
         ]);
 
-        Doctor::create($request->all());
+        $this->doctorService->store($request->all());
 
         return redirect()
             ->route('admin.doctors.index')
@@ -46,7 +53,7 @@ class DoctorController extends Controller
  
     public function edit(Doctor $doctor)
     {
-        $users = User::all();
+        $users = $this->doctorService->getUsers();
     }
 
    
@@ -59,7 +66,7 @@ class DoctorController extends Controller
             'address'   => 'required|string',
         ]);
 
-        $doctor->update($request->all());
+        $this->doctorService->update($doctor, $request->all());
 
         return redirect()
             ->route('admin.doctors.index')
@@ -69,7 +76,7 @@ class DoctorController extends Controller
   
     public function destroy(Doctor $doctor)
     {
-        $doctor->delete();
+        $this->doctorService->delete($doctor);
         return back()->with('success', 'تم حذف الطبيب');
     }
 }

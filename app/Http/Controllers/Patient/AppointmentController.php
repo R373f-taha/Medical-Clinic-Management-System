@@ -4,13 +4,21 @@ namespace App\Http\Controllers\Patient;
 
 use App\Http\Controllers\Controller;
 use App\Models\Appointment;
+use App\Services\Patient\AppointmentService;
 use Illuminate\Http\Request;
 
 class AppointmentController extends Controller
 {
+    protected $appointmentService;
+
+    public function __construct(AppointmentService $appointmentService)
+    {
+        $this->appointmentService = $appointmentService;
+    }
+
     public function index()
     {
-        return response()->json(Appointment::latest()->get());
+        return response()->json($this->appointmentService->getAll());
     }
 
     public function store(Request $request)
@@ -22,7 +30,7 @@ class AppointmentController extends Controller
             'status'    => 'required|string|max:50',
         ]);
 
-        $appointment = Appointment::create($data());
+        $appointment = $this->appointmentService->store($data);
 
         return response()->json([
             'message' => 'تم إنشاء الموعد بنجاح',
@@ -44,7 +52,7 @@ class AppointmentController extends Controller
             'status'    => 'required|string|max:50',
         ]);
 
-        $appointment->update($request->all());
+        $appointment = $this->appointmentService->update($appointment, $data);
 
         return response()->json([
             'message' => 'تم تحديث الموعد',
@@ -54,7 +62,7 @@ class AppointmentController extends Controller
 
     public function destroy(Appointment $appointment)
     {
-        $appointment->delete();
+        $this->appointmentService->delete($appointment);
 
         return response()->json([
             'message' => 'تم حذف الموعد'

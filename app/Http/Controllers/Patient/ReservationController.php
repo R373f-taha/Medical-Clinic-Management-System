@@ -4,13 +4,21 @@ namespace App\Http\Controllers\Patient;
 
 use App\Http\Controllers\Controller;
 use App\Models\Reservation;
+use App\Services\Patient\ReservationService;
 use Illuminate\Http\Request;
 
 class ReservationController extends Controller
 {
+    protected $reservationService;
+
+    public function __construct(ReservationService $reservationService)
+    {
+        $this->reservationService = $reservationService;
+    }
+
     public function index()
     {
-        return response()->json(Reservation::latest()->get());
+        return response()->json($this->reservationService->getAll());
     }
 
     public function store(Request $request)
@@ -22,7 +30,7 @@ class ReservationController extends Controller
             'status'    => 'required|string|max:50',
         ]);
 
-        $reservation = Reservation::create($data);
+        $reservation = $this->reservationService->store($data);
 
         return response()->json([
             'message' => 'تم إنشاء الحجز بنجاح',
@@ -44,7 +52,7 @@ class ReservationController extends Controller
             'status'    => 'required|string|max:50',
         ]);
 
-        $reservation->update($data);
+        $reservation = $this->reservationService->update($reservation, $data);
 
         return response()->json([
             'message' => 'تم تحديث الحجز',
@@ -54,7 +62,7 @@ class ReservationController extends Controller
 
     public function destroy(Reservation $reservation)
     {
-        $reservation->delete();
+        $this->reservationService->delete($reservation);
 
         return response()->json([
             'message' => 'تم حذف الحجز'

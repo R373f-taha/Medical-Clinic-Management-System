@@ -6,22 +6,29 @@ use App\Http\Controllers\Controller;
 use App\Models\Clinic;
 use App\Models\Doctor;
 use App\Models\Clinic_Doctor;
+use App\Services\Admin\ClinicDoctorService;
 use Illuminate\Http\Request;
 
 class ClinicDoctorController extends Controller
 {
+    protected $clinicDoctorService;
+
+    public function __construct(ClinicDoctorService $clinicDoctorService)
+    {
+        $this->clinicDoctorService = $clinicDoctorService;
+    }
   
     public function index()
     {
-        $clinicDoctors = Clinic_Doctor::with(['clinic', 'doctor'])->latest()->get();
+        $clinicDoctors = $this->clinicDoctorService->getAll();
 
     }
 
  
     public function create()
     {
-        $clinics = Clinic::all();
-        $doctors = Doctor::all();
+        $clinics = $this->clinicDoctorService->getClinics();
+        $doctors = $this->clinicDoctorService->getDoctors();
 
     }
 
@@ -32,7 +39,7 @@ class ClinicDoctorController extends Controller
             'doctor_id' => 'required|exists:doctor,id',
         ]);
 
-        Clinic_Doctor::create($request->all());
+        $this->clinicDoctorService->store($request->all());
 
         return redirect()
             ->route('admin.clinic-doctors.index')
@@ -47,8 +54,8 @@ class ClinicDoctorController extends Controller
   
     public function edit(Clinic_Doctor $clinicDoctor)
     {
-        $clinics = Clinic::all();
-        $doctors = Doctor::all();
+        $clinics = $this->clinicDoctorService->getClinics();
+        $doctors = $this->clinicDoctorService->getDoctors();
 
     }
 
@@ -59,7 +66,7 @@ class ClinicDoctorController extends Controller
             'doctor_id' => 'required|exists:doctor,id',
         ]);
 
-        $clinicDoctor->update($request->all());
+        $this->clinicDoctorService->update($clinicDoctor, $request->all());
 
         return redirect()
             ->route('admin.clinic-doctors.index')
@@ -69,7 +76,7 @@ class ClinicDoctorController extends Controller
    
     public function destroy(Clinic_Doctor $clinicDoctor)
     {
-        $clinicDoctor->delete();
+        $this->clinicDoctorService->delete($clinicDoctor);
 
         return back()->with('success', 'تم حذف الرابط');
     }

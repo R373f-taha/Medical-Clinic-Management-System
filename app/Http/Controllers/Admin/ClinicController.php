@@ -4,14 +4,20 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Clinic;
+use App\Services\Admin\ClinicService;
 use Illuminate\Http\Request;
 
 class ClinicController extends Controller
 {
+    protected $clinicService;
+    public function __construct(ClinicService $clinicService)
+    {
+        $this->clinicService = $clinicService;
+    }
 
     public function index()
     {
-        $clinics = Clinic::latest()->get();
+        $clinics =  $this->clinicService->getAll();
 
         return view('admin.clinics.index', compact('clinics'));
     }
@@ -31,7 +37,7 @@ class ClinicController extends Controller
             'phone'   => 'required|string|max:20',
         ]);
 
-        Clinic::create($request->all());
+        $this->clinicService->store($request->all());
 
         return redirect()
             ->route('admin.clinics.index')
@@ -59,7 +65,7 @@ class ClinicController extends Controller
             'phone'   => 'required|string|max:20',
         ]);
 
-        $clinic->update($request->all());
+        $this->clinicService->update($clinic, $request->all());
 
         return redirect()
             ->route('admin.clinics.index')
@@ -69,7 +75,7 @@ class ClinicController extends Controller
 
     public function destroy(Clinic $clinic)
     {
-        $clinic->delete();
+        $this->clinicService->delete($clinic);
 
         return back()->with('success', 'تم حذف العيادة');
     }

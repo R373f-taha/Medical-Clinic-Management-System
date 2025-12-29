@@ -4,14 +4,21 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Employee;
+use App\Services\Admin\EmployeeService;
 use Illuminate\Http\Request;
 
 class EmployeeController extends Controller
 {
-  
+    protected $employeeService;
+
+    public function __construct(EmployeeService $employeeService)
+    {
+        $this->employeeService = $employeeService;
+    }
+
     public function index()
     {
-        $employees = Employee::latest()->get();
+        $employees = $this->employeeService->getAll();
     }
 
 
@@ -29,7 +36,7 @@ class EmployeeController extends Controller
     'role'  => 'required|string|max:50',
 ]);
 
-Employee::create($data);
+$this->employeeService->store($data);
 
 
         return redirect()
@@ -57,7 +64,7 @@ Employee::create($data);
     'role'  => 'required|string|max:50',
 ]);
 
-$employee->update($data);
+$this->employeeService->update($employee, $data);
         return redirect()
             ->route('admin.employees.index')
             ->with('success', 'تم تعديل بيانات الموظف');
@@ -66,7 +73,7 @@ $employee->update($data);
  
     public function destroy(Employee $employee)
     {
-        $employee->delete();
+        $this->employeeService->delete($employee);
         return back()->with('success', 'تم حذف الموظف');
     }
 }
