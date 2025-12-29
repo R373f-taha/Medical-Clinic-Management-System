@@ -4,13 +4,22 @@ namespace App\Http\Controllers\Doctor;
 
 use App\Http\Controllers\Controller;
 use App\Models\MedicalRecord;
+use App\Services\Doctor\MedicalRecordService;
 use Illuminate\Http\Request;
 
 class MedicalRecordController extends Controller
 {
+    protected $medicalRecordService;
+
+    public function __construct(MedicalRecordService $medicalRecordService)
+    {
+        $this->medicalRecordService = $medicalRecordService;
+    }
+
+
     public function index()
     {
-        $records = MedicalRecord::with('patient')->latest()->get();
+         $records = $this->medicalRecordService->getAll();
     }
 
     public function create()
@@ -26,7 +35,7 @@ class MedicalRecordController extends Controller
             'treatment'    => 'nullable|string',
         ]);
 
-        MedicalRecord::create($data);
+        $this->medicalRecordService->store($data);
 
         return redirect()->route('doctor.medical-records.index')
             ->with('success', 'تم إضافة السجل الطبي بنجاح');
@@ -49,7 +58,7 @@ class MedicalRecordController extends Controller
             'treatment'    => 'nullable|string',
         ]);
 
-        $medicalRecord->update($data);
+        $this->medicalRecordService->update($medicalRecord, $data);
 
         return redirect()->route('doctor.medical-records.index')
             ->with('success', 'تم تعديل السجل الطبي');
@@ -57,7 +66,7 @@ class MedicalRecordController extends Controller
 
     public function destroy(MedicalRecord $medicalRecord)
     {
-        $medicalRecord->delete();
+        $this->medicalRecordService->delete($medicalRecord);
         return back()->with('success', 'تم حذف السجل الطبي');
     }
 }

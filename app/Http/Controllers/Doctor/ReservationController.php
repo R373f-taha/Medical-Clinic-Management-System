@@ -4,13 +4,21 @@ namespace App\Http\Controllers\Doctor;
 
 use App\Http\Controllers\Controller;
 use App\Models\Reservation;
+use App\Services\Doctor\ReservationService;
 use Illuminate\Http\Request;
 
 class ReservationController extends Controller
 {
+    protected $reservationService;
+
+    public function __construct(ReservationService $reservationService)
+    {
+        $this->reservationService = $reservationService;
+    }
+
     public function index()
     {
-        $reservations = Reservation::with('patient')->latest()->get();
+        $reservations = $this->reservationService->getAll();
     }
 
     public function create()
@@ -26,7 +34,7 @@ class ReservationController extends Controller
             'status'     => 'required|string|max:50',
         ]);
 
-        Reservation::create($data());
+        $this->reservationService->store($data);
 
         return redirect()->route('doctor.reservations.index')
             ->with('success', 'تم إضافة الحجز بنجاح');
@@ -49,7 +57,7 @@ class ReservationController extends Controller
             'status'     => 'required|string|max:50',
         ]);
 
-        $reservation->update($data);
+         $this->reservationService->update($reservation, $data);
 
         return redirect()->route('doctor.reservations.index')
             ->with('success', 'تم تعديل الحجز');
@@ -57,7 +65,8 @@ class ReservationController extends Controller
 
     public function destroy(Reservation $reservation)
     {
-        $reservation->delete();
+        $this->reservationService->delete($reservation);
+
         return back()->with('success', 'تم حذف الحجز');
     }
 }

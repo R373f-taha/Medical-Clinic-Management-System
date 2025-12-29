@@ -4,13 +4,21 @@ namespace App\Http\Controllers\Patient;
 
 use App\Http\Controllers\Controller;
 use App\Models\Image;
+use App\Services\Patient\ImageService;
 use Illuminate\Http\Request;
 
 class ImageController extends Controller
 {
+    protected $imageService;
+
+    public function __construct(ImageService $imageService)
+    {
+        $this->imageService = $imageService;
+    }
+
     public function index()
     {
-        return response()->json(Image::latest()->get());
+         return response()->json($this->imageService->getAll());
     }
 
     public function store(Request $request)
@@ -20,7 +28,8 @@ class ImageController extends Controller
             'description' => 'nullable|string',
         ]);
 
-        $image = Image::create($data());
+        $image = $this->imageService->store($data);
+
 
         return response()->json([
             'message' => 'تم رفع الصورة بنجاح',
@@ -40,7 +49,7 @@ class ImageController extends Controller
             'description' => 'nullable|string',
         ]);
 
-        $image->update($data());
+        $image = $this->imageService->update($image, $data);
 
         return response()->json([
             'message' => 'تم تعديل بيانات الصورة',
@@ -50,7 +59,7 @@ class ImageController extends Controller
 
     public function destroy(Image $image)
     {
-        $image->delete();
+        $this->imageService->delete($image);
 
         return response()->json([
             'message' => 'تم حذف الصورة'

@@ -4,13 +4,21 @@ namespace App\Http\Controllers\Patient;
 
 use App\Http\Controllers\Controller;
 use App\Models\Rating;
+use App\Services\Patient\RatingService;
 use Illuminate\Http\Request;
 
 class RatingController extends Controller
 {
+    protected $ratingService;
+
+    public function __construct(RatingService $ratingService)
+    {
+        $this->ratingService = $ratingService;
+    }
+
     public function index()
     {
-        return response()->json(Rating::latest()->get());
+        return response()->json($this->ratingService->getAll());
     }
 
     public function store(Request $request)
@@ -21,7 +29,7 @@ class RatingController extends Controller
             'comment'   => 'nullable|string',
         ]);
 
-        $rating = Rating::create($data);
+        $rating = $this->ratingService->store($data);
 
         return response()->json([
             'message' => 'تم إضافة التقييم',
@@ -42,7 +50,8 @@ class RatingController extends Controller
             'comment'   => 'nullable|string',
         ]);
 
-        $rating->update($data());
+        $rating = $this->ratingService->update($rating, $data);
+
 
         return response()->json([
             'message' => 'تم تعديل التقييم',
@@ -52,7 +61,7 @@ class RatingController extends Controller
 
     public function destroy(Rating $rating)
     {
-        $rating->delete();
+        $this->ratingService->delete($rating);
 
         return response()->json([
             'message' => 'تم حذف التقييم'

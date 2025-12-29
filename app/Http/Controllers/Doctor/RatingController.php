@@ -4,13 +4,21 @@ namespace App\Http\Controllers\Doctor;
 
 use App\Http\Controllers\Controller;
 use App\Models\Rating;
+use App\Services\Doctor\RatingService;
 use Illuminate\Http\Request;
 
 class RatingController extends Controller
 {
+    protected $ratingService;
+
+    public function __construct(RatingService $ratingService)
+    {
+        $this->ratingService = $ratingService;
+    }
+
     public function index()
     {
-        $ratings = Rating::with('patient')->latest()->get();
+           $ratings = $this->ratingService->getAll();
     }
 
     public function create()
@@ -25,7 +33,7 @@ class RatingController extends Controller
             'comment'    => 'nullable|string',
         ]);
 
-        Rating::create($data);
+        $this->ratingService->store($data);
 
         return redirect()->route('doctor.ratings.index')
             ->with('success', 'تم إضافة التقييم بنجاح');
@@ -47,7 +55,7 @@ class RatingController extends Controller
             'comment'    => 'nullable|string',
         ]);
 
-        $rating->update($data);
+        $this->ratingService->update($rating, $data);
 
         return redirect()->route('doctor.ratings.index')
             ->with('success', 'تم تعديل التقييم');
@@ -55,7 +63,7 @@ class RatingController extends Controller
 
     public function destroy(Rating $rating)
     {
-        $rating->delete();
+        $this->ratingService->delete($rating);
         return back()->with('success', 'تم حذف التقييم');
     }
 }

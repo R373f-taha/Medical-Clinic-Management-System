@@ -6,21 +6,29 @@ use App\Http\Controllers\Controller;
 use App\Models\Invoice;
 use App\Models\Patient;
 use App\Models\Doctor;
+use App\Services\Admin\InvoiceService;
 use Illuminate\Http\Request;
 
 class InvoiceController extends Controller
 {
+    protected $invoiceService;
+
+    public function __construct(InvoiceService $invoiceService)
+    {
+        $this->invoiceService = $invoiceService;
+    }
+
  
     public function index()
     {
-        $invoices = Invoice::with(['patient', 'doctor'])->latest()->get();
+         $invoices = $this->invoiceService->getAll();
     }
 
  
     public function create()
     {
-        $patients = Patient::all();
-        $doctors = Doctor::all();
+        $patients = $this->invoiceService->getPatients();
+        $doctors  = $this->invoiceService->getDoctors();
     }
 
   
@@ -34,7 +42,7 @@ class InvoiceController extends Controller
             'date'       => 'required|date',
         ]);
 
-   Invoice::create($data);
+        $this->invoiceService->store($data);
        
 
         return redirect()
@@ -51,8 +59,8 @@ class InvoiceController extends Controller
    
     public function edit(Invoice $invoice)
     {
-        $patients = Patient::all();
-        $doctors = Doctor::all();
+        $patients = $this->invoiceService->getPatients();
+        $doctors  = $this->invoiceService->getDoctors();
     }
 
 
@@ -66,7 +74,7 @@ class InvoiceController extends Controller
             'date'       => 'required|date',
         ]);
 
-        $invoice->update($data);
+        $this->invoiceService->update($invoice, $data);
   
 
         return redirect()
@@ -77,7 +85,7 @@ class InvoiceController extends Controller
 
     public function destroy(Invoice $invoice)
     {
-        $invoice->delete();
+        $this->invoiceService->delete($invoice);
         return back()->with('success', 'تم حذف الفاتورة');
     }
 }

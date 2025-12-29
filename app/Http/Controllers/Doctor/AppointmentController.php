@@ -4,13 +4,21 @@ namespace App\Http\Controllers\Doctor;
 
 use App\Http\Controllers\Controller;
 use App\Models\Appointment;
+use App\Services\Doctor\AppointmentService;
 use Illuminate\Http\Request;
 
 class AppointmentController extends Controller
 {
+    protected $appointmentService;
+
+    public function __construct(AppointmentService $appointmentService)
+    {
+        $this->appointmentService = $appointmentService;
+    }
+
     public function index()
     {
-        $appointments = Appointment::with('patient')->latest()->get();
+        $appointments = $this->appointmentService->getAll();
     }
 
     public function create()
@@ -26,7 +34,7 @@ class AppointmentController extends Controller
             'status'     => 'required|string|max:50',
         ]);
 
-        Appointment::create($data);
+        $this->appointmentService->store($data);
 
         return redirect()->route('doctor.appointments.index')
             ->with('success', 'تم إضافة الموعد بنجاح');
@@ -49,7 +57,7 @@ class AppointmentController extends Controller
             'status'     => 'required|string|max:50',
         ]);
 
-        $appointment->update($data);
+        $this->appointmentService->update($appointment, $data);
 
 
         return redirect()->route('doctor.appointments.index')
@@ -58,7 +66,7 @@ class AppointmentController extends Controller
 
     public function destroy(Appointment $appointment)
     {
-        $appointment->delete();
+        $this->appointmentService->delete($appointment);
         return back()->with('success', 'تم حذف الموعد');
     }
 }

@@ -4,13 +4,21 @@ namespace App\Http\Controllers\Doctor;
 
 use App\Http\Controllers\Controller;
 use App\Models\Prescription;
+use App\Services\Doctor\PrescriptionService;
 use Illuminate\Http\Request;
 
 class PrescriptionController extends Controller
 {
+    protected $prescriptionService;
+
+    public function __construct(PrescriptionService $prescriptionService)
+    {
+        $this->prescriptionService = $prescriptionService;
+    }
+
     public function index()
     {
-        $prescriptions = Prescription::with('patient')->latest()->get();
+         $prescriptions = $this->prescriptionService->getAll();
     }
 
     public function create()
@@ -25,7 +33,7 @@ class PrescriptionController extends Controller
             'notes'       => 'nullable|string',
         ]);
 
-        Prescription::create($data);
+        $this->prescriptionService->store($data);
 
         return redirect()->route('doctor.prescriptions.index')
             ->with('success', 'تم إضافة الوصفة بنجاح');
@@ -47,7 +55,7 @@ class PrescriptionController extends Controller
             'notes'       => 'nullable|string',
         ]);
 
-        $prescription->update($data);
+        $this->prescriptionService->update($prescription, $data);
 
         return redirect()->route('doctor.prescriptions.index')
             ->with('success', 'تم تعديل الوصفة');
@@ -55,7 +63,8 @@ class PrescriptionController extends Controller
 
     public function destroy(Prescription $prescription)
     {
-        $prescription->delete();
+        $this->prescriptionService->delete($prescription);
+
         return back()->with('success', 'تم حذف الوصفة');
     }
 }
