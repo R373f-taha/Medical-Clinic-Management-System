@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Patient;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\UpdatePatientRequest;
 use App\Models\Patient;
 use App\Services\Patient\PatientService;
 use Illuminate\Http\Request;
@@ -20,7 +21,20 @@ class PatientController extends Controller
     {
         return response()->json($this->patientService->getAll());
     }
+    public function create()
+    {
+        $patients = $this->patientService->getAll();
+    }
 
+    public function store(Request $request)
+    {
+        $data = $request->validated();
+        $patient = $this->patientService->store($data);
+        return response()->json([
+            'message' => 'Patient was added',
+            'data' => $patient
+        ]);
+    }
 
     public function show(Patient $patient)
     {
@@ -32,24 +46,15 @@ class PatientController extends Controller
         return response()->json($patient);
     }
 
-    public function update(Request $request, Patient $patient)
+    public function update(UpdatePatientRequest $request, Patient $patient)
     {
-        $data = $request->validate([
-             'blood_type' => 'nullable|string|max:5',
-            'height'     => 'nullable|numeric',
-            'weight'     => 'nullable|numeric',
-            'gender'     => 'nullable|string|in:male,female,other',
-            'allergies'  => 'nullable|string',
-            'name'       => 'nullable|string|max:255',       // من جدول users
-            'email'      => 'nullable|email|unique:users,email,' . $patient->user_id,
-            'phone'      => 'nullable|string|max:20',
-        ]);
+        $data = array_filter($request->validated(), fn($value) => !is_null($value));
 
         $patient = $this->patientService->update($patient, $data);
 
         return response()->json([
             'message' => 'تم تحديث بيانات المريض',
-            'data' => $patient
+            'data'    => $patient
         ]);
     }
 }

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreEmployeeRequest;
+use App\Http\Requests\UpdateEmployeeRequest;
 use App\Models\Employee;
 use App\Services\Admin\EmployeeService;
 use Illuminate\Http\Request;
@@ -22,25 +24,14 @@ class EmployeeController extends Controller
     }
 
 
-    public function create()
-    {
-    }
+    public function create() {}
 
-  
-    public function store(Request $request)
-    {
-    $data = $request->validate([
-  'user_id'        => 'required|exists:users,id|unique:employee,user_id',
-            'name'           => 'required|string|max:255',
-            'qualificatins'  => 'required|string|max:255',
-            'age'            => 'required|integer|min:18',
-            'phone'          => 'required|string|max:20|unique:employee,phone',
-            'email'          => 'required|email|unique:employee,email',
-            'gender'         => 'required|in:Male,Female',
-            'date_of_birth'  => 'nullable|date',
-]);
 
-$this->employeeService->store($data);
+    public function store(StoreEmployeeRequest $request)
+    {
+        $data = $request->validated();
+
+        $this->employeeService->store($data);
 
 
         return redirect()
@@ -49,36 +40,24 @@ $this->employeeService->store($data);
     }
 
 
-    public function show(Employee $employee)
+    public function show(Employee $employee) {}
+
+
+    public function edit(Employee $employee) {}
+
+
+    public function update(UpdateEmployeeRequest $request, Employee $employee)
     {
-    }
+        $data = array_filter($request->validated(), fn($value) => !is_null($value));
 
+        $this->employeeService->update($employee, $data);
 
-    public function edit(Employee $employee)
-    {
-    }
-
-  
-    public function update(Request $request, Employee $employee)
-    {
-     $data = $request->validate([
-    'user_id'        => 'required|exists:users,id|unique:employee,user_id',
-            'name'           => 'required|string|max:255',
-            'qualificatins'  => 'required|string|max:255',
-            'age'            => 'required|integer|min:18',
-            'phone'          => 'required|string|max:20|unique:employee,phone',
-            'email'          => 'required|email|unique:employee,email',
-            'gender'         => 'required|in:Male,Female',
-            'date_of_birth'  => 'nullable|date',
-]);
-
-$this->employeeService->update($employee, $data);
         return redirect()
             ->route('admin.employees.index')
             ->with('success', 'تم تعديل بيانات الموظف');
     }
 
- 
+
     public function destroy(Employee $employee)
     {
         $this->employeeService->delete($employee);

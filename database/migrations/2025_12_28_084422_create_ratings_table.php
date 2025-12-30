@@ -11,10 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('rating', function (Blueprint $table) {
+        Schema::create('ratings', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('patient_id')->constrained('patient')->cascadeOnDelete()->unique();
-            $table->foreignId('doctor_id')->constrained('doctor')->cascadeOnDelete()->unique();
+            $table->foreignId('patient_id')->constrained('patients')->cascadeOnDelete()->unique();
+            $table->foreignId('doctor_id')->constrained('doctors')->cascadeOnDelete()->unique();
             $table->tinyInteger('rating'); // 1–5
             $table->date('date')->nullable();
             $table->text('notes')->nullable();
@@ -27,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('rating');
+        Schema::dropIfExists('ratings');
     }
 };

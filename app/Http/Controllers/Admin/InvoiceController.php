@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreInvoiceRequest;
+use App\Http\Requests\UpdateInvoiceRequest;
 use App\Models\Invoice;
 use App\Models\Patient;
 use App\Models\Appointment;
@@ -28,21 +30,11 @@ class InvoiceController extends Controller
     {
         $patients = $this->invoiceService->getPatients();
         $appointments = $this->invoiceService->getAppointments();
-
     }
 
-    public function store(Request $request)
+    public function store(StoreInvoiceRequest $request)
     {
-        $data = $request->validate([
-            'patient_id'      => 'required|exists:patient,id',
-            'appointment_id'  => 'required|exists:appointments,id|unique:invoices,appointment_id',
-            'tax'             => 'required|integer|min:0',
-            'discount'        => 'required|integer|min:0',
-            'status'          => 'required|in:paid,unpaid',
-            'invoice_date'    => 'required|date',
-            'total_amount'    => 'required|integer|min:0',
-            'payment_method'  => 'required|in:cash,card,online,bank_transfer',
-        ]);
+        $data = $request->validated();
 
         $this->invoiceService->store($data);
 
@@ -60,21 +52,11 @@ class InvoiceController extends Controller
     {
         $patients = $this->invoiceService->getPatients();
         $appointments = $this->invoiceService->getAppointments();
-
     }
 
-    public function update(Request $request, Invoice $invoice)
+    public function update(UpdateInvoiceRequest $request, Invoice $invoice)
     {
-        $data = $request->validate([
-            'patient_id'      => 'required|exists:patient,id',
-            'appointment_id'  => 'required|exists:appointments,id|unique:invoices,appointment_id,' . $invoice->id,
-            'tax'             => 'required|integer|min:0',
-            'discount'        => 'required|integer|min:0',
-            'status'          => 'required|in:paid,unpaid',
-            'invoice_date'    => 'required|date',
-            'total_amount'    => 'required|integer|min:0',
-            'payment_method'  => 'required|in:cash,card,online,bank_transfer',
-        ]);
+        $data = array_filter($request->validated(), fn($value) => !is_null($value));
 
         $this->invoiceService->update($invoice, $data);
 
@@ -82,6 +64,7 @@ class InvoiceController extends Controller
             ->route('admin.invoices.index')
             ->with('success', 'تم تعديل الفاتورة');
     }
+
 
     public function destroy(Invoice $invoice)
     {

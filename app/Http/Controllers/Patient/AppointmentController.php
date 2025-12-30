@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Patient;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreAppointmentRequest;
+use App\Http\Requests\UpdateAppointmentRequest;
 use App\Models\Appointment;
 use App\Services\Patient\AppointmentService;
 use Illuminate\Http\Request;
@@ -21,19 +23,12 @@ class AppointmentController extends Controller
         return response()->json($this->appointmentService->getAll());
     }
 
-    public function store(Request $request)
+    public function store(StoreAppointmentRequest $request)
     {
-       $data= $request->validate([
-             'doctor_id' => 'required|exists:doctors,id',
-            'date'      => 'required|date',
-            'time'      => 'required',
-            'status'    => 'required|string|max:50',
-            'notes'     => 'nullable|string',
-            'reason'    => 'nullable|string',
-        ]);
+        $data = $request->validated();
 
         $appointment = $this->appointmentService->store($data);
-        
+
 
         return response()->json([
             'message' => 'تم إنشاء الموعد بنجاح',
@@ -46,24 +41,17 @@ class AppointmentController extends Controller
         return response()->json($appointment);
     }
 
-  public function update(Request $request, Appointment $appointment)
-{
-    $data = $request->validate([
-        'doctor_id' => 'required|exists:doctors,id',
-        'date'      => 'required|date',
-        'time'      => 'required',
-        'status'    => 'required|string|max:50',
-        'notes'     => 'nullable|string',
-        'reason'    => 'nullable|string',
-    ]);
-
-    $appointment = $this->appointmentService->update($appointment, $data);
-
-    return response()->json([
-        'message' => 'تم تحديث الموعد',
-        'data' => $appointment
-    ]);
-}
+    public function update(UpdateAppointmentRequest $request, Appointment $appointment)
+    {
+        $data = array_filter($request->validated(), fn($value) => !is_null($value));
+        // Saving old values from the null value...
+        $appointment->update($data);
+        // Only the entered values will be updated...
+        return response()->json([
+            'message' => 'تم تحديث الموعد',
+            'data' => $appointment
+        ]);
+    }
 
 
     public function destroy(Appointment $appointment)

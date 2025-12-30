@@ -6,8 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Invoice extends Model
 {
-  protected $guarded=[];
-  public function appointment(){
-    return $this->belongsTo(Appointment::class);
-  }
+    protected $guarded=[];
+    public function appointment(){
+        return $this->belongsTo(Appointment::class);
+    }
 }

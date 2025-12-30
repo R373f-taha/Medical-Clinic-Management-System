@@ -8,6 +8,6 @@ class Clinic extends Model
 {
     protected $guarded=[];
     public function doctors(){
-    return $this->hasMany(Doctor::class);
- }
+        return $this->hasMany(Doctor::class);
+    }
 }
