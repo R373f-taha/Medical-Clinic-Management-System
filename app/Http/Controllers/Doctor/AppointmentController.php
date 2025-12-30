@@ -28,10 +28,13 @@ class AppointmentController extends Controller
     public function store(Request $request)
     {
        $data= $request->validate([
-            'patient_id' => 'required|exists:users,id',
-            'date'       => 'required|date',
-            'time'       => 'required',
-            'status'     => 'required|string|max:50',
+          'patient_id'        => 'required|exists:patients,id',
+            'doctor_id'         => 'required|exists:doctors,id',
+            'medical_record_id' => 'nullable|exists:medical_records,id|unique:appointments,medical_record_id',
+            'appointment_date'  => 'required|date',
+            'status'            => 'required|string|max:50',
+            'notes'             => 'nullable|string',
+            'reason'            => 'nullable|string',
         ]);
 
         $this->appointmentService->store($data);
@@ -51,10 +54,14 @@ class AppointmentController extends Controller
     public function update(Request $request, Appointment $appointment)
     {
        $data= $request->validate([
-            'patient_id' => 'required|exists:users,id',
-            'date'       => 'required|date',
-            'time'       => 'required',
-            'status'     => 'required|string|max:50',
+        'patient_id'        => 'required|exists:patients,id',
+            'doctor_id'         => 'required|exists:doctors,id',
+            'medical_record_id' => 'nullable|exists:medical_records,id|unique:appointments,medical_record_id',
+            'appointment_date'  => 'required|date',
+            'status'            => 'required|string|max:50',
+            'notes'             => 'nullable|string',
+            'reason'            => 'nullable|string',
+        
         ]);
 
         $this->appointmentService->update($appointment, $data);

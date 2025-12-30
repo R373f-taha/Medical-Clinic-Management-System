@@ -8,6 +8,8 @@ use App\Models\User;
 use App\Services\Admin\DoctorService;
 use Illuminate\Http\Request;
 
+
+
 class DoctorController extends Controller
 {
     protected $doctorService;
@@ -31,11 +33,13 @@ class DoctorController extends Controller
  
     public function store(Request $request)
     {
-        $request->validate([
-            'user_id'   => 'required|exists:users,id',
-            'specialty' => 'required|string|max:255',
-            'phone'     => 'required|string|max:20',
-            'address'   => 'required|string',
+        $data = $request->validate([
+            'user_id'           => 'required|exists:users,id',
+            'specialization'    => 'required|string|max:255',
+            'qualifications'    => 'required|string|max:255',
+            'available_hours'   => 'required|integer|min:0',
+            'experience_years'  => 'nullable|integer|min:0',
+            'Current_rate'      => 'required|integer|min:0',
         ]);
 
         $this->doctorService->store($request->all());
@@ -60,10 +64,12 @@ class DoctorController extends Controller
     public function update(Request $request, Doctor $doctor)
     {
         $request->validate([
-            'user_id'   => 'required|exists:users,id',
-            'specialty' => 'required|string|max:255',
-            'phone'     => 'required|string|max:20',
-            'address'   => 'required|string',
+         'user_id'           => 'required|exists:users,id',
+            'specialization'    => 'required|string|max:255',
+            'qualifications'    => 'required|string|max:255',
+            'available_hours'   => 'required|integer|min:0',
+            'experience_years'  => 'nullable|integer|min:0',
+            'Current_rate'      => 'required|integer|min:0',
         ]);
 
         $this->doctorService->update($doctor, $request->all());

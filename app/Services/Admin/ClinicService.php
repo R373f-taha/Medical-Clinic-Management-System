@@ -11,7 +11,7 @@ class ClinicService
         return Clinic::latest()->get();
     }
 
-    public function create(array $data): Clinic
+    public function store(array $data): Clinic
     {
         return Clinic::create($data);
     }

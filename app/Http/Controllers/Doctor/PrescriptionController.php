@@ -18,7 +18,7 @@ class PrescriptionController extends Controller
 
     public function index()
     {
-         $prescriptions = $this->prescriptionService->getAll();
+        $prescriptions = $this->prescriptionService->getAll();
     }
 
     public function create()
@@ -27,10 +27,14 @@ class PrescriptionController extends Controller
 
     public function store(Request $request)
     {
-       $data= $request->validate([
-            'patient_id'  => 'required|exists:users,id',
-            'medicines'   => 'required|string',
-            'notes'       => 'nullable|string',
+        $data = $request->validate([
+            'medical_record_id' => 'required|exists:medical_records,id',
+            'medicine_name'     => 'required|string|max:255',
+            'dosage'            => 'required|integer|min:1',
+            'frequency'         => 'required|integer|min:1',
+            'refills'           => 'nullable|string|max:50',
+            'instructions'      => 'nullable|string',
+            'duration'          => 'required|integer|min:1',
         ]);
 
         $this->prescriptionService->store($data);
@@ -49,22 +53,26 @@ class PrescriptionController extends Controller
 
     public function update(Request $request, Prescription $prescription)
     {
-      $data=  $request->validate([
-            'patient_id'  => 'required|exists:users,id',
-            'medicines'   => 'required|string',
-            'notes'       => 'nullable|string',
+        $data = $request->validate([
+            'medical_record_id' => 'required|exists:medical_records,id',
+            'medicine_name'     => 'required|string|max:255',
+            'dosage'            => 'required|integer|min:1',
+            'frequency'         => 'required|integer|min:1',
+            'refills'           => 'nullable|string|max:50',
+            'instructions'      => 'nullable|string',
+            'duration'          => 'required|integer|min:1',
         ]);
 
         $this->prescriptionService->update($prescription, $data);
 
         return redirect()->route('doctor.prescriptions.index')
-            ->with('success', 'تم تعديل الوصفة');
+            ->with('success', 'تم تعديل الوصفة بنجاح');
     }
 
     public function destroy(Prescription $prescription)
     {
         $this->prescriptionService->delete($prescription);
 
-        return back()->with('success', 'تم حذف الوصفة');
+        return back()->with('success', 'تم حذف الوصفة بنجاح');
     }
 }

@@ -16,7 +16,6 @@ class MedicalRecordController extends Controller
         $this->medicalRecordService = $medicalRecordService;
     }
 
-
     public function index()
     {
          $records = $this->medicalRecordService->getAll();
@@ -24,15 +23,18 @@ class MedicalRecordController extends Controller
 
     public function create()
     {
+        return view('doctor.medical_records.create');
     }
 
     public function store(Request $request)
     {
-        $data=$request->validate([
-            'patient_id'   => 'required|exists:users,id',
-            'description'  => 'required|string',
-            'diagnosis'    => 'nullable|string',
-            'treatment'    => 'nullable|string',
+        $data = $request->validate([
+            'patient_id'     => 'required|exists:patients,id',
+            'doctor_id'      => 'required|exists:doctors,id',
+            'notes'          => 'nullable|string',
+            'diagnosis'      => 'nullable|string',
+            'treatment_plan' => 'nullable|string',
+            'follow_up_date' => 'nullable|date',
         ]);
 
         $this->medicalRecordService->store($data);
@@ -51,11 +53,13 @@ class MedicalRecordController extends Controller
 
     public function update(Request $request, MedicalRecord $medicalRecord)
     {
-       $data= $request->validate([
-            'patient_id'   => 'required|exists:users,id',
-            'description'  => 'required|string',
-            'diagnosis'    => 'nullable|string',
-            'treatment'    => 'nullable|string',
+       $data = $request->validate([
+            'patient_id'     => 'required|exists:patients,id',
+            'doctor_id'      => 'required|exists:doctors,id',
+            'notes'          => 'nullable|string',
+            'diagnosis'      => 'nullable|string',
+            'treatment_plan' => 'nullable|string',
+            'follow_up_date' => 'nullable|date',
         ]);
 
         $this->medicalRecordService->update($medicalRecord, $data);

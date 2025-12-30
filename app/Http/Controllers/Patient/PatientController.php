@@ -35,9 +35,14 @@ class PatientController extends Controller
     public function update(Request $request, Patient $patient)
     {
         $data = $request->validate([
-            'name'  => 'required|string|max:255',
-            'email' => 'required|email|unique:patients,email,' . $patient->id, 
-            'phone' => 'required|string|max:20',
+             'blood_type' => 'nullable|string|max:5',
+            'height'     => 'nullable|numeric',
+            'weight'     => 'nullable|numeric',
+            'gender'     => 'nullable|string|in:male,female,other',
+            'allergies'  => 'nullable|string',
+            'name'       => 'nullable|string|max:255',       // من جدول users
+            'email'      => 'nullable|email|unique:users,email,' . $patient->user_id,
+            'phone'      => 'nullable|string|max:20',
         ]);
 
         $patient = $this->patientService->update($patient, $data);
