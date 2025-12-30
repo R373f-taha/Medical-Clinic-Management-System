@@ -3,13 +3,16 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Rating extends Model
 {
-    public function patient(){
-        return $this->belongsTo(Patient ::class);
-    }
-    public function doctor(){
-        return $this->belongsTo(Doctor::class);
-    }
+   use HasFactory;
+   protected $table = 'ratings';
+   public function patient(){
+    return $this->belongsTo(Patient ::class);
+   }
+   public function doctor(){
+    return $this->belongsTo(Doctor::class);
+   }
 }
