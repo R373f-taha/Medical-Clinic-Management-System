@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Patient;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StorePatientRequest;
 use App\Http\Requests\UpdatePatientRequest;
 use App\Models\Patient;
 use App\Services\Patient\PatientService;
@@ -26,7 +27,7 @@ class PatientController extends Controller
         $patients = $this->patientService->getAll();
     }
 
-    public function store(Request $request)
+    public function store(StorePatientRequest $request)
     {
         $data = $request->validated();
         $patient = $this->patientService->store($data);
