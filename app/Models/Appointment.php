@@ -3,9 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Appointment extends Model
-{ protected $guarded=[];
+{ 
+   use HasFactory;
+   protected $table = 'appointments';
+   protected $guarded=[];
    public function medical_record()   {
     return $this->belongsTo(Appointment::class);
    }
