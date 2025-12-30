@@ -24,10 +24,10 @@ class ReservationController extends Controller
     public function store(Request $request)
     {
        $data= $request->validate([
-            'doctor_id' => 'required|exists:doctor,id',
-            'date'      => 'required|date',
-            'time'      => 'required',
-            'status'    => 'required|string|max:50',
+           'patient_id'  => 'required|exists:patient,id',
+        'employee_id' => 'required|exists:employee,id',
+        'date'        => 'required|date',
+        'time'        => 'required',
         ]);
 
         $reservation = $this->reservationService->store($data);
@@ -46,10 +46,10 @@ class ReservationController extends Controller
     public function update(Request $request, Reservation $reservation)
     {
          $data=$request->validate([
-            'doctor_id' => 'required|exists:doctor,id',
-            'date'      => 'required|date',
-            'time'      => 'required',
-            'status'    => 'required|string|max:50',
+             'patient_id'  => 'required|exists:patient,id',
+        'employee_id' => 'required|exists:employee,id',
+        'date'        => 'required|date',
+        'time'        => 'required',
         ]);
 
         $reservation = $this->reservationService->update($reservation, $data);

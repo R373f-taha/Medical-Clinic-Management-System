@@ -24,13 +24,16 @@ class AppointmentController extends Controller
     public function store(Request $request)
     {
        $data= $request->validate([
-            'doctor_id' => 'required|exists:doctor,id',
+             'doctor_id' => 'required|exists:doctors,id',
             'date'      => 'required|date',
             'time'      => 'required',
             'status'    => 'required|string|max:50',
+            'notes'     => 'nullable|string',
+            'reason'    => 'nullable|string',
         ]);
 
         $appointment = $this->appointmentService->store($data);
+        
 
         return response()->json([
             'message' => 'تم إنشاء الموعد بنجاح',
@@ -43,22 +46,25 @@ class AppointmentController extends Controller
         return response()->json($appointment);
     }
 
-    public function update(Request $request, Appointment $appointment)
-    {
-        $request->validate([
-            'doctor_id' => 'required|exists:doctor,id',
-            'date'      => 'required|date',
-            'time'      => 'required',
-            'status'    => 'required|string|max:50',
-        ]);
+  public function update(Request $request, Appointment $appointment)
+{
+    $data = $request->validate([
+        'doctor_id' => 'required|exists:doctors,id',
+        'date'      => 'required|date',
+        'time'      => 'required',
+        'status'    => 'required|string|max:50',
+        'notes'     => 'nullable|string',
+        'reason'    => 'nullable|string',
+    ]);
 
-        $appointment = $this->appointmentService->update($appointment, $data);
+    $appointment = $this->appointmentService->update($appointment, $data);
 
-        return response()->json([
-            'message' => 'تم تحديث الموعد',
-            'data' => $appointment
-        ]);
-    }
+    return response()->json([
+        'message' => 'تم تحديث الموعد',
+        'data' => $appointment
+    ]);
+}
+
 
     public function destroy(Appointment $appointment)
     {

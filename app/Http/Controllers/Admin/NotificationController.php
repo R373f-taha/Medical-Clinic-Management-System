@@ -35,6 +35,7 @@ class NotificationController extends Controller
             'title'   => 'required|string|max:255',
             'message' => 'required|string',
             'user_id' => 'required|exists:users,id',
+       
         ]);
 
 

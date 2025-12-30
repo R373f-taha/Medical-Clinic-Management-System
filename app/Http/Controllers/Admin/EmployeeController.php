@@ -30,10 +30,14 @@ class EmployeeController extends Controller
     public function store(Request $request)
     {
     $data = $request->validate([
-    'name'  => 'required|string|max:255',
-    'email' => 'required|email|unique:employee,email',
-    'phone' => 'required|string|max:20',
-    'role'  => 'required|string|max:50',
+  'user_id'        => 'required|exists:users,id|unique:employee,user_id',
+            'name'           => 'required|string|max:255',
+            'qualificatins'  => 'required|string|max:255',
+            'age'            => 'required|integer|min:18',
+            'phone'          => 'required|string|max:20|unique:employee,phone',
+            'email'          => 'required|email|unique:employee,email',
+            'gender'         => 'required|in:Male,Female',
+            'date_of_birth'  => 'nullable|date',
 ]);
 
 $this->employeeService->store($data);
@@ -58,10 +62,14 @@ $this->employeeService->store($data);
     public function update(Request $request, Employee $employee)
     {
      $data = $request->validate([
-    'name'  => 'required|string|max:255',
-    'email' => 'required|email|unique:employees,email,' . $employee->id, // اسم الجدول غالباً employees
-    'phone' => 'required|string|max:20',
-    'role'  => 'required|string|max:50',
+    'user_id'        => 'required|exists:users,id|unique:employee,user_id',
+            'name'           => 'required|string|max:255',
+            'qualificatins'  => 'required|string|max:255',
+            'age'            => 'required|integer|min:18',
+            'phone'          => 'required|string|max:20|unique:employee,phone',
+            'email'          => 'required|email|unique:employee,email',
+            'gender'         => 'required|in:Male,Female',
+            'date_of_birth'  => 'nullable|date',
 ]);
 
 $this->employeeService->update($employee, $data);

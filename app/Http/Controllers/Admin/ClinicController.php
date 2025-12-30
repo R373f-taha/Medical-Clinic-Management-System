@@ -9,7 +9,8 @@ use Illuminate\Http\Request;
 
 class ClinicController extends Controller
 {
-    protected $clinicService;
+    protected ClinicService $clinicService;
+
     public function __construct(ClinicService $clinicService)
     {
         $this->clinicService = $clinicService;
@@ -17,66 +18,60 @@ class ClinicController extends Controller
 
     public function index()
     {
-        $clinics =  $this->clinicService->getAll();
-
-        return view('admin.clinics.index', compact('clinics'));
+        $clinics = $this->clinicService->getAll();
     }
-
 
     public function create()
     {
-        return view('admin.clinics.create');
     }
-
 
     public function store(Request $request)
     {
-        $request->validate([
+        $data = $request->validate([
             'name'    => 'required|string|max:255',
-            'address' => 'required|string',
+            'address' => 'required|string|max:255',
             'phone'   => 'required|string|max:20',
+            'email'   => 'nullable|email|max:255',
         ]);
 
-        $this->clinicService->store($request->all());
+        $this->clinicService->store($data);
 
         return redirect()
             ->route('admin.clinics.index')
             ->with('success', 'تم إضافة العيادة بنجاح');
     }
 
-   
     public function show(Clinic $clinic)
     {
-        return view('admin.clinics.show', compact('clinic'));
-    }
 
-  
+        }
+
     public function edit(Clinic $clinic)
     {
-        return view('admin.clinics.edit', compact('clinic'));
     }
 
-  
     public function update(Request $request, Clinic $clinic)
     {
-        $request->validate([
+        $data = $request->validate([
             'name'    => 'required|string|max:255',
-            'address' => 'required|string',
+            'address' => 'required|string|max:255',
             'phone'   => 'required|string|max:20',
+            'email'   => 'nullable|email|max:255',
         ]);
 
-        $this->clinicService->update($clinic, $request->all());
+        $this->clinicService->update($clinic, $data);
 
         return redirect()
             ->route('admin.clinics.index')
-            ->with('success', 'تم تعديل العيادة');
+            ->with('success', 'تم تعديل العيادة بنجاح');
     }
-
 
     public function destroy(Clinic $clinic)
     {
         $this->clinicService->delete($clinic);
 
-        return back()->with('success', 'تم حذف العيادة');
+        return redirect()
+            ->route('admin.clinics.index')
+            ->with('success', 'تم حذف العيادة بنجاح');
     }
 }

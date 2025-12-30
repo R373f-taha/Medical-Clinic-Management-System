@@ -4,13 +4,13 @@ namespace App\Services\Admin;
 
 use App\Models\Invoice;
 use App\Models\Patient;
-use App\Models\Doctor;
+use App\Models\Appointment;
 
 class InvoiceService
 {
     public function getAll()
     {
-        return Invoice::with(['patient', 'doctor'])
+        return Invoice::with(['patient', 'appointment'])
             ->latest()
             ->get();
     }
@@ -20,9 +20,9 @@ class InvoiceService
         return Patient::all();
     }
 
-    public function getDoctors()
+    public function getAppointments()
     {
-        return Doctor::all();
+        return Appointment::all();
     }
 
     public function store(array $data)

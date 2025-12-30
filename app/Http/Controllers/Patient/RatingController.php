@@ -24,9 +24,9 @@ class RatingController extends Controller
     public function store(Request $request)
     {
       $data=  $request->validate([
-            'doctor_id' => 'required|exists:doctor,id',
+          'doctor_id' => 'required|exists:doctor,id',
             'rating'    => 'required|numeric|min:1|max:5',
-            'comment'   => 'nullable|string',
+            'notes'     => 'nullable|string',
         ]);
 
         $rating = $this->ratingService->store($data);
@@ -47,7 +47,7 @@ class RatingController extends Controller
        $data= $request->validate([
             'doctor_id' => 'required|exists:doctor,id',
             'rating'    => 'required|numeric|min:1|max:5',
-            'comment'   => 'nullable|string',
+            'notes'     => 'nullable|string',
         ]);
 
         $rating = $this->ratingService->update($rating, $data);
