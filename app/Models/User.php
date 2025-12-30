@@ -46,7 +46,7 @@ class User extends Authenticatable
         ];
     }
     public function patient(){
-     return $this->hasOne(Patient::class);
+        return $this->hasOne(Patient::class);
     }
     public function Employee(){
         return $this->hasOne(Employee::class);

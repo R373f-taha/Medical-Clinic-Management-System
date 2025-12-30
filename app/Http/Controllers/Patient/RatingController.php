@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Patient;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreRateRequest;
+use App\Http\Requests\UpdateRateRequest;
 use App\Models\Rating;
 use App\Services\Patient\RatingService;
 use Illuminate\Http\Request;
@@ -21,13 +23,9 @@ class RatingController extends Controller
         return response()->json($this->ratingService->getAll());
     }
 
-    public function store(Request $request)
+    public function store(StoreRateRequest $request)
     {
-      $data=  $request->validate([
-          'doctor_id' => 'required|exists:doctor,id',
-            'rating'    => 'required|numeric|min:1|max:5',
-            'notes'     => 'nullable|string',
-        ]);
+        $data =  $request->validated();
 
         $rating = $this->ratingService->store($data);
 
@@ -42,22 +40,18 @@ class RatingController extends Controller
         return response()->json($rating);
     }
 
-    public function update(Request $request, Rating $rating)
+    public function update(UpdateRateRequest $request, Rating $rating)
     {
-       $data= $request->validate([
-            'doctor_id' => 'required|exists:doctor,id',
-            'rating'    => 'required|numeric|min:1|max:5',
-            'notes'     => 'nullable|string',
-        ]);
+        $data = array_filter($request->validated(), fn($value) => !is_null($value));
 
         $rating = $this->ratingService->update($rating, $data);
 
-
         return response()->json([
             'message' => 'تم تعديل التقييم',
-            'data' => $rating
+            'data'    => $rating
         ]);
     }
+
 
     public function destroy(Rating $rating)
     {

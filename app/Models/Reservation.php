@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Reservation extends Model
 {
    use HasFactory;
-   protected $table = 'reservation';
+   protected $table = 'reservations';
    protected $guarded=[];
    public function employee(){
     return $this->belongsTo(Employee::class);

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Doctor;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StorePrescriptionRequest;
+use App\Http\Requests\UpdatePrescriptionRequest;
 use App\Models\Prescription;
 use App\Services\Doctor\PrescriptionService;
 use Illuminate\Http\Request;
@@ -21,21 +23,11 @@ class PrescriptionController extends Controller
         $prescriptions = $this->prescriptionService->getAll();
     }
 
-    public function create()
-    {
-    }
+    public function create() {}
 
-    public function store(Request $request)
+    public function store(StorePrescriptionRequest $request)
     {
-        $data = $request->validate([
-            'medical_record_id' => 'required|exists:medical_records,id',
-            'medicine_name'     => 'required|string|max:255',
-            'dosage'            => 'required|integer|min:1',
-            'frequency'         => 'required|integer|min:1',
-            'refills'           => 'nullable|string|max:50',
-            'instructions'      => 'nullable|string',
-            'duration'          => 'required|integer|min:1',
-        ]);
+        $data = $request->validated();
 
         $this->prescriptionService->store($data);
 
@@ -43,31 +35,21 @@ class PrescriptionController extends Controller
             ->with('success', 'تم إضافة الوصفة بنجاح');
     }
 
-    public function show(Prescription $prescription)
-    {
-    }
+    public function show(Prescription $prescription) {}
 
-    public function edit(Prescription $prescription)
-    {
-    }
+    public function edit(Prescription $prescription) {}
 
-    public function update(Request $request, Prescription $prescription)
+    public function update(UpdatePrescriptionRequest $request, Prescription $prescription)
     {
-        $data = $request->validate([
-            'medical_record_id' => 'required|exists:medical_records,id',
-            'medicine_name'     => 'required|string|max:255',
-            'dosage'            => 'required|integer|min:1',
-            'frequency'         => 'required|integer|min:1',
-            'refills'           => 'nullable|string|max:50',
-            'instructions'      => 'nullable|string',
-            'duration'          => 'required|integer|min:1',
-        ]);
+        $data = array_filter($request->validated(), fn($value) => !is_null($value));
 
         $this->prescriptionService->update($prescription, $data);
 
-        return redirect()->route('doctor.prescriptions.index')
+        return redirect()
+            ->route('doctor.prescriptions.index')
             ->with('success', 'تم تعديل الوصفة بنجاح');
     }
+
 
     public function destroy(Prescription $prescription)
     {

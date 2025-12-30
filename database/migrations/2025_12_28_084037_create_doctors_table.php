@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('doctor', function (Blueprint $table) {
+        Schema::create('doctors', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete()->unique();
             //Many to Many with clinic...
@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('qualifications');
             $table->integer('available_hours');
             $table->integer('experience_years')->nullable();
-            $table->integer('Current_rate');
+            $table->decimal('current_rate', 2, 1)->default(0);
             /*
                 I added this field to store the doctor's most recent rating
                 after it has been calculated according to the rating algorithm...
@@ -33,6 +33,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('doctor');
+        Schema::dropIfExists('doctors');
     }
 };

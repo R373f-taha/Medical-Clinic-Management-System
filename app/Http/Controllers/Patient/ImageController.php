@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Patient;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreImageRequest;
+use App\Http\Requests\UpdateImageRequest;
 use App\Models\Image;
 use App\Services\Patient\ImageService;
 use Illuminate\Http\Request;
@@ -18,15 +20,12 @@ class ImageController extends Controller
 
     public function index()
     {
-         return response()->json($this->imageService->getAll());
+        return response()->json($this->imageService->getAll());
     }
 
-    public function store(Request $request)
+    public function store(StoreImageRequest $request)
     {
-       $data= $request->validate([
-            'file_path' => 'required|string',
-            'description' => 'nullable|string',
-        ]);
+        $data = $request->validated();
 
         $image = $this->imageService->store($data);
 
@@ -42,20 +41,18 @@ class ImageController extends Controller
         return response()->json($image);
     }
 
-    public function update(Request $request, Image $image)
+    public function update(UpdateImageRequest $request, Image $image)
     {
-         $data=$request->validate([
-            'file_path' => 'required|string',
-            'description' => 'nullable|string',
-        ]);
+        $data = array_filter($request->validated(), fn($value) => !is_null($value));
 
         $image = $this->imageService->update($image, $data);
 
         return response()->json([
             'message' => 'تم تعديل بيانات الصورة',
-            'data' => $image
+            'data'    => $image
         ]);
     }
+
 
     public function destroy(Image $image)
     {

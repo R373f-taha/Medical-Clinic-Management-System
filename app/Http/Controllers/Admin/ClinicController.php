@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreClinicRequest;
+use App\Http\Requests\UpdateClinicRequest;
 use App\Models\Clinic;
 use App\Services\Admin\ClinicService;
 use Illuminate\Http\Request;
@@ -21,18 +23,11 @@ class ClinicController extends Controller
         $clinics = $this->clinicService->getAll();
     }
 
-    public function create()
-    {
-    }
+    public function create() {}
 
-    public function store(Request $request)
+    public function store(StoreClinicRequest $request)
     {
-        $data = $request->validate([
-            'name'    => 'required|string|max:255',
-            'address' => 'required|string|max:255',
-            'phone'   => 'required|string|max:20',
-            'email'   => 'nullable|email|max:255',
-        ]);
+        $data = $request->validated();
 
         $this->clinicService->store($data);
 
@@ -41,23 +36,13 @@ class ClinicController extends Controller
             ->with('success', 'تم إضافة العيادة بنجاح');
     }
 
-    public function show(Clinic $clinic)
-    {
+    public function show(Clinic $clinic) {}
 
-        }
+    public function edit(Clinic $clinic) {}
 
-    public function edit(Clinic $clinic)
+    public function update(UpdateClinicRequest $request, Clinic $clinic)
     {
-    }
-
-    public function update(Request $request, Clinic $clinic)
-    {
-        $data = $request->validate([
-            'name'    => 'required|string|max:255',
-            'address' => 'required|string|max:255',
-            'phone'   => 'required|string|max:20',
-            'email'   => 'nullable|email|max:255',
-        ]);
+        $data = array_filter($request->validated(), fn($value) => !is_null($value));
 
         $this->clinicService->update($clinic, $data);
 
@@ -65,7 +50,6 @@ class ClinicController extends Controller
             ->route('admin.clinics.index')
             ->with('success', 'تم تعديل العيادة بنجاح');
     }
-
     public function destroy(Clinic $clinic)
     {
         $this->clinicService->delete($clinic);

@@ -66,11 +66,8 @@ Route::prefix('patient')->name('patient.')->middleware(['auth','role:patient'])-
 // =========================================
 Route::prefix('doctor')->name('doctor.')->middleware(['auth','role:doctor'])->group(function () {
     Route::resources([
-        'appointments'     => DoctorAppointmentController::class,
         'medical-records'  => MedicalRecordController::class,
         'prescriptions'    => PrescriptionController::class,
-        'reservations'     => DoctorReservationController::class,
-        'ratings'          => DoctorRatingController::class,
     ]);
 });
 
