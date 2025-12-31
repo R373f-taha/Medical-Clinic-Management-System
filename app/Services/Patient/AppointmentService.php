@@ -12,7 +12,7 @@ class AppointmentService
     }
 
     public function store(array $data)
-    {
+    { 
         return Appointment::create($data);
     }
 
@@ -26,4 +26,5 @@ class AppointmentService
     {
         return $appointment->delete();
     }
+
 }
