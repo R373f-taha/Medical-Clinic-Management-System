@@ -68,6 +68,7 @@ Route::prefix('doctor')->name('doctor.')->middleware(['auth','role:doctor'])->gr
     Route::resources([
         'medical-records'  => MedicalRecordController::class,
         'prescriptions'    => PrescriptionController::class,
+
     ]);
 });
 

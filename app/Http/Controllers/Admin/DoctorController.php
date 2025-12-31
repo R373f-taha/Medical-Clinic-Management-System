@@ -45,13 +45,17 @@ class DoctorController extends Controller
     }
 
 
-    public function show(Doctor $doctor) {}
 
+    public function show(Doctor $doctor)
+    {
+    }
 
     public function edit(Doctor $doctor)
     {
         $users = $this->doctorService->getUsers();
     }
+
+
 
 
     public function update(UpdateDoctorRequest $request, Doctor $doctor)
@@ -64,7 +68,6 @@ class DoctorController extends Controller
             ->route('admin.doctors.index')
             ->with('success', 'تم تعديل بيانات الطبيب');
     }
-
 
 
     public function destroy(Doctor $doctor)
