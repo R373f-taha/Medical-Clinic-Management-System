@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreDoctorRequest;
 use App\Http\Requests\UpdateDoctorRequest;
 use App\Models\Doctor;
 use App\Models\User;
@@ -32,7 +33,7 @@ class DoctorController extends Controller
     }
 
 
-    public function store(Request $request)
+    public function store(StoreDoctorRequest $request)
     {
         $data = $request->validated();
 
