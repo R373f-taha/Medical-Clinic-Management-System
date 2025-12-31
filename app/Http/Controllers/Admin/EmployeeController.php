@@ -27,6 +27,7 @@ class EmployeeController extends Controller
     public function create() {}
 
 
+
     public function store(StoreEmployeeRequest $request)
     {
         $data = $request->validated();
