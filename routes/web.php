@@ -1,7 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+
 use App\Http\Controllers\ProfileController;
+
 use App\Http\Controllers\Admin\ClinicController;
 use App\Http\Controllers\Admin\ClinicDoctorController;
 use App\Http\Controllers\Admin\DoctorController;
@@ -15,11 +17,13 @@ use App\Http\Controllers\Patient\ReservationController;
 use App\Http\Controllers\Patient\RatingController;
 use App\Http\Controllers\Patient\ImageController;
 
-use App\Http\Controllers\Doctor\AppointmentController as DoctorAppointmentController;
 use App\Http\Controllers\Doctor\MedicalRecordController;
 use App\Http\Controllers\Doctor\PrescriptionController;
-use App\Http\Controllers\Doctor\ReservationController as DoctorReservationController;
-use App\Http\Controllers\Doctor\RatingController as DoctorRatingController;
+
+use App\Http\Controllers\Employee\ScheduleController;
+use App\Http\Controllers\Employee\BookingController;
+
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -29,15 +33,12 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 });//->middleware(['auth', 'verified'])->name('dashboard');
 
-
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-// Admin Resources
-// =========================================
 Route::prefix('admin')->name('admin.')->middleware(['auth','role:admin'])->group(function () {
     Route::resources([
         'clinics'        => ClinicController::class,
@@ -49,8 +50,6 @@ Route::prefix('admin')->name('admin.')->middleware(['auth','role:admin'])->group
     ]);
 });
 
-// Patient Resources
-// =========================================
 Route::prefix('patient')->name('patient.')->middleware(['auth','role:patient'])->group(function () {
     Route::resources([
         'profile'      => PatientController::class,
@@ -61,16 +60,20 @@ Route::prefix('patient')->name('patient.')->middleware(['auth','role:patient'])-
     ]);
 });
 
-
-// Doctor Resources
-// =========================================
 Route::prefix('doctor')->name('doctor.')->middleware(['auth','role:doctor'])->group(function () {
     Route::resources([
         'medical-records'  => MedicalRecordController::class,
         'prescriptions'    => PrescriptionController::class,
-
     ]);
 });
 
+// Employee Resources (Schedules + Bookings)
+Route::prefix('employee')->name('employee.')->middleware(['auth','role:employee'])->group(function () {
+    Route::resources([
+        'schedules' => ScheduleController::class,
+        'bookings'  => BookingController::class,
+    ]);
+});
 
+// Auth routes
 require __DIR__.'/auth.php';
