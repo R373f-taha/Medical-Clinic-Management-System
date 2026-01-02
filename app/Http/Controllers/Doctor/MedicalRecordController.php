@@ -25,7 +25,6 @@ class MedicalRecordController extends Controller
 
     public function create()
     {
-        return view('doctor.medical_records.create');
     }
 
     public function store(StoreMedicalRecordRequest $request)
