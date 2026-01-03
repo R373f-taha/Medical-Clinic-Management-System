@@ -8,7 +8,9 @@ class AppointmentService
 {
     public function getAll()
     {
-        return Appointment::latest()->get();
+        return Appointment::with(['patient', 'doctor'])
+            ->latest()
+            ->get();
     }
 
     public function store(array $data)

@@ -2,16 +2,20 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use App\Models\Clinic;
 
 class ClinicSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        \App\Models\Clinic::factory()->count(5)->create();
+        if (Clinic::count() === 0) {
+            Clinic::create([
+                'name' => 'عيادة الريادة',
+                'address' => 'دمشق - سوريا',
+                'phone' => '00963123456789',
+                'email' => 'clinic@example.com',
+            ]);
+        }
     }
 }
