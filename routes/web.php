@@ -29,6 +29,8 @@ use App\Http\Controllers\Employee\BookingController;
 Route::get('/', function () {
     return view('welcome');
 });
+// testing doctor dashboard...
+Route::get('doctor/dashboard', [DoctorDashboardController::class, 'index'])->name('doctor.dashboard');
 
 Route::get('/dashboard', function () {
     return view('dashboard');

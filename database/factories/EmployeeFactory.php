@@ -15,7 +15,7 @@ class EmployeeFactory extends Factory
         return [
             'user_id' => User::factory(),
             'name' => $this->faker->name(),
-            'qualificatins' => $this->faker->randomElement([
+            'qualifications' => $this->faker->randomElement([
                 'Bachelor',
                 'Master',
                 'PhD',

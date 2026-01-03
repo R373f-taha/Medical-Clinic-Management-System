@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Store;
 
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -23,7 +23,6 @@ class StoreMedicalRecordRequest extends FormRequest
     {
         return [
             'patient_id'     => 'required|exists:patients,id',
-            'doctor_id'      => 'required|exists:doctors,id',
             'notes'          => 'nullable|string',
             'diagnosis'      => 'nullable|string',
             'treatment_plan' => 'nullable|string',
