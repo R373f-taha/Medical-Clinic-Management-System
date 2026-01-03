@@ -9,7 +9,7 @@ class MedicalRecord extends Model
 {
    use HasFactory;
    protected $table = 'medical_records';
-   protected $guarded=[];
+   protected $guarded=['patient_id'];
    public function doctor(){
     return $this->belongsTo(Doctor::class);
    }
@@ -20,9 +20,9 @@ class MedicalRecord extends Model
     return $this->hasMany(Image::class);
    }
    public function appointment(){
-    return $this->hasOne(Appointment::class);
-   }
-   public function perscriptions(){
     return $this->hasMany(Appointment::class);
+   }
+   public function prescriptions(){
+    return $this->hasMany(Prescription::class);
    }
 }

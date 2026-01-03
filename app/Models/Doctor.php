@@ -14,13 +14,13 @@ class Doctor extends Model
     return $this->belongsTo(User::class);
  }
  public function medicaa_records(){
-    return $this->hasMany(Doctor::class);
+    return $this->hasMany(MedicalRecord::class);
  }
  public function appointments(){
    return $this->hasMany(Appointment::class);
  }
  public function rating(){
-    return $this->hasOne(Rating::class);
+    return $this->hasMany(Rating::class);
  }
  public function clinic(){
     return $this->belongsTo(Clinic::class);

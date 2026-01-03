@@ -6,12 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Appointment extends Model
-{ 
+{
    use HasFactory;
    protected $table = 'appointments';
    protected $guarded=[];
-   public function medical_record()   {
-    return $this->belongsTo(Appointment::class);
+   public function medicalRecord()   {
+    return $this->belongsTo(MedicalRecord::class);
    }
    public function invoice(){
     return $this->hasOne(Invoice::class);

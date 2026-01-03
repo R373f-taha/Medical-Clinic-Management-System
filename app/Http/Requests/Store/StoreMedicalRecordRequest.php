@@ -13,6 +13,12 @@ class StoreMedicalRecordRequest extends FormRequest
     {
         return true;
     }
+    //  public function prepareForValidation()
+    //  {
+    //     $this->merge([
+    //         'patient_id'=>$this->query('patient_id')
+    //     ]);
+    //  }
 
     /**
      * Get the validation rules that apply to the request.
@@ -22,7 +28,8 @@ class StoreMedicalRecordRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'patient_id'     => 'required|exists:patients,id',
+            'patient_id'     => 'required|exists:patients,id|unique:patients,id',
+            'doctor_id'      => 'required|exists:doctors,id',
             'notes'          => 'nullable|string',
             'diagnosis'      => 'nullable|string',
             'treatment_plan' => 'nullable|string',
