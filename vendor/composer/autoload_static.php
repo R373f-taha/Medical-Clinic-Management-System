@@ -624,6 +624,7 @@ class ComposerStaticInitb90ce3130f082fb52779a6b880e9a36a
     );
 
     public static $classMap = array (
+        'App\\Http\\Controllers\\Admin\\AppointmentMonitorController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/AppointmentMonitorController.php',
         'App\\Http\\Controllers\\Admin\\ClinicController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/ClinicController.php',
         'App\\Http\\Controllers\\Admin\\ClinicDoctorController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/ClinicDoctorController.php',
         'App\\Http\\Controllers\\Admin\\DoctorController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/DoctorController.php',
@@ -642,6 +643,8 @@ class ComposerStaticInitb90ce3130f082fb52779a6b880e9a36a
         'App\\Http\\Controllers\\Controller' => __DIR__ . '/../..' . '/app/Http/Controllers/Controller.php',
         'App\\Http\\Controllers\\Doctor\\MedicalRecordController' => __DIR__ . '/../..' . '/app/Http/Controllers/Doctor/MedicalRecordController.php',
         'App\\Http\\Controllers\\Doctor\\PrescriptionController' => __DIR__ . '/../..' . '/app/Http/Controllers/Doctor/PrescriptionController.php',
+        'App\\Http\\Controllers\\Employee\\BookingController' => __DIR__ . '/../..' . '/app/Http/Controllers/Employee/BookingController.php',
+        'App\\Http\\Controllers\\Employee\\ScheduleController' => __DIR__ . '/../..' . '/app/Http/Controllers/Employee/ScheduleController.php',
         'App\\Http\\Controllers\\Patient\\AppointmentController' => __DIR__ . '/../..' . '/app/Http/Controllers/Patient/AppointmentController.php',
         'App\\Http\\Controllers\\Patient\\ImageController' => __DIR__ . '/../..' . '/app/Http/Controllers/Patient/ImageController.php',
         'App\\Http\\Controllers\\Patient\\PatientController' => __DIR__ . '/../..' . '/app/Http/Controllers/Patient/PatientController.php',
@@ -651,7 +654,8 @@ class ComposerStaticInitb90ce3130f082fb52779a6b880e9a36a
         'App\\Http\\Controllers\\ResetPasswordController' => __DIR__ . '/../..' . '/app/Http/Controllers/ResetPasswordController.php',
         'App\\Http\\Requests\\Auth\\LoginRequest' => __DIR__ . '/../..' . '/app/Http/Requests/Auth/LoginRequest.php',
         'App\\Http\\Requests\\ProfileUpdateRequest' => __DIR__ . '/../..' . '/app/Http/Requests/ProfileUpdateRequest.php',
-        'App\\Http\\Requests\\Store\\StorePatientRequest' => __DIR__ . '/../..' . '/app/Http/Requests/Store/StorePatientRequest.php',
+        'App\\Http\\Requests\\Store\\StoreEmployeeRequest' => __DIR__ . '/../..' . '/app/Http/Requests/Store/StoreEmployeeRequest.php',
+        'App\\Http\\Requests\\Update\\UpdateEmployeeRequest' => __DIR__ . '/../..' . '/app/Http/Requests/Update/UpdateEmployeeRequest.php',
         'App\\Models\\Appointment' => __DIR__ . '/../..' . '/app/Models/Appointment.php',
         'App\\Models\\Clinic' => __DIR__ . '/../..' . '/app/Models/Clinic.php',
         'App\\Models\\Clinic_Doctor' => __DIR__ . '/../..' . '/app/Models/Clinic_Doctor.php',
@@ -678,6 +682,8 @@ class ComposerStaticInitb90ce3130f082fb52779a6b880e9a36a
         'App\\Services\\Doctor\\PrescriptionService' => __DIR__ . '/../..' . '/app/Services/Doctor/PrescriptionService.php',
         'App\\Services\\Doctor\\RatingService' => __DIR__ . '/../..' . '/app/Services/Doctor/RatingService.php',
         'App\\Services\\Doctor\\ReservationService' => __DIR__ . '/../..' . '/app/Services/Doctor/ReservationService.php',
+        'App\\Services\\Employee\\BookingService' => __DIR__ . '/../..' . '/app/Services/Employee/BookingService.php',
+        'App\\Services\\Employee\\ScheduleService' => __DIR__ . '/../..' . '/app/Services/Employee/ScheduleService.php',
         'App\\Services\\Patient\\AppointmentService' => __DIR__ . '/../..' . '/app/Services/Patient/AppointmentService.php',
         'App\\Services\\Patient\\ImageService' => __DIR__ . '/../..' . '/app/Services/Patient/ImageService.php',
         'App\\Services\\Patient\\PatientService' => __DIR__ . '/../..' . '/app/Services/Patient/PatientService.php',

@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Patient;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreAppointmentRequest;
+use App\Http\Requests\Store\StoreAppointmentRequest as StoreStoreAppointmentRequest;
+//use App\Http\Requests\StoreAppointmentRequest;
+use App\Http\Requests\Update\UpdateAppointmentRequest as UpdateUpdateAppointmentRequest;
 use App\Http\Requests\UpdateAppointmentRequest;
 use App\Models\Appointment;
 use App\Models\MedicalRecord;
@@ -25,7 +27,7 @@ class AppointmentController extends Controller
         return response()->json($this->appointmentService->getAll());
     }
 
-    public function store(StoreAppointmentRequest $request)
+    public function store(StoreStoreAppointmentRequest $request)
     {
         $data = $request->validated();
 
@@ -43,7 +45,7 @@ class AppointmentController extends Controller
         return response()->json($appointment);
     }
 
-    public function update(UpdateAppointmentRequest $request, Appointment $appointment)
+    public function update(UpdateUpdateAppointmentRequest $request, Appointment $appointment)
     {
         $data = array_filter($request->validated(), fn($value) => !is_null($value));
         // Saving old values from the null value...
@@ -66,7 +68,7 @@ class AppointmentController extends Controller
     }
     ////////////////////////////////////appointments management///////////////////////////////////////
 
-    public function takeAppointment(StoreAppointmentRequest $appointment){
+    public function takeAppointment(StoreStoreAppointmentRequest $appointment){
 
         $patient_id=$appointment->patient_id;
 

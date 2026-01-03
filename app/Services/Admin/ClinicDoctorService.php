@@ -3,41 +3,18 @@
 namespace App\Services\Admin;
 
 use App\Models\Clinic;
-use App\Models\Doctor;
-use App\Models\Clinic_Doctor;
 
-class ClinicDoctorService
+class ClinicService
 {
-    public function getAll()
+    public function get()
     {
-        return Clinic_Doctor::with(['clinic', 'doctor'])
-            ->latest()
-            ->get();
+        // نجيب أول سجل موجود
+        return Clinic::first();
     }
 
-    public function getClinics()
+    public function update(Clinic $clinic, array $data)
     {
-        return Clinic::all();
-    }
-
-    public function getDoctors()
-    {
-        return Doctor::all();
-    }
-
-    public function store(array $data)
-    {
-        return Clinic_Doctor::create($data);
-    }
-
-    public function update(Clinic_Doctor $clinicDoctor, array $data)
-    {
-        $clinicDoctor->update($data);
-        return $clinicDoctor;
-    }
-
-    public function delete(Clinic_Doctor $clinicDoctor)
-    {
-        return $clinicDoctor->delete();
+        $clinic->update($data);
+        return $clinic;
     }
 }

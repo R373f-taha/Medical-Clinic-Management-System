@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Doctor;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Update\UpdateMedicalRecordRequest as UpdateUpdateMedicalRecordRequest;
 //use App\Http\Requests\StoreMedicalRecordRequest;
 //use App\Http\Requests\Store\StoreMedicalRecordRequest;
 //use App\Http\Requests\StoreMedicalRecordRequest as RequestsStoreMedicalRecordRequest;
@@ -27,11 +28,12 @@ class MedicalRecordController extends Controller
     public function index()
     {
         $records = $this->medicalRecordService->getAll();
+        return view("doctor.patients.medical_records", compact("records"));
     }
 
-//     public function check(Request $request)
-//     {
-//         $patientId=$request->query("patient_id");
+    public function create()
+    {
+    }
 
 //         if(!$patientId){
 //             return response()->json(['error'=>'المويض مش موجود']);
@@ -55,32 +57,28 @@ class MedicalRecordController extends Controller
     public function store(\App\Http\Requests\Store\StoreMedicalRecordRequest $request)
     {
 
-    
+
         $data = $request->validated();
 
 
-        $medicalRecord=$this->medicalRecordService->store($data);
-
-
-          return response()->json([
-            'message' => 'تم إضافة السجل الطبي بنجاح',
-            'data' => $medicalRecord,
-          //  'patient_url' => route('patients.show', $medicalRecord->patient_id)
-        ], 201);
+        return redirect()->route('doctor.medical_records.index')
+            ->with('success', 'تم إضافة السجل الطبي بنجاح');
     }
 
     public function show(MedicalRecord $medicalRecord) {}
 
-    public function edit(MedicalRecord $medicalRecord) {}
+    public function edit(MedicalRecord $medicalRecord) {
+        return view('doctor.patients.update_medical_record', compact('medicalRecord'));
+    }
 
-    public function update(UpdateMedicalRecordRequest $request, MedicalRecord $medicalRecord)
+    public function update(UpdateUpdateMedicalRecordRequest $request, MedicalRecord $medicalRecord)
     {
         $data = array_filter($request->validated(), fn($value) => !is_null($value));
 
         $this->medicalRecordService->update($medicalRecord, $data);
 
         return redirect()
-            ->route('doctor.medical-records.index')
+            ->route('doctor.medical_records.index')
             ->with('success', 'تم تعديل السجل الطبي');
     }
 

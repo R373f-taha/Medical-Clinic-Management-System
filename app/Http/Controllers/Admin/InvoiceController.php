@@ -23,7 +23,6 @@ class InvoiceController extends Controller
     public function index()
     {
         $invoices = $this->invoiceService->getAll();
-        return view('admin.invoices.index', compact('invoices'));
     }
 
     public function create()
