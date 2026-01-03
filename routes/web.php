@@ -24,6 +24,9 @@ use App\Http\Controllers\Employee\ScheduleController;
 use App\Http\Controllers\Employee\BookingController;
 
 
+use App\Http\Controllers\Employee\EmployeeDashboardController;
+use App\Http\Controllers\Employee\EmployeeInvoiceController;
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -67,12 +70,13 @@ Route::prefix('doctor')->name('doctor.')->middleware(['auth','role:doctor'])->gr
     ]);
 });
 
-// Employee Resources (Schedules + Bookings)
 Route::prefix('employee')->name('employee.')->middleware(['auth','role:employee'])->group(function () {
     Route::resources([
         'schedules' => ScheduleController::class,
         'bookings'  => BookingController::class,
     ]);
+    Route::get('/dashboard', [EmployeeDashboardController::class, 'index'])->name('dashboard');
+    Route::resource('invoices', EmployeeInvoiceController::class); 
 });
 
 // Auth routes
