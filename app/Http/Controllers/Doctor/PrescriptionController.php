@@ -3,11 +3,12 @@
 namespace App\Http\Controllers\Doctor;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StorePrescriptionRequest;
-use App\Http\Requests\UpdatePrescriptionRequest;
+use App\Http\Requests\Store\StorePrescriptionRequest;
+use App\Http\Requests\Update\UpdatePrescriptionRequest;
 use App\Models\Prescription;
 use App\Services\Doctor\PrescriptionService;
 use Illuminate\Http\Request;
+use App\Models\MedicalRecord;
 
 class PrescriptionController extends Controller
 {
@@ -21,9 +22,13 @@ class PrescriptionController extends Controller
     public function index()
     {
         $prescriptions = $this->prescriptionService->getAll();
+        return view('Admin.prescriptions.index', compact('prescriptions'));
     }
 
-    public function create() {}
+    public function create() {
+        $medicalRecords = MedicalRecord::all();
+        return view('Admin.prescriptions.create', compact('medicalRecords'));
+    }
 
     public function store(StorePrescriptionRequest $request)
     {
@@ -31,13 +36,16 @@ class PrescriptionController extends Controller
 
         $this->prescriptionService->store($data);
 
-        return redirect()->route('doctor.prescriptions.index')
+        return redirect()->route('prescriptions.index')
             ->with('success', 'تم إضافة الوصفة بنجاح');
     }
 
     public function show(Prescription $prescription) {}
 
-    public function edit(Prescription $prescription) {}
+    public function edit(Prescription $prescription) {
+        $medicalRecords = MedicalRecord::all();
+        return view('Admin.prescriptions.edit', compact('prescription', 'medicalRecords'));
+    }
 
     public function update(UpdatePrescriptionRequest $request, Prescription $prescription)
     {
@@ -46,7 +54,7 @@ class PrescriptionController extends Controller
         $this->prescriptionService->update($prescription, $data);
 
         return redirect()
-            ->route('doctor.prescriptions.index')
+            ->route('prescriptions.index')
             ->with('success', 'تم تعديل الوصفة بنجاح');
     }
 
@@ -55,6 +63,6 @@ class PrescriptionController extends Controller
     {
         $this->prescriptionService->delete($prescription);
 
-        return back()->with('success', 'تم حذف الوصفة بنجاح');
+        return  redirect()->route('prescriptions.index')->with('success', 'تم حذف الوصفة بنجاح');
     }
 }

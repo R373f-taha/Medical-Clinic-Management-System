@@ -21,8 +21,7 @@ class AppointmentFactory extends Factory
             'notes' => fake()->optional()->sentence(),
             'appointment_date' => fake()->dateTimeBetween('now', '+1 month'),
             'status' => fake()->randomElement([
-                'pending',
-                'confirmed',
+                'scheduled',
                 'completed',
                 'cancelled'
             ]),

@@ -14,7 +14,7 @@ class ImageFactory extends Factory
     {
         return [
             'medical_record_id' => MedicalRecord::factory(),
-            'path' => $this->faker->imageUrl(640, 480, 'medical'),
+            'image' => $this->faker->imageUrl(640, 480, 'medical'),
             'type' => $this->faker->randomElement(['x-ray', 'ct-scan', 'mri']),
         ];
     }

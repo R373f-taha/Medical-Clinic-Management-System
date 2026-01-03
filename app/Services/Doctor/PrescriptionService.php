@@ -3,12 +3,13 @@
 namespace App\Services\Doctor;
 
 use App\Models\Prescription;
+use App\Models\MedicalRecord;
 
 class PrescriptionService
 {
     public function getAll()
     {
-        return Prescription::with('patient')
+        return Prescription::with('medical_record')
             ->latest()
             ->get();
     }
