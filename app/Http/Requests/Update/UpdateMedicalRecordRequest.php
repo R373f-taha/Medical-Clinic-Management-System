@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateMedicalRecordRequest extends FormRequest
 {
@@ -22,7 +23,11 @@ class UpdateMedicalRecordRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'patient_id'     => 'nullable|exists:patients,id',
+            'patient_id'   =>[
+                'nullable',
+                'exists:patients,id',
+               Rule::unique('medical_records', 'patient_id')->ignore($this->medical_record),
+        ],
             'doctor_id'      => 'nullable|exists:doctors,id',
             'notes'          => 'nullable|string',
             'diagnosis'      => 'nullable|string',

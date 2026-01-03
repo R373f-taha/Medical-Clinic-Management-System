@@ -3,11 +3,14 @@
 namespace App\Http\Controllers\Patient;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StorePatientRequest;
+use App\Http\Requests\Store\StorePatientRequest as StoreStorePatientRequest;
+use App\Http\Requests\StoreAppointmentRequest;
 use App\Http\Requests\UpdatePatientRequest;
 use App\Models\Patient;
 use App\Services\Patient\PatientService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Pest\Support\Str;
 
 class PatientController extends Controller
 {
@@ -24,17 +27,22 @@ class PatientController extends Controller
     }
     public function create()
     {
-        $patients = $this->patientService->getAll();
+       $patients = $this->patientService->getAll();
     }
 
-    public function store(StorePatientRequest $request)
+    public function store(StoreStorePatientRequest $request)
     {
         $data = $request->validated();
-        $patient = $this->patientService->store($data);
+
+        $patient = $this->patientService->store($data,);
+
         return response()->json([
+
             'message' => 'Patient was added',
-            'data' => $patient
-        ]);
+
+            'data' => $patient,
+
+        ],201);
     }
 
     public function show(Patient $patient)
@@ -53,9 +61,19 @@ class PatientController extends Controller
 
         $patient = $this->patientService->update($patient, $data);
 
+
         return response()->json([
+
             'message' => 'تم تحديث بيانات المريض',
             'data'    => $patient
         ]);
     }
-}
+
+    
+
+
+
+
+    }
+
+

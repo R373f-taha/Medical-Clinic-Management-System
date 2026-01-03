@@ -19,6 +19,7 @@ return new class extends Migration
             $table->float('weight')->nullable();
             $table->string('gender');
             $table->text('allergies')->nullable();
+           // $table->enum('status', ['out','in'])->default('out');
             $table->timestamps();
         });
     }

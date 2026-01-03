@@ -27,7 +27,7 @@ Route::get('/', function () {
 
 Route::get('/dashboard', function () {
     return view('dashboard');
-});//->middleware(['auth', 'verified'])->name('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
 
 
 Route::middleware('auth')->group(function () {
@@ -51,16 +51,22 @@ Route::prefix('admin')->name('admin.')->middleware(['auth','role:admin'])->group
 
 // Patient Resources
 // =========================================
-Route::prefix('patient')->name('patient.')->middleware(['auth','role:patient'])->group(function () {
-    Route::resources([
-        'profile'      => PatientController::class,
-        'appointments' => PatientAppointmentController::class,
-        'reservations' => ReservationController::class,
-        'ratings'      => RatingController::class,
-        'images'       => ImageController::class,
-    ]);
-});
+// Route::prefix('patient')->name('patient.')->middleware(['auth','role:patient'])->group(function () {
+//     Route::resources([
+//         'profile'      => PatientController::class,
+//         'appointments' => PatientAppointmentController::class,
+//         'reservations' => ReservationController::class,
+//         'ratings'      => RatingController::class,
+//         'images'       => ImageController::class,
+//     ]);
+// });
 
+//->middleware(['auth','role:patient'])
+
+// Route::prefix('patient')->name('patient.')->group(function () {
+//     Route::apiResource('patients', PatientController::class);
+//     Route::apiResource('prescriptions', PrescriptionController::class);
+// });-
 
 // Doctor Resources
 // =========================================
