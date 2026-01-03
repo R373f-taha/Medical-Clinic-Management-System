@@ -31,29 +31,33 @@ class MedicalRecordController extends Controller
         return view("doctor.patients.medical_records", compact("records"));
     }
 
+
     public function create()
     {
+        $patients = $this->medicalRecordService->create();
+        return view('doctor.patients.create_medical_record', compact('patients'));
     }
 
-//         if(!$patientId){
-//             return response()->json(['error'=>'المويض مش موجود']);
-//         }
-//          $patient=Patient::find($patientId);
 
-//         if($patient->expiresAt->diffInMinutes(now()) > 10){
+    //         if(!$patientId){
+    //             return response()->json(['error'=>'المويض مش موجود']);
+    //         }
+    //          $patient=Patient::find($patientId);
 
-//             $patient->delete();
-//             return response()->json(['error'=> 'انتهت المهلة. تم حذف المريض'],404);
+    //         if($patient->expiresAt->diffInMinutes(now()) > 10){
 
-//     }
-//     return  response()->json([
-//         'testing'=>'yes you can get a special medical record for you',
-//         'add_medical_record_url' => url('/api/store-medical-record?patient_id=' . $patient->id),
-//      //   'add_medical_record_url' => url('/api/medical-records/create?patient_id=' . $patient->id),
-//         'instructions' => 'أرسل POST request إلى الرابط أعلاه مع بيانات السجل الطبي'
-//     ],200);
+    //             $patient->delete();
+    //             return response()->json(['error'=> 'انتهت المهلة. تم حذف المريض'],404);
 
-// }
+    //     }
+    //     return  response()->json([
+    //         'testing'=>'yes you can get a special medical record for you',
+    //         'add_medical_record_url' => url('/api/store-medical-record?patient_id=' . $patient->id),
+    //      //   'add_medical_record_url' => url('/api/medical-records/create?patient_id=' . $patient->id),
+    //         'instructions' => 'أرسل POST request إلى الرابط أعلاه مع بيانات السجل الطبي'
+    //     ],200);
+
+    // }
     public function store(\App\Http\Requests\Store\StoreMedicalRecordRequest $request)
     {
 
@@ -67,7 +71,8 @@ class MedicalRecordController extends Controller
 
     public function show(MedicalRecord $medicalRecord) {}
 
-    public function edit(MedicalRecord $medicalRecord) {
+    public function edit(MedicalRecord $medicalRecord)
+    {
         return view('doctor.patients.update_medical_record', compact('medicalRecord'));
     }
 
