@@ -6,24 +6,15 @@ use App\Models\Clinic;
 
 class ClinicService
 {
-    public function getAll()
+    public function get()
     {
-        return Clinic::latest()->get();
+        // نجيب أول سجل موجود
+        return Clinic::first();
     }
 
-    public function store(array $data): Clinic
-    {
-        return Clinic::create($data);
-    }
-
-    public function update(Clinic $clinic, array $data): Clinic
+    public function update(Clinic $clinic, array $data)
     {
         $clinic->update($data);
         return $clinic;
-    }
-
-    public function delete(Clinic $clinic): bool
-    {
-        return $clinic->delete();
     }
 }

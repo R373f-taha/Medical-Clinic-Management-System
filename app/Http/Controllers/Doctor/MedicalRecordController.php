@@ -27,8 +27,6 @@ class MedicalRecordController extends Controller
 
     public function create()
     {
-        $patients = $this->medicalRecordService->create();
-        return view('doctor.patients.create_medical_record', compact('patients'));
     }
 
     public function store(StoreMedicalRecordRequest $request)
