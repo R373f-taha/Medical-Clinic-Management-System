@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\DoctorController;
 use App\Http\Controllers\Admin\EmployeeController;
 use App\Http\Controllers\Admin\InvoiceController;
 use App\Http\Controllers\Admin\NotificationController;
+use App\Http\Controllers\Admin\AppointmentMonitorController;
 
 use App\Http\Controllers\Patient\PatientController;
 use App\Http\Controllers\Patient\AppointmentController as PatientAppointmentController;
@@ -39,16 +40,48 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::prefix('admin')->name('admin.')->middleware(['auth','role:admin'])->group(function () {
-    Route::resources([
-        'clinics'        => ClinicController::class,
-        'clinic-doctors' => ClinicDoctorController::class,
-        'doctors'        => DoctorController::class,
-        'employees'      => EmployeeController::class,
-        'invoices'       => InvoiceController::class,
-        'notifications'  => NotificationController::class,
-    ]);
+// Route::prefix('admin')->name('admin.')->middleware(['auth','role:admin'])->group(function () {
+//     Route::resources([
+//         'clinics'        => ClinicController::class,
+//         'clinic-doctors' => ClinicDoctorController::class,
+//         'doctors'        => DoctorController::class,
+//         'employees'      => EmployeeController::class,
+//         'invoices'       => InvoiceController::class,
+//         'notifications'  => NotificationController::class,
+//     ]);
+// });
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::resource('employees', EmployeeController::class);
 });
+
+Route::prefix('admin') ->name('admin.') ->group(function () {
+
+        Route::get('AppointmentMonitor',
+        [AppointmentMonitorController::class, 'index'])->name('AppointmentMonitor.index');
+
+        Route::delete('AppointmentMonitor/{appointment}',
+[AppointmentMonitorController::class, 'destroy'] )->name('AppointmentMonitor.destroy');
+
+    });
+
+
+
+
+
+
+Route::prefix('admin')->name('admin.')->group(function () {
+    // عرض بيانات العيادة
+    Route::get('clinic', [ClinicController::class, 'index'])->name('clinic.index');
+
+    // تعديل بيانات العيادة
+    Route::get('clinic/{clinic}/edit', [ClinicController::class, 'edit'])->name('clinic.edit');
+
+    // حفظ التعديلات
+    Route::put('clinic/{clinic}', [ClinicController::class, 'update'])->name('clinic.update');
+});
+
+
+
 
 Route::prefix('patient')->name('patient.')->middleware(['auth','role:patient'])->group(function () {
     Route::resources([
