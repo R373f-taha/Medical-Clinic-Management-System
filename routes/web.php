@@ -20,15 +20,19 @@ use App\Http\Controllers\Doctor\MedicalRecordController;
 use App\Http\Controllers\Doctor\PrescriptionController;
 use App\Http\Controllers\Doctor\ReservationController as DoctorReservationController;
 use App\Http\Controllers\Doctor\RatingController as DoctorRatingController;
+use App\Http\Controllers\Doctor\DoctorDashboardController;
+use App\Http\Doctor\Controllers\PatientController as ControllersPatientController;
 
 Route::get('/', function () {
     return view('welcome');
 });
+// testing doctor dashboard...
+Route::get('doctor/dashboard', [DoctorDashboardController::class, 'index'])->name('doctor.dashboard');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
-});//->middleware(['auth', 'verified'])->name('dashboard');
-
+})->name('dashboard');
+//->middleware(['auth', 'verified'])
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -38,7 +42,7 @@ Route::middleware('auth')->group(function () {
 
 // Admin Resources
 // =========================================
-Route::prefix('admin')->name('admin.')->middleware(['auth','role:admin'])->group(function () {
+Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->group(function () {
     Route::resources([
         'clinics'        => ClinicController::class,
         'clinic-doctors' => ClinicDoctorController::class,
@@ -51,7 +55,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth','role:admin'])->group
 
 // Patient Resources
 // =========================================
-Route::prefix('patient')->name('patient.')->middleware(['auth','role:patient'])->group(function () {
+Route::prefix('patient')->name('patient.')->middleware(['auth', 'role:patient'])->group(function () {
     Route::resources([
         'profile'      => PatientController::class,
         'appointments' => PatientAppointmentController::class,
@@ -64,7 +68,7 @@ Route::prefix('patient')->name('patient.')->middleware(['auth','role:patient'])-
 
 // Doctor Resources
 // =========================================
-Route::prefix('doctor')->name('doctor.')->middleware(['auth','role:doctor'])->group(function () {
+Route::prefix('doctor')->name('doctor.')->middleware(['auth', 'role:doctor'])->group(function () {
     Route::resources([
         'medical-records'  => MedicalRecordController::class,
         'prescriptions'    => PrescriptionController::class,
@@ -72,5 +76,21 @@ Route::prefix('doctor')->name('doctor.')->middleware(['auth','role:doctor'])->gr
     ]);
 });
 
+// Temp Routes for testing doctor baldes...
+Route::get('doctor/patients', [App\Http\Controllers\Doctor\PatientController::class,'index'])->name('doctor.patients.index');
+Route::get('doctor/medical_records', [App\Http\Controllers\Doctor\MedicalRecordController::class,'index'])->name('doctor.medical_records.index');
+Route::get('doctor/create_medical_records', [App\Http\Controllers\Doctor\MedicalRecordController::class,'create'])->name('doctor.medical_records.create');
+Route::post('doctor/store_medical_records', [App\Http\Controllers\Doctor\MedicalRecordController::class,'store'])->name('doctor.medical_records.store');
+Route::get('doctor/{medicalRecord}/edit_medical_records', [App\Http\Controllers\Doctor\MedicalRecordController::class,'edit'])->name('doctor.medical_records.edit');
+Route::put('doctor/{medicalRecord}/update_medical_records', [App\Http\Controllers\Doctor\MedicalRecordController::class,'update'])->name('doctor.medical_records.update');
 
-require __DIR__.'/auth.php';
+Route::get('doctor/appointments', [App\Http\Controllers\Doctor\AppointmentController::class,'doctorAppointments'])->name('doctor.appointments.doctorAppointments');
+Route::get('doctor/today_appointments', [App\Http\Controllers\Doctor\AppointmentController::class,'today'])->name('doctor.appointments.today');
+Route::get('doctor/create_appointments', [App\Http\Controllers\Doctor\AppointmentController::class,'create'])->name('doctor.appointments.create');
+Route::post('doctor/store_appointments', [App\Http\Controllers\Doctor\AppointmentController::class,'store'])->name('doctor.appointments.store');
+Route::get('doctor/{appointment}/update_appointments', [App\Http\Controllers\Doctor\AppointmentController::class,'update'])->name('doctor.appointments.update');
+Route::put('doctor/{appointment}/edit_appointments', [App\Http\Controllers\Doctor\AppointmentController::class,'edit'])->name('doctor.appointments.edit');
+
+
+
+require __DIR__ . '/auth.php';
