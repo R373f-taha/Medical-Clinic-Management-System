@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Patient;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreRateRequest;
 use App\Http\Requests\UpdateRateRequest;
+use App\Models\Doctor;
 use App\Models\Rating;
 use App\Services\Patient\RatingService;
 use Illuminate\Http\Request;
@@ -23,15 +24,34 @@ class RatingController extends Controller
         return response()->json($this->ratingService->getAll());
     }
 
-    public function store(StoreRateRequest $request)
+    public function addRating(StoreRateRequest $request)
     {
         $data =  $request->validated();
 
         $rating = $this->ratingService->store($data);
 
+        $doctorId=$request->doctor_id;
+
+        $values=Rating::where("doctor_id",$doctorId)
+
+        ->selectRaw('COUNT(*) as total_ratings
+
+        SUM(rating) as sum_ratings ')
+
+        ->first();
+
+        $average=0;
+
+        if($values->total_ratings>0){
+        $average=$values->sum_ratings/$values->total_ratings;
+            }
+        Doctor::where('id',$doctorId)->update([
+            'current_rate'=>$average]);
+
         return response()->json([
-            'message' => 'تم إضافة التقييم',
-            'data' => $rating
+
+            'message' => 'your rating is added',
+
         ]);
     }
 

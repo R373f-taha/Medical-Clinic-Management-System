@@ -23,7 +23,7 @@ class ImageController extends Controller
         return response()->json($this->imageService->getAll());
     }
 
-    public function store(StoreImageRequest $request)
+    public function addImage(StoreImageRequest $request)
     {
         $data = $request->validated();
 

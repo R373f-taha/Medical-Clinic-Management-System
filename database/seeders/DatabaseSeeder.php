@@ -33,6 +33,8 @@ class DatabaseSeeder extends Seeder
             InvoiceSeeder::class,
             RatingSeeder::class,
             NotificationSeeder::class,
+           ClinicSePatientSeeder::class,
+
 
         ]);
 
