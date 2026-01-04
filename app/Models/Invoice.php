@@ -13,4 +13,7 @@ class Invoice extends Model
   public function appointment(){
     return $this->belongsTo(Appointment::class);
   }
+  public function patient() {
+    return $this->belongsTo(Patient::class);
+}
 }
