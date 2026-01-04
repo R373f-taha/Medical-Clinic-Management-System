@@ -13,8 +13,8 @@ class ImageFactory extends Factory
     public function definition(): array
     {
         return [
-            'medical_record_id' => MedicalRecord::factory(),
-            'image' => $this->faker->imageUrl(640, 480, 'medical'),
+            'medical_record_id' => MedicalRecord::inRandomOrder()->first()->id,
+            'image' => $this->faker->imageUrl(),
             'type' => $this->faker->randomElement(['x-ray', 'ct-scan', 'mri']),
         ];
     }
