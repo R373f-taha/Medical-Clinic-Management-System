@@ -35,7 +35,7 @@ class MedicalRecordService
     {
         return MedicalRecord::create([
             'patient_id'=> $data['patient_id'],
-            'doctor_id'=> Auth::user()->doctor->id,
+            'doctor_id'=> $data['doctor_id'],
             'notes'=> $data['notes'],
             'diagnosis'=> $data['diagnosis'],
             'treatment_plan'=> $data['treatment_plan'],
