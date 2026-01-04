@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Appointment;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateRateRequest extends FormRequest
@@ -14,6 +15,7 @@ class UpdateRateRequest extends FormRequest
         return true;
     }
 
+    
     /**
      * Get the validation rules that apply to the request.
      *
@@ -22,6 +24,7 @@ class UpdateRateRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'patient_id'  => 'nullable|exists:patients,id',
             'doctor_id' => 'nullable|exists:doctors,id',
             'rating'    => 'nullable|numeric|min:1|max:5',
             'notes'     => 'nullable|string',

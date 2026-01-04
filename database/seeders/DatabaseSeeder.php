@@ -6,6 +6,9 @@ use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
+
 class DatabaseSeeder extends Seeder
 {
     use WithoutModelEvents;
@@ -30,7 +33,18 @@ class DatabaseSeeder extends Seeder
             InvoiceSeeder::class,
             RatingSeeder::class,
             NotificationSeeder::class,
+           ClinicSePatientSeeder::class,
+
 
         ]);
+
+        // Create Employee Role"
+        $employeeRole = Role::create(['name' => 'employee']);
+
+        // Invoices and appointments Role
+        Permission::create(['name' => 'manage invoices']);
+        Permission::create(['name' => 'manage appointments']);
+
+        $employeeRole->givePermissionTo(['manage invoices', 'manage appointments']);
     }
 }

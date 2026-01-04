@@ -13,13 +13,16 @@ class MedicalRecordFactory extends Factory
 
     public function definition(): array
     {
+        $patients=Patient::all();
+        //foreach($patients as $patient){
         return [
             'doctor_id' => Doctor::inRandomOrder()->first()->id,
             'patient_id' => Patient::inRandomOrder()->first()->id,
+           // 'patient_id' => Patient::factory(), // ربط السجل بالمريض
             'notes' => $this->faker->optional()->paragraph(),
             'diagnosis' => $this->faker->optional()->sentence(),
             'treatment_plan' => $this->faker->optional()->paragraph(),
             'follow_up_date' => $this->faker->optional()->dateTimeBetween('now', '+2 months'),
-        ];
-    }
+        ];}
+   // }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Store;
 
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -24,7 +24,7 @@ class StoreAppointmentRequest extends FormRequest
         return [
             'patient_id'        => 'required|exists:patients,id',
             'doctor_id'         => 'required|exists:doctors,id',
-            'medical_record_id' => 'required|exists:medical_records,id|unique:appointments,medical_record_id',
+            'medical_record_id' => 'required|exists:medical_records,id',
             'appointment_date'  => 'required|date',
             'status'            => 'required|in:scheduled,completed,cancelled',
             'notes'             => 'nullable|string',

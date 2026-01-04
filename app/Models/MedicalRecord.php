@@ -11,15 +11,7 @@ class MedicalRecord extends Model
    
    use HasFactory;
    protected $table = 'medical_records';
-   protected $guarded=[];
-   protected $fillable = [
-      'doctor_id',
-      'patient_id',
-      'notes',
-      'diagnosis',
-      'treatment_plan',
-      'follow_up_date',
-  ];
+   protected $guarded=['patient_id'];
    public function doctor(){
     return $this->belongsTo(Doctor::class);
    }
@@ -35,6 +27,9 @@ class MedicalRecord extends Model
    public function prescriptions()
    {
        return $this->hasMany(Prescription::class);
+   }
+   public function prescriptions(){
+    return $this->hasMany(Prescription::class);
    }
 }
 
