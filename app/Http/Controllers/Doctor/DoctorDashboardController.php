@@ -17,26 +17,32 @@ class DoctorDashboardController extends Controller
         $user = Auth::user();
         $doctor = Doctor::where('user_id', $user->id)->firstOrFail();
 
-        $days = [];
         $week = $this->weekRating();
-        $stat =$this->statistics();
+        $stat = $this->statistics();
 
-        $todayNumber = date('N');
 
-        for ($i = 0; $i < 7; $i++) {
+        $days = [];
+        $today = Carbon::today();
 
-            $date = date(
-                'Y-m-d',
-                strtotime("+" . $i . " days")
-            );
-
-            $dayName = date(
-                'l',
-                strtotime("+" . $i . " days")
-            );
-
-            $days[] = $dayName;
+        for ($i = 0; $i <= 6; $i++) {
+            $days[] = $today->copy()->addDays($i)->format('l');
         }
+        // $todayNumber = date('N');
+
+        // for ($i = 0; $i < 7; $i++) {
+
+        //     $date = date(
+        //         'Y-m-d',
+        //         strtotime("+" . $i . " days")
+        //     );
+
+        //     $dayName = date(
+        //         'l',
+        //         strtotime("+" . $i . " days")
+        //     );
+
+        //     $days[] = $dayName;
+        // }
         // $stringWeek = implode(', ', $week);
         // $finalWeek = '[' . $stringWeek . ']';
         // $stringDays = implode(',', $days);
@@ -45,7 +51,7 @@ class DoctorDashboardController extends Controller
         $finalWeek = json_encode($week);
         $finalDays = json_encode($days);
         $finalStat = json_encode($stat);
-        return view('doctor.dashboard', compact('doctor', 'finalDays', 'finalWeek','finalStat'));
+        return view('doctor.dashboard', compact('doctor', 'finalDays', 'finalWeek', 'finalStat'));
     }
 
     public function weekRating()
@@ -63,17 +69,18 @@ class DoctorDashboardController extends Controller
             $avgRating = $ratings->count() > 0
                 ? $ratings->avg('rating')
                 : 0;
-            $week []= $avgRating;
+            $week[] = $avgRating;
         }
         return $week;
     }
 
-    public function statistics(){
+    public function statistics()
+    {
         $user = Auth::user();
         $doctor = Doctor::where('user_id', $user->id)->firstOrFail();
         $stat = [];
-        for($i=0;$i<5;$i++){
-            $stat []= Rating::where('doctor_id', $doctor->id)->where('rating',$i+1)->count('*');
+        for ($i = 0; $i < 5; $i++) {
+            $stat[] = Rating::where('doctor_id', $doctor->id)->where('rating', $i + 1)->count('*');
         }
         return $stat;
     }

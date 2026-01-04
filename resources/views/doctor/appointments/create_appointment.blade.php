@@ -15,6 +15,9 @@
         <form action="{{ route('doctor.appointments.store') }}" method="POST">
             @csrf
 
+            <!-- Doctor -->
+            <input type="hidden" name="doctor_id" value="{{ Auth::user()->doctor->id }}">
+
             <!-- Patient -->
             <div style="margin-bottom:15px;">
                 <label style="display:block; margin-bottom:6px;">Patient</label>

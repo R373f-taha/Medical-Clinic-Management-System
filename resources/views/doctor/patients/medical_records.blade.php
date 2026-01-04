@@ -21,6 +21,7 @@
                 <thead style="background-color:#e5e5e5;">
                     <tr>
                         <th style="padding:12px; text-align:left;">ID</th>
+                        <th style="padding:12px; text-align:left;">Patient</th>
                         <th style="padding:12px; text-align:left;">Diagnosis</th>
                         <th style="padding:12px; text-align:left;">Notes</th>
                         <th style="padding:12px; text-align:left;">Treatment Plan</th>
@@ -32,6 +33,10 @@
                     @forelse ($records as $record)
                         <tr style="border-bottom:1px solid #ddd;">
                             <td style="padding:10px;">{{ $record->id }}</td>
+
+                            <td style="padding:10px;">
+                                {{ $record->patient->user->name ?? 'N/A' }}
+                            </td>
 
                             <td style="padding:10px;">
                                 {{ $record->diagnosis ?? 'N/A' }}
