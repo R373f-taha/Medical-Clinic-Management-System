@@ -11,7 +11,7 @@ class MedicalRecord extends Model
    
    use HasFactory;
    protected $table = 'medical_records';
-   protected $guarded=['patient_id'];
+   protected $guarded=[];
    public function doctor(){
     return $this->belongsTo(Doctor::class);
    }

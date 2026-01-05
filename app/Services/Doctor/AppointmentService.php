@@ -26,11 +26,15 @@ class AppointmentService
     public function today()
     {
         return Appointment::with('patient')
-            ->whereDate('appointment_date', now()->toDateString())
-            ->orderBy('appointment_date', 'asc')
+            ->whereBetween('appointment_date', [
+                now()->startOfDay(),
+                now()->endOfDay()
+            ])
             ->where('doctor_id', Auth::user()->doctor->id)
+            ->orderBy('appointment_date', 'asc')
             ->get();
     }
+
     public function createAppointment()
     {
         $doctor = Auth::user()->doctor;
