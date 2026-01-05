@@ -20,7 +20,7 @@ class AppointmentFactory extends Factory
             'medical_record_id' => MedicalRecord::inRandomOrder()->first()->id,
             'notes' => fake()->optional()->sentence(),
             'appointment_date' => fake()->dateTimeBetween('now', '+1 month'),
-            'status' => $this->faker->randomElement([
+            'status' => fake()->randomElement([
                 'scheduled',
                 'completed',
                 'cancelled'

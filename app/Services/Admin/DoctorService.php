@@ -21,6 +21,7 @@ class DoctorService
 
     public function store(array $data)
     {
+        
         return Doctor::create($data);
     }
 
