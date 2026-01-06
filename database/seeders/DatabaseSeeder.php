@@ -2,30 +2,42 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 
 class DatabaseSeeder extends Seeder
 {
-    use WithoutModelEvents;
-
-    /**
-     * Seed the application's database.
-     */
     public function run(): void
     {
-        // User::factory(10)->create();
+        Permission::firstOrCreate([
+            'name' => 'manage invoices',
+            'guard_name' => 'web',
+        ]);
 
-    $this->call([
+        Permission::firstOrCreate([
+            'name' => 'manage appointments',
+            'guard_name' => 'web',
+        ]);
+
+        $employeeRole = Role::firstOrCreate([
+            'name' => 'employee',
+            'guard_name' => 'web',
+        ]);
+
+        $employeeRole->syncPermissions([
+            'manage invoices',
+            'manage appointments',
+        ]);
+
+        $this->call([
             ClinicSeeder::class,
             UserSeeder::class,
             DoctorSeeder::class,
             EmployeeSeeder::class,
-            ReservationSeeder::class,
             MedicalRecordSeeder::class,
             AppointmentSeeder::class,
             PrescriptionSeeder::class,
