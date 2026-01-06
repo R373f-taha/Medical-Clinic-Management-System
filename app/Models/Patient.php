@@ -22,9 +22,6 @@ class Patient extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function reservation(){
-        return $this->hasOne(Reservation::class);
-    }
     public function medicalRecord(){
         return $this->hasOne(MedicalRecord::class);
     }
