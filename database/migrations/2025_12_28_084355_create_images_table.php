@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('medical_record_id')->constrained('medical_records')->cascadeOnDelete();
             $table->string('image');// I have updated the name of this field from path to image
             $table->string('type');
+           // $table->string('path');
             $table->timestamps();
         });
     }

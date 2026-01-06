@@ -3,11 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreClinicRequest;
-use App\Http\Requests\UpdateClinicRequest;
 use App\Models\Clinic;
 use App\Services\Admin\ClinicService;
-use Illuminate\Http\Request;
+use App\Http\Requests\Update\UpdateClinicRequest;
 
 class ClinicController extends Controller
 {
@@ -18,44 +16,25 @@ class ClinicController extends Controller
         $this->clinicService = $clinicService;
     }
 
+    // عرض بيانات العيادة
     public function index()
     {
-        $clinics = $this->clinicService->getAll();
+        $clinic = $this->clinicService->get();
+        return view('admin.Clinic.index', compact('clinic'));
     }
 
-    public function create() {}
-
-    public function store(StoreClinicRequest $request)
+    // تعديل بيانات العيادة
+    public function edit(Clinic $clinic)
     {
-        $data = $request->validated();
-
-        $this->clinicService->store($data);
-
-        return redirect()
-            ->route('admin.clinics.index')
-            ->with('success', 'تم إضافة العيادة بنجاح');
+        return view('admin.Clinic.edit', compact('clinic'));
     }
 
-    public function show(Clinic $clinic) {}
-
-    public function edit(Clinic $clinic) {}
-
+    // حفظ التعديلات
     public function update(UpdateClinicRequest $request, Clinic $clinic)
     {
-        $data = array_filter($request->validated(), fn($value) => !is_null($value));
+        $this->clinicService->update($clinic, $request->validated());
 
-        $this->clinicService->update($clinic, $data);
-
-        return redirect()
-            ->route('admin.clinics.index')
-            ->with('success', 'تم تعديل العيادة بنجاح');
-    }
-    public function destroy(Clinic $clinic)
-    {
-        $this->clinicService->delete($clinic);
-
-        return redirect()
-            ->route('admin.clinics.index')
-            ->with('success', 'تم حذف العيادة بنجاح');
+        return redirect()->route('admin.clinic.index')
+                         ->with('success', 'تم تعديل بيانات العيادة بنجاح');
     }
 }

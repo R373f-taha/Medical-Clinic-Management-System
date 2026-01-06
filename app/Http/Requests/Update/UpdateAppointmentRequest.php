@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Update;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -23,13 +23,11 @@ class UpdateAppointmentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'patient_id'        => 'nullable|exists:patients,id',
+            'patient_id'   =>['nullable','exists:patients,id'],
             'doctor_id'         => 'nullable|exists:doctors,id',
             'medical_record_id' => [
                 'nullable',
                 'exists:medical_records,id',
-                Rule::unique('appointments', 'medical_record_id')
-                    ->ignore($this->route('appointments')), //ignore the current appointment
             ],
             'appointment_date'  => 'nullable|date',
             'status'            => 'nullable|in:scheduled,completed,cancelled',

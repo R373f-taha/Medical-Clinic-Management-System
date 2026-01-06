@@ -23,11 +23,11 @@ class UpdatePatientRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'user_id' => [
-                'nullable',
-                'exists:users,id',
-                Rule::unique('patient', 'user_id')->ignore($this->patient),
-            ],
+            // 'user_id' => [
+            //     'nullable',
+            //     'exists:users,id',
+            //     Rule::unique('patient', 'user_id')->ignore($this->patient),
+            // ],
             'blood_type' => 'nullable|string|max:5',
             'height'     => 'nullable|numeric',
             'weight'     => 'nullable|numeric',

@@ -4,9 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Prescription;
 
 class MedicalRecord extends Model
 {
+   
    use HasFactory;
    protected $table = 'medical_records';
    protected $guarded=[];
@@ -22,7 +24,12 @@ class MedicalRecord extends Model
    public function appointment(){
     return $this->hasOne(Appointment::class);
    }
-   public function perscriptions(){
-    return $this->hasMany(Appointment::class);
+   public function prescriptions()
+   {
+       return $this->hasMany(Prescription::class);
+   }
+   public function prescriptions(){
+    return $this->hasMany(Prescription::class);
    }
 }
+

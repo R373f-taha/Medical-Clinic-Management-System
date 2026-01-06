@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Store;
 
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -13,6 +13,12 @@ class StoreMedicalRecordRequest extends FormRequest
     {
         return true;
     }
+    //  public function prepareForValidation()
+    //  {
+    //     $this->merge([
+    //         'patient_id'=>$this->query('patient_id')
+    //     ]);
+    //  }
 
     /**
      * Get the validation rules that apply to the request.
