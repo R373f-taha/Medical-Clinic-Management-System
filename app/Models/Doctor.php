@@ -16,9 +16,6 @@ class Doctor extends Model
  public function medicaa_records(){
     return $this->hasMany(MedicalRecord::class);
  }
- public function appointments(){
-   return $this->hasMany(Appointment::class);
- }
  public function appointments()
     {
         return $this->hasMany(Appointment::class, 'doctor_id');

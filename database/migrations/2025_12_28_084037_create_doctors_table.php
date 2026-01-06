@@ -19,7 +19,6 @@ return new class extends Migration
             $table->string('qualifications');
             $table->integer('available_hours');
             $table->integer('experience_years')->nullable();
-            $table->decimal('current_rate', 2, 1)->default(0);
             /*
                 I added this field to store the doctor's most recent rating
                 after it has been calculated according to the rating algorithm...
