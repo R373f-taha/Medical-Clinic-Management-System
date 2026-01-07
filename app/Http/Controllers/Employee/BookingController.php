@@ -3,66 +3,76 @@
 namespace App\Http\Controllers\Employee;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Employee\UpdateBookingRequest;
 use App\Models\Appointment;
+use App\Models\Patient;
+use App\Models\Doctor;
 use App\Services\Employee\BookingService;
+use App\Http\Requests\Store\StoreBookingRequest;
+use App\Http\Requests\Update\UpdateBookingRequest;
+use Illuminate\Http\Request;
 
 class BookingController extends Controller
 {
-    protected $bookingService;
+    protected $service;
 
-    public function __construct(BookingService $bookingService)
+    public function __construct(BookingService $service)
     {
-        $this->bookingService = $bookingService;
+        $this->service = $service;
     }
 
-    /**
-     * عرض جميع الحجوزات
-     */
     public function index()
     {
-        return $this->bookingService->getAll();
+        $bookings = Appointment::with(['patient.user', 'doctor.user'])
+            ->orderBy('appointment_date')
+            ->get();
+
+        return view('Employee.Booking.index', compact('bookings'));
     }
 
-    /**
-     * تحديث الحجز
-     */
-    public function update(UpdateBookingRequest $request, Appointment $appointment)
+    public function create()
     {
-        $appointment = $this->bookingService->update(
-            $appointment,
-            $request->validated()
+        $patients = Patient::with('user')->get();
+        $doctors  = Doctor::with('user')->get();
+
+        return view('Employee.Booking.create', compact('patients', 'doctors'));
+    }
+
+    public function store(StoreBookingRequest $request)
+    {
+        $this->service->createBooking($request->validated());
+
+        return redirect()->route('employee.bookings.index')
+            ->with('success', 'Booking created successfully.');
+    }
+
+    public function edit($id)
+    {
+        $booking = Appointment::findOrFail($id);
+        return view('Employee.Booking.edit', compact('booking'));
+    }
+
+    public function update(UpdateBookingRequest $request, $id)
+    {
+        $this->service->updateBooking(
+            $id,
+            $request->appointment_date,
+            $request->reason,
+            $request->status
         );
 
-        return response()->json([
-            'message' => 'تم تحديث الحجز بنجاح',
-            'data'    => $appointment,
-        ]);
+        return redirect()->route('employee.bookings.index')
+            ->with('success', 'Booking updated successfully.');
     }
 
-    /**
-     * قبول الحجز
-     */
-    public function approve(Appointment $appointment)
+    public function approve($id)
     {
-        $appointment = $this->bookingService->approve($appointment);
-
-        return response()->json([
-            'message' => 'تم قبول الحجز',
-            'data'    => $appointment,
-        ]);
+        $this->service->approve($id);
+        return redirect()->back()->with('success', 'Booking approved.');
     }
 
-    /**
-     * رفض الحجز
-     */
-    public function reject(Appointment $appointment)
+    public function reject($id)
     {
-        $appointment = $this->bookingService->reject($appointment);
-
-        return response()->json([
-            'message' => 'تم رفض الحجز',
-            'data'    => $appointment,
-        ]);
+        $this->service->reject($id);
+        return redirect()->back()->with('success', 'Booking rejected.');
     }
 }
