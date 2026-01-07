@@ -14,7 +14,6 @@ use App\Http\Controllers\Admin\AppointmentMonitorController;
 use App\Http\Controllers\Doctor\DoctorDashboardController;
 use App\Http\Controllers\Patient\PatientController;
 use App\Http\Controllers\Patient\AppointmentController as PatientAppointmentController;
-use App\Http\Controllers\Patient\ReservationController;
 use App\Http\Controllers\Patient\RatingController;
 use App\Http\Controllers\Patient\ImageController;
 
@@ -23,6 +22,9 @@ use App\Http\Controllers\Doctor\PrescriptionController;
 
 use App\Http\Controllers\Employee\ScheduleController;
 use App\Http\Controllers\Employee\BookingController;
+
+
+
 
 
 use App\Http\Controllers\Employee\EmployeeDashboardController;
@@ -55,24 +57,20 @@ Route::middleware('auth')->group(function () {
 //         'notifications'  => NotificationController::class,
 //     ]);
 // });
+////////////////////////////////////////////////////////
+
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::resource('employees', EmployeeController::class);
 });
 
-Route::prefix('admin') ->name('admin.') ->group(function () {
+Route::prefix('admin')->name('admin.')->group(function () {
 
-        Route::get('AppointmentMonitor',
-        [AppointmentMonitorController::class, 'index'])->name('AppointmentMonitor.index');
+    Route::get('appointments', [AppointmentMonitorController::class, 'index'])
+        ->name('appointments.index');
 
-        Route::delete('AppointmentMonitor/{appointment}',
-[AppointmentMonitorController::class, 'destroy'] )->name('AppointmentMonitor.destroy');
-
-    });
-
-
-
-
-
+    Route::delete('appointments/{id}', [AppointmentMonitorController::class, 'destroy'])
+        ->name('appointments.destroy');
+});
 
 Route::prefix('admin')->name('admin.')->group(function () {
     // عرض بيانات العيادة
@@ -85,6 +83,33 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::put('clinic/{clinic}', [ClinicController::class, 'update'])->name('clinic.update');
 });
 
+///////////////////////////////////////////////
+
+
+
+Route::prefix('employee')->name('employee.')->group(function () {
+
+    Route::get('bookings', [BookingController::class, 'index'])
+        ->name('bookings.index');
+
+    Route::get('bookings/create', [BookingController::class, 'create'])
+        ->name('bookings.create');
+
+    Route::post('bookings', [BookingController::class, 'store'])
+        ->name('bookings.store');
+
+    Route::get('bookings/{id}/edit', [BookingController::class, 'edit'])
+        ->name('bookings.edit');
+
+    Route::put('bookings/{id}', [BookingController::class, 'update'])
+        ->name('bookings.update');
+
+    Route::post('bookings/{id}/approve', [BookingController::class, 'approve'])
+        ->name('bookings.approve');
+
+    Route::post('bookings/{id}/reject', [BookingController::class, 'reject'])
+        ->name('bookings.reject');
+});
 
 
 
@@ -92,7 +117,6 @@ Route::prefix('patient')->name('patient.')->middleware(['auth','role:patient'])-
     Route::resources([
         'profile'      => PatientController::class,
         'appointments' => PatientAppointmentController::class,
-        'reservations' => ReservationController::class,
         'ratings'      => RatingController::class,
         'images'       => ImageController::class,
     ]);
@@ -105,14 +129,12 @@ Route::prefix('doctor')->name('doctor.')->middleware(['auth','role:doctor'])->gr
     ]);
 });
 
-Route::prefix('employee')->name('employee.')->middleware(['auth','role:employee'])->group(function () {
-    Route::resources([
-        'schedules' => ScheduleController::class,
-        'bookings'  => BookingController::class,
-    ]);
-    Route::get('/dashboard', [EmployeeDashboardController::class, 'index'])->name('dashboard');
-    Route::resource('invoices', EmployeeInvoiceController::class); 
-});
+Route::prefix('employee')->name('employee.')
+->middleware(['auth','role:employee'])->group(function () {
+      Route::resource('invoices', EmployeeInvoiceController::class); });
+
+
+    // Route::get('/dashboard', [EmployeeDashboardController::class, 'index'])->name('dashboard');
 // Temp Routes for testing doctor baldes...
 Route::get('doctor/patients', [App\Http\Controllers\Doctor\PatientController::class,'index'])->name('doctor.patients.index');
 Route::get('doctor/medical_records', [App\Http\Controllers\Doctor\MedicalRecordController::class,'index'])->name('doctor.medical_records.index');

@@ -3,30 +3,28 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Appointment;
-use App\Services\Patient\AppointmentService;
+use App\Services\Admin\AppointmentMonitorService;
+use Illuminate\Http\Request;
 
 class AppointmentMonitorController extends Controller
 {
-    protected AppointmentService $appointmentService;
+    protected $service;
 
-    public function __construct(AppointmentService $appointmentService)
+    public function __construct(AppointmentMonitorService $service)
     {
-        $this->appointmentService = $appointmentService;
+        $this->service = $service;
     }
 
- public function index()
-{
-    $appointments = $this->appointmentService->getAll();
-
-return view('Admin.AppointmentMonitor.index', compact('appointments'));
-}
-
-
-    public function destroy(Appointment $appointment)
+    public function index()
     {
-        $this->appointmentService->delete($appointment);
+        $appointments = $this->service->getAllAppointments();
+        return view('Admin.AppointmentMonitor.index', compact('appointments'));
+    }
 
-        return redirect()->back()->with('success', 'Appointment deleted');
+    public function destroy($id)
+    {
+        $this->service->deleteAppointment($id);
+        return redirect()->route('admin.appointments.index')
+                         ->with('success', 'Appointment deleted successfully.');
     }
 }
