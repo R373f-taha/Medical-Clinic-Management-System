@@ -22,12 +22,12 @@ class PrescriptionController extends Controller
     public function index()
     {
         $prescriptions = $this->prescriptionService->getAll();
-        return view('Admin.prescriptions.index', compact('prescriptions'));
+        return view('doctor.prescriptions.index', compact('prescriptions'));
     }
 
     public function create() {
         $medicalRecords = MedicalRecord::all();
-        return view('Admin.prescriptions.create', compact('medicalRecords'));
+        return view('doctor.prescriptions.create', compact('medicalRecords'));
     }
 
     public function store(StorePrescriptionRequest $request)
@@ -44,7 +44,7 @@ class PrescriptionController extends Controller
 
     public function edit(Prescription $prescription) {
         $medicalRecords = MedicalRecord::all();
-        return view('Admin.prescriptions.edit', compact('prescription', 'medicalRecords'));
+        return view('doctor.prescriptions.edit', compact('prescription', 'medicalRecords'));
     }
 
     public function update(UpdatePrescriptionRequest $request, Prescription $prescription)

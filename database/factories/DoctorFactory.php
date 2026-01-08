@@ -21,7 +21,7 @@ class DoctorFactory extends Factory
             'qualifications' => 'Master of Medicine and Surgery (MBBS)',
             'available_hours' => fake()->numberBetween(4, 12),
             'experience_years' => fake()->numberBetween(1, 30),
-            'Current_rate' => fake()->numberBetween(1, 5),
+            
         ];
     }
 }

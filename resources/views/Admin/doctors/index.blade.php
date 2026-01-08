@@ -24,11 +24,11 @@
             <table style="width:100%; border-collapse:collapse; text-align:center;">
                 <thead style="background-color:#e5e5e5;">
                     <tr>
+                        <th style="padding:12px;">doctor name</th>
                         <th style="padding:12px;">Specialization</th>
                         <th style="padding:12px;">Qualifications</th>
                         <th style="padding:12px;">Available Hours</th>
                         <th style="padding:12px;">Experience</th>
-                        <th style="padding:12px;">Rate</th>
                         <th style="padding:12px;">Actions</th>
                     </tr>
                 </thead>
@@ -36,6 +36,10 @@
                 <tbody>
                     @foreach ($doctors as $doctor)
                         <tr style="border-bottom:1px solid #ddd;">
+                            <td style="padding:10px;">
+                              {{ $doctor->user->name }}
+                            </td>
+
                             <td style="padding:10px;">
                                 {{ $doctor->specialization }}
                             </td>
@@ -52,9 +56,6 @@
                                 {{ $doctor->experience_years ?? '-' }}
                             </td>
 
-                            <td style="padding:10px;">
-                                {{ $doctor->current_rate }}
-                            </td>
 
                             <td style="padding:10px;">
                                 <a href="{{ route('doctors.edit', $doctor->id) }}"
