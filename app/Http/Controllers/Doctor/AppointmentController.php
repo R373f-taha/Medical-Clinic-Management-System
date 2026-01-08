@@ -29,9 +29,16 @@ class AppointmentController extends Controller
     }
     public function store(StoreAppointmentRequest $request)
     {
-        $data = $request->validated();
-        $this->appointmentServices->store($data);
-        return redirect()->route("doctor.appointments.doctorAppointments")->with("success", "Appointment Created..!");
+        try {
+            $data = $request->validated();
+            $this->appointmentServices->store($data);
+            return redirect()->route("doctor.appointments.doctorAppointments")->with("success", "Appointment Created..!");
+        } catch (\DomainException $e) {
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with('delete', $e->getMessage());
+        }
     }
     public function doctorAppointments()
     {
@@ -44,9 +51,16 @@ class AppointmentController extends Controller
     }
     public function edit(Appointment $appointment, UpdateAppointmentRequest $request)
     {
-        $data = array_filter($request->validated(), fn($value) => !is_null($value));
-        $this->appointmentServices->update($appointment, $data);
-        return redirect()->route("doctor.appointments.doctorAppointments")->with("success","Appointment Updated..!");
+        try {
+            $data = array_filter($request->validated(), fn($value) => !is_null($value));
+            $this->appointmentServices->update($appointment, $data);
+            return redirect()->route("doctor.appointments.doctorAppointments")->with("success", "Appointment Updated..!");
+        } catch (\DomainException $e) {
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with('delete', $e->getMessage());
+        }
     }
     public function today()
     {

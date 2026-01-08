@@ -5,8 +5,10 @@ namespace App\Services\Doctor;
 use App\Models\Appointment;
 use App\Models\MedicalRecord;
 use App\Models\Patient;
+use Carbon\Carbon;
 use DateTime;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class AppointmentService
 {
@@ -50,57 +52,109 @@ class AppointmentService
     }
     public function store(array $data)
     {
-        $doctor_id = Auth::user()->doctor->id;
-        $medicalRecord_id = MedicalRecord::where('patient_id', $data['patient_id'])->first()->id;
-        $newAppointmentTime = new DateTime($data['appointment_date']);
+        try {
+            DB::beginTransaction();
 
-        $lastAppointment = Appointment::where('doctor_id', $doctor_id)
-            ->where('status', 'scheduled')
-            ->orderBy('appointment_date', 'desc')
-            ->first();
+            $doctorId  = Auth::user()->doctor->id;
+            $patientId = $data['patient_id'];
+            $appointmentTime = Carbon::parse($data['appointment_date']);
+            $from = $appointmentTime->copy()->subMinutes(30);
+            $to   = $appointmentTime->copy()->addMinutes(30);
 
-        if ($lastAppointment) {
-            $lastTime = new DateTime($lastAppointment->appointment_date);
-            $diffInMinutes = ($newAppointmentTime->getTimestamp() - $lastTime->getTimestamp()) / 60;
-            if ($diffInMinutes < 30) {
-                $newAppointmentTime = (clone $lastTime)->modify('+30 minutes');
+            $patientConflict = Appointment::where('patient_id', $patientId)
+                ->where('status', 'scheduled')
+                ->whereBetween('appointment_date', [$from, $to])
+                ->lockForUpdate()
+                ->exists();
+
+            if ($patientConflict) {
+                throw new \DomainException(
+                    'This patient has an appointment with another doctor in this time'
+                );
             }
-        }
 
-        return Appointment::create([
-            'patient_id'        => $data['patient_id'],
-            'doctor_id'         => $doctor_id,
-            'medical_record_id' => $medicalRecord_id,
-            'appointment_date'  => $newAppointmentTime->format('Y-m-d H:i:s'),
-            'status'            => $data['status'],
-            'notes'             => $data['notes'] ?? null,
-            'reason'            => $data['reason'] ?? null,
-        ]);
+            $doctorConflict = Appointment::where('doctor_id', $doctorId)
+                ->where('status', 'scheduled')
+                ->whereBetween('appointment_date', [$from, $to])
+                ->lockForUpdate()
+                ->exists();
+
+            if ($doctorConflict) {
+                throw new \DomainException(
+                    'This doctor has an appointment with another patient in this time'
+                );
+            }
+
+            $appointment = Appointment::create([
+                'doctor_id'         => $doctorId,
+                'patient_id'        => $patientId,
+                'appointment_date'  => $appointmentTime->format('Y-m-d H:i:s'),
+                'medical_record_id' => $data['medical_record_id'] ?? null,
+                'status'            => 'scheduled',
+                'notes'             => $data['notes'] ?? null,
+                'reason'            => $data['reason'] ?? null,
+            ]);
+
+            DB::commit();
+            return $appointment;
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            throw $e;
+        }
     }
+
+
     public function update(Appointment $appointment, array $data)
     {
-        $doctor_id = Auth::user()->doctor->id;
-        $newAppointmentTime = new DateTime($data['appointment_date']);
+        try {
+            DB::beginTransaction();
 
-        $lastAppointment = Appointment::where('doctor_id', $doctor_id)
-            ->where('status', 'scheduled')
-            ->orderBy('appointment_date', 'desc')
-            ->first();
+            $doctorId  = Auth::user()->doctor->id;
+            $patientId = $appointment->patient_id;
+            $appointmentTime = Carbon::parse($data['appointment_date']);
 
-        if ($lastAppointment) {
-            $lastTime = new DateTime($lastAppointment->appointment_date);
-            $diffInMinutes = ($newAppointmentTime->getTimestamp() - $lastTime->getTimestamp()) / 60;
-            if ($diffInMinutes < 30) {
-                $newAppointmentTime = (clone $lastTime)->modify('+30 minutes');
+            $from = $appointmentTime->copy()->subMinutes(30);
+            $to   = $appointmentTime->copy()->addMinutes(30);
+
+            $patientConflict = Appointment::where('patient_id', $patientId)
+                ->where('status', 'scheduled')
+                ->where('id', '!=', $appointment->id)
+                ->whereBetween('appointment_date', [$from, $to])
+                ->lockForUpdate()
+                ->exists();
+
+            if ($patientConflict) {
+                throw new \DomainException(
+                    'This patient has another appointment in this time'
+                );
             }
+
+            $doctorConflict = Appointment::where('doctor_id', $doctorId)
+                ->where('status', 'scheduled')
+                ->where('id', '!=', $appointment->id)
+                ->whereBetween('appointment_date', [$from, $to])
+                ->lockForUpdate()
+                ->exists();
+
+            if ($doctorConflict) {
+                throw new \DomainException(
+                    'This doctor has another appointment in this time'
+                );
+            }
+
+            $appointment->update([
+                'appointment_date' => $appointmentTime->format('Y-m-d H:i:s'),
+                'status'           => $data['status'],
+                'notes'            => $data['notes'] ?? null,
+                'reason'           => $data['reason'] ?? null,
+            ]);
+
+            DB::commit();
+            return $appointment;
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            throw $e;
         }
-        $appointment->update([
-            'appointment_date'  => $newAppointmentTime->format('Y-m-d H:i:s'),
-            'status'            => $data['status'],
-            'notes'             => $data['notes'] ?? null,
-            'reason'            => $data['reason'] ?? null,
-        ]);
-        return $appointment;
     }
 
     public function delete(Appointment $appointment)

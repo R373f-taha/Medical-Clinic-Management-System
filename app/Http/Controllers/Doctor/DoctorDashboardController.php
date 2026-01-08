@@ -51,7 +51,7 @@ class DoctorDashboardController extends Controller
         $finalWeek = json_encode($week);
         $finalDays = json_encode($days);
         $finalStat = json_encode($stat);
-        return view('doctor.dashboard', compact('doctor', 'finalDays', 'finalWeek', 'finalStat'));
+        return view('dashboard', compact('doctor', 'finalDays', 'finalWeek', 'finalStat'));
     }
 
     public function weekRating()
