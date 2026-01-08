@@ -29,17 +29,19 @@ use App\Http\Controllers\Employee\BookingController;
 
 use App\Http\Controllers\Employee\EmployeeDashboardController;
 use App\Http\Controllers\Employee\EmployeeInvoiceController;
-
+use Illuminate\Support\Facades\Auth;
 
 Route::get('/', function () {
     return view('welcome');
 });
 // testing doctor dashboard...
-Route::get('doctor/dashboard', [DoctorDashboardController::class, 'index'])->name('doctor.dashboard');
+Route::get('Ddashboard', [DoctorDashboardController::class, 'index'])->name('doctor.dashboard');
 
 Route::get('/dashboard', function () {
+    if(Auth::user()->doctor)
+        return redirect() -> route('doctor.dashboard');
     return view('dashboard');
-});//->middleware(['auth', 'verified'])->name('dashboard');
+})->name('dashboard');//->middleware(['auth', 'verified'])
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
