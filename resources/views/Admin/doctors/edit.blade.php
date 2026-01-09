@@ -22,7 +22,7 @@
 
           
                 <div style="margin-bottom:15px;">
-                    <label style="font-weight:600;">User</label>
+                    <label style="font-weight:600;">doctor name</label>
                     <select name="user_id"
                             style="width:100%; padding:10px; border-radius:6px;
                                    border:1px solid #ccc;" required>
@@ -71,17 +71,7 @@
                                   border:1px solid #ccc;" required>
                 </div>
 
-             
-                <div style="margin-bottom:20px;">
-                    <label style="font-weight:600;">Rating</label>
-                    <input type="number" step="0.1" min="0" max="5"
-                           name="rate"
-                           value="{{ old('current_rate', $doctor->current_rate) }}"
-                           style="width:100%; padding:10px; border-radius:6px;
-                                  border:1px solid #ccc;" required>
-                </div>
-
-
+        
                 <div style="display:flex; gap:10px;">
                     <button type="submit"
                             style="background-color:#ff7a00; color:#fff;
