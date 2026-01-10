@@ -13,11 +13,15 @@ class ReservationFactory extends Factory
 
     public function definition(): array
     {
-        return [
-            'patient_id' => Patient::inRandomOrder()->first()->id,
-            'employee_id' => Employee::inRandomOrder()->first()->id,
-            'date' => $this->faker->date(),
-            'time' => $this->faker->time('H:i'),
-        ];
+$patient = Patient::inRandomOrder()->first();
+$employee = Employee::inRandomOrder()->first();
+
+return [
+    'patient_id' => $patient ? $patient->id : null,
+    'employee_id' => $employee ? $employee->id : null,
+    'date' => $this->faker->date(),
+    'time' => $this->faker->time('H:i'),
+];
+
     }
 }

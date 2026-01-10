@@ -12,6 +12,9 @@ class MedicalRecord extends Model
    use HasFactory;
    protected $table = 'medical_records';
    protected $guarded=[];
+    protected $dates = ['follow_up_date'];
+
+
    public function doctor(){
     return $this->belongsTo(Doctor::class);
    }
@@ -28,8 +31,7 @@ class MedicalRecord extends Model
    {
        return $this->hasMany(Prescription::class);
    }
-   public function prescriptions(){
-    return $this->hasMany(Prescription::class);
-   }
+
+
 }
 

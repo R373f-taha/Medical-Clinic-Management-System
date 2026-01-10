@@ -27,17 +27,20 @@
                         @csrf
                         
                         <div class="row">
+                            {{-- اختيار المريض --}}
                             <div class="col-md-6 mb-4">
                                 <label class="form-label fw-bold">Patient <span class="text-danger">*</span></label>
                                 <select name="patient_id" class="form-select @error('patient_id') is-invalid @enderror" required>
                                     <option value="" disabled selected>Select a patient</option>
                                     @foreach($patients as $patient)
-                                        <option value="{{ $patient->id }}">{{ $patient->name }}</option>
+                                        {{-- هنا نستخدم العلاقة مع User --}}
+                                        <option value="{{ $patient->id }}">{{ $patient->user->name }}</option>
                                     @endforeach
                                 </select>
                                 @error('patient_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
 
+                            {{-- اختيار الموعد --}}
                             <div class="col-md-6 mb-4">
                                 <label class="form-label fw-bold">Related Appointment <span class="text-danger">*</span></label>
                                 <select name="appointment_id" class="form-select @error('appointment_id') is-invalid @enderror" required>
@@ -49,6 +52,7 @@
                                 @error('appointment_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
 
+                            {{-- باقي الحقول --}}
                             <div class="col-md-4 mb-4">
                                 <label class="form-label fw-bold">Total Amount</label>
                                 <div class="input-group">

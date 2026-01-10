@@ -11,6 +11,9 @@ use App\Http\Controllers\Admin\EmployeeController;
 use App\Http\Controllers\Admin\InvoiceController;
 use App\Http\Controllers\Admin\NotificationController;
 use App\Http\Controllers\Admin\AppointmentMonitorController;
+use App\Http\Controllers\Admin\AdminMedicalRecordController;
+
+
 use App\Http\Controllers\Doctor\DoctorDashboardController;
 use App\Http\Controllers\Patient\PatientController;
 use App\Http\Controllers\Patient\AppointmentController as PatientAppointmentController;
@@ -55,8 +58,13 @@ Route::middleware('auth')->group(function () {
 //         'notifications'  => NotificationController::class,
 //     ]);
 // });
+
+
+//admin routes
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::resource('employees', EmployeeController::class);
+    Route::resource('medical-records', AdminMedicalRecordController::class);
+
 });
 
 Route::prefix('admin') ->name('admin.') ->group(function () {
@@ -105,7 +113,8 @@ Route::prefix('doctor')->name('doctor.')->middleware(['auth','role:doctor'])->gr
     ]);
 });
 
-Route::prefix('employee')->name('employee.')->middleware(['auth','role:employee'])->group(function () {
+/////employee routes
+Route::prefix('employee')->name('employee.')->group(function () {
     Route::resources([
         'schedules' => ScheduleController::class,
         'bookings'  => BookingController::class,

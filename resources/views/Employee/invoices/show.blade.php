@@ -7,8 +7,7 @@
             <div class="col-sm-6">
                 <h3 class="text-primary">Clinic Logo</h3>
                 <div>Address: Health Street, City</div>
-                <div>Phone: +123 456 789</div>
-            </div>
+                </div>
             <div class="col-sm-6 text-end">
                 <h2 class="fw-bold">Medical Invoice</h2>
                 <div>Reference #: #{{ $invoice->id }}</div>
@@ -21,8 +20,7 @@
         <div class="row mb-4">
             <div class="col-sm-6">
                 <h6 class="mb-3 text-muted">To Patient:</h6>
-                <div><strong>{{ $invoice->patient->name }}</strong></div>
-                <div>Phone: {{ $invoice->patient->phone ?? '---' }}</div>
+                <div><strong>{{ $invoice->patient->user->name}}</strong></div>
             </div>
         </div>
 

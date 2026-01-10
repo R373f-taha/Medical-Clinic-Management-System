@@ -3,26 +3,28 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use App\Models\Patient;
+use App\Models\User;
 
-/**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Patient>
- */
 class PatientFactory extends Factory
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
+    protected $model = Patient::class;
+
     public function definition(): array
     {
+        $user = User::inRandomOrder()->first();
+
+        if (!$user) {
+            $user = \App\Models\User::factory()->create();
+        }
+
         return [
-            'user_id' => \App\Models\User::factory(), // ينشئ مستخدم جديد تلقائياً
-            'blood_type' => fake()->randomElement(['A+', 'O-', 'B+']),
-            'height' => fake()->randomFloat(2, 150, 200),
-            'weight' => fake()->randomFloat(2, 50, 120),
-            'gender' => fake()->randomElement(['Male', 'Female']),
-            'allergies' => fake()->sentence(),
+            'user_id' => $user->id,
+            'blood_type' => $this->faker->randomElement(['A+', 'B+', 'O+', 'AB+']),
+            'height' => $this->faker->numberBetween(150, 200),
+            'weight' => $this->faker->numberBetween(50, 100),
+            'gender' => $this->faker->randomElement(['male','female']),
+            'allergies' => $this->faker->sentence(),
         ];
     }
 }

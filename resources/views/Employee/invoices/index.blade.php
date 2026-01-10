@@ -27,7 +27,7 @@
                     @foreach($invoices as $invoice)
                     <tr>
                         <td>#{{ $invoice->id }}</td>
-                        <td>{{ $invoice->patient->name }}</td>
+                        <td>{{ $invoice->patient->user->name }}</td>
                         <td>{{ $invoice->total_amount }}</td>
                         <td>
                             <span class="badge {{ $invoice->status == 'paid' ? 'bg-success' : 'bg-danger' }}">

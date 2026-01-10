@@ -16,9 +16,9 @@ class MedicalRecordFactory extends Factory
         $patients=Patient::all();
         //foreach($patients as $patient){
         return [
-            'doctor_id' => Doctor::inRandomOrder()->first()->id,
-            'patient_id' => Patient::inRandomOrder()->first()->id,
-           // 'patient_id' => Patient::factory(), // ربط السجل بالمريض
+        'patient_id' => Patient::inRandomOrder()->first()->id,
+        'doctor_id' => Doctor::inRandomOrder()->first()->id, 
+           // 'patient_id' => Patient::factory(),
             'notes' => $this->faker->optional()->paragraph(),
             'diagnosis' => $this->faker->optional()->sentence(),
             'treatment_plan' => $this->faker->optional()->paragraph(),

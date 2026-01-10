@@ -17,7 +17,7 @@ class InvoiceFactory extends Factory
         $patient = $appointment->patient;
 
         return [
-            'patient_id' => $patient->id,
+            'patient_id' => Patient::inRandomOrder()->first()->id,
             'appointment_id' => $appointment->id,
             'tax' => $this->faker->numberBetween(0, 50),
             'discount' => $this->faker->numberBetween(0, 30),

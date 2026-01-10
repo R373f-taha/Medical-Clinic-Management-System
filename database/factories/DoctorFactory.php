@@ -3,25 +3,28 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use App\Models\User;    // ← هذا المطلوب
 use App\Models\Doctor;
+use App\Models\User;
 
-/**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Doctor>
- */
 class DoctorFactory extends Factory
 {
     protected $model = Doctor::class;
 
     public function definition(): array
     {
+        $user = User::inRandomOrder()->first();
+
+        if (!$user) {
+            $user = \App\Models\User::factory()->create();
+        }
+
         return [
-            'user_id' => User::factory(), 
-            'specialization' => fake()->randomElement(['Cardiology', 'Neurology', 'Pediatrics', 'Dermatology', 'General Surgery']),
+            'user_id' => $user->id,
+            'specialization' => $this->faker->randomElement(['Cardiology','Pediatrics','Dermatology','Neurology','General Surgery']),
             'qualifications' => 'Master of Medicine and Surgery (MBBS)',
-            'available_hours' => fake()->numberBetween(4, 12),
-            'experience_years' => fake()->numberBetween(1, 30),
-            'Current_rate' => fake()->numberBetween(1, 5),
+            'available_hours' => $this->faker->numberBetween(4,12),
+            'experience_years' => $this->faker->numberBetween(1,30),
+            'current_rate' => $this->faker->randomFloat(1,1,5),
         ];
     }
 }
