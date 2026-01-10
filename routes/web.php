@@ -111,10 +111,19 @@ Route::prefix('employee')->name('employee.')->group(function () {
 
     Route::post('bookings/{id}/reject', [BookingController::class, 'reject'])
         ->name('bookings.reject');
+
+    Route::delete('bookings/{id}', [BookingController::class, 'destroy'])
+        ->name('bookings.destroy');
+
+    Route::post('bookings/{id}/complete', [BookingController::class, 'complete'])
+        ->name('bookings.complete');
 });
 
 
 
+Route::get('employee/schedule', [ScheduleController::class, 'index'])
+    ->name('employee.schedule');
+    
 Route::prefix('patient')->name('patient.')->middleware(['auth','role:patient'])->group(function () {
     Route::resources([
         'profile'      => PatientController::class,

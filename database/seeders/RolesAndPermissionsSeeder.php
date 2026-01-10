@@ -42,6 +42,8 @@ class RolesAndPermissionsSeeder extends Seeder
         Permission::create(['name'=> 'api:view own prescriptions']);
         Permission::create(['name'=> 'api:view own medical record']);
         Permission::create(['name'=> 'api:create rating']);
+        Permission::create(['name'=> 'view rating']);
+
 
           //Permission::create(['name'=> 'view own mwedical record']);
 

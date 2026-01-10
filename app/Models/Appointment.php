@@ -5,12 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Carbon\Carbon;
+use Spatie\Permission\Traits\HasRoles;
 
 class Appointment extends Model
 {
     use HasFactory;
-
-    protected $table = 'appointments';
+    use HasRoles;
 
     protected $fillable = [
         'patient_id',
@@ -27,7 +27,6 @@ class Appointment extends Model
         'appointment_date' => 'datetime',
         'hold_expires_at'  => 'datetime',
     ];
-
 
     public function patient()
     {
@@ -49,9 +48,10 @@ class Appointment extends Model
         return $this->hasOne(Invoice::class);
     }
 
-
     public function isOnHold(): bool
     {
-        return $this->status === 'hold'&& $this->hold_expires_at&& Carbon::now()->lt($this->hold_expires_at);
+        return $this->status === 'hold'
+            && $this->hold_expires_at
+            && Carbon::now()->lt($this->hold_expires_at);
     }
 }
