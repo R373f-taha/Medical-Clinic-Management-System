@@ -10,9 +10,7 @@ class Appointment extends Model
    use HasFactory;
    protected $table = 'appointments';
    protected $guarded=[];
-   public function medicalRecord()   {
-    return $this->belongsTo(MedicalRecord::class);
-   }
+
    public function invoice(){
     return $this->hasOne(Invoice::class);
    }

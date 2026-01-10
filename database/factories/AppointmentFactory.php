@@ -17,7 +17,7 @@ class AppointmentFactory extends Factory
         return [
             'patient_id' => Patient::inRandomOrder()->first()->id,
             'doctor_id' => Doctor::inRandomOrder()->first()->id,
-            'medical_record_id' => MedicalRecord::inRandomOrder()->first()->id,
+           // 'medical_record_id' => MedicalRecord::inRandomOrder()->first()->id,
             'notes' => fake()->optional()->sentence(),
             'appointment_date' => fake()->dateTimeBetween('now', '+1 month'),
 

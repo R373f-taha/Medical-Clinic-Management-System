@@ -31,12 +31,17 @@ class StorePatientRequest extends FormRequest
     public function rules(): array
     {
         return [
-            // 'user_id'    => 'required|exists:users,id|unique:patients,user_id',
-            'blood_type' => 'required|string|max:5',
-            'height'     => 'required|numeric',
-            'weight'     => 'required|numeric',
-            'gender'     => 'required|string|in:male,female',
-            'allergies'  => 'required|string',
+            // بيانات User
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|confirmed',
+
+            // بيانات Patient
+            'blood_type' => 'required',//|in:A+,A-,B+,B-,O+,O-,AB+,AB-',
+            'height' => 'nullable|numeric|min:50|max:250',
+            'weight' => 'nullable|numeric|min:10|max:300',
+            'gender' => 'required|in:male,female',
+            'allergies' => 'nullable|string|max:500'
         ];
     }
 }

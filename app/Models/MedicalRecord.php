@@ -19,9 +19,6 @@ class MedicalRecord extends Model
    public function images(){
     return $this->hasMany(Image::class);
    }
-   public function appointment(){
-    return $this->hasMany(Appointment::class);
-   }
    public function prescriptions(){
     return $this->hasMany(Prescription::class);
    }

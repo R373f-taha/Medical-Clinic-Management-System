@@ -22,10 +22,10 @@ class StoreAppointmentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'patient_id'        => 'required|exists:patients,id',
+            //'patient_id'        => 'required|exists:patients,id',
             'doctor_id'         => 'required|exists:doctors,id',
-            'medical_record_id' => 'required|exists:medical_records,id',
-            'appointment_date'  => 'required|date',
+            //'medical_record_id' => 'required|exists:medical_records,id',
+            'appointment_date'  => 'date',
             'status'            => 'required|in:scheduled,completed,cancelled',
             'notes'             => 'nullable|string',
             'reason'            => 'nullable|string',

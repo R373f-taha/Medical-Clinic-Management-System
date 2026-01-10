@@ -3,12 +3,14 @@
 namespace App\Http\Controllers\Patient;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreRateRequest;
+use App\Http\Requests\Store\StoreRateRequest;
 use App\Http\Requests\UpdateRateRequest;
+
 use App\Models\Doctor;
 use App\Models\Rating;
 use App\Services\Patient\RatingService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class RatingController extends Controller
 {
@@ -26,34 +28,55 @@ class RatingController extends Controller
 
     public function addRating(StoreRateRequest $request)
     {
-        $data =  $request->validated();
+         $user=Auth::user();
 
-        $rating = $this->ratingService->store($data);
+         if (!$user) {
+            return response()->json([
+                'status' => 'error 😑',
+                'message' => 'Register First 🙄'
+            ], 401);
+        }
 
-        $doctorId=$request->doctor_id;
+        if(!$user->patient){
 
-        $values=Rating::where("doctor_id",$doctorId)
+             return response()->json([
+                            'message'=>'you must ba a patient person to add rating 😑',
+                            'instruction'=>'make a patient account  🧐'],403);
+                    }
 
-        ->selectRaw('COUNT(*) as total_ratings
+        $patient=$user->patient;
 
-        SUM(rating) as sum_ratings ')
+        $validatedData= $request->validated();
 
-        ->first();
+           $ratingData = array_merge($validatedData, [
+            'patient_id' => $patient->id,
+            'date' => $validatedData['date'] ?? now()->format('Y-m-d')]);
 
-        $average=0;
+         $existingRating = Rating::where('patient_id', $patient->id)//to prevent rating the same doctor more than one
+            ->where('doctor_id', $validatedData['doctor_id'])
+            ->first();
 
-        if($values->total_ratings>0){
-        $average=$values->sum_ratings/$values->total_ratings;
-            }
-        Doctor::where('id',$doctorId)->update([
-            'current_rate'=>$average]);
+             if ($existingRating) {
+            return response()->json([
+                'status' => 'error 🔄',
+                'message' => "You have already rated this doctor.😑",
+                'existing_rating' => [
+                    'rating' => $existingRating->rating,
+                    'date' => $existingRating->date
+                ],
+                'action' =>"You can update your existing rating instead of creating a new one.😊"
+            ], 409);
+        }
+        $rating=Rating::create($ratingData);
+          return response()->json([
+            'status' => 'success ✅',
+            'message' => 'added rating successfully⭐',
+            'rating ' => $rating
+        ], 201);
 
-        return response()->json([
-
-            'message' => 'your rating is added',
-
-        ]);
     }
+
+
 
     public function show(Rating $rating)
     {
