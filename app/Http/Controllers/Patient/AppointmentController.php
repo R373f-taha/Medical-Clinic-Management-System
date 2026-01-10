@@ -1,17 +1,19 @@
 <?php
 
 namespace App\Http\Controllers\Patient;
-
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Store\StoreAppointmentRequest as StoreStoreAppointmentRequest;
-//use App\Http\Requests\StoreAppointmentRequest;
+use App\Http\Requests\Store\StoreAppointmentRequest as StoreAppointmentRequest;
 use App\Http\Requests\Update\UpdateAppointmentRequest as UpdateUpdateAppointmentRequest;
+//use App\Http\Requests\StoreAppointmentRequest;
 use App\Http\Requests\UpdateAppointmentRequest;
 use App\Models\Appointment;
 use App\Models\MedicalRecord;
 use App\Models\Patient;
 use App\Services\Patient\AppointmentService;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class AppointmentController extends Controller
 {
@@ -27,7 +29,7 @@ class AppointmentController extends Controller
         return response()->json($this->appointmentService->getAll());
     }
 
-    public function store(StoreStoreAppointmentRequest $request)
+    public function store(StoreAppointmentRequest $request)
     {
         $data = $request->validated();
 
@@ -68,140 +70,269 @@ class AppointmentController extends Controller
     }
     ////////////////////////////////////appointments management///////////////////////////////////////
 
-    public function takeAppointment(StoreStoreAppointmentRequest $appointment){
+    public function takeAppointment(StoreAppointmentRequest $appointment){
 
-        $patient_id=$appointment->patient_id;
+        try{
+
+            $user=Auth::user();
+
+             if (!$user) {
+            return response()->json([
+                'status' => 'error 😑',
+                'message' => 'Register First 🙄'
+            ], 401);
+        }
+
+            if(!$user->patient){
+                  return response()->json([
+                    'message'=>'you must ba a patient person to take an appointment 😑',
+                    'instruction'=>'make a patient account 🧐'],403);
+            }
+
+        $patient=$user->patient;
+
+        $patient_id=$patient->id;
 
         $doctor_id=$appointment->doctor_id;
 
-        $medical_record_id=$appointment->medical_record_id;
-
-        $patient=Patient::find($patient_id);
-
-        if(!$patient){
-
-            return response()->json(['error'=> 'this patient doesn`t exist']);
-        }
 
         if(!$doctor_id){
 
-            return response()->json(['error'=> 'this doctor doesn`t exist']);
+            return response()->json(['error'=> 'this doctor doesn`t exist ❌']);
         }
-         if(!$medical_record_id){
 
-             return response()->json(['error'=> 'without medical record ..you can`t take an apointment']);
-
-         }
         $patient->appointments()->create([
             'patient_id'=>$patient_id,
             'doctor_id'=>$doctor_id,
-            'medical_record_id'=>$medical_record_id,
+            'appointment_date'=>$appointment->appointment_date,
             'notes'=>$appointment->notes,
             'status'=>$appointment->status,
             'reason'=>$appointment->reason
         ]);
+
+        return response()->json([
+            'message'=> 'welcome 🤗💛',
+            'result'=> 'yes...this appointment is registered 😎✅',
+            'patient'=> $patient]);
+
+    }
+    catch(Exception $e){
+
+        return response()->json(['error ❌ '=> $e->getMessage()]);
     }
 
-    public function show_appointments($patient_id){
 
-        $patient=Patient::find($patient_id);
+    }
+    public function show_appointments(){
+
+        $user=Auth::user();
+
+         if (!$user) {
+            return response()->json([
+                'status' => 'error 😑',
+                'message' => 'Register First 🙄'
+            ], 401);
+        }
+
+
+        $patient=$user->patient;
 
         $appointments=$patient->appointments()->get();
 
         return response()->json([
 
-            'message'=> 'welcome...your appointments:',
+            'message'=> 'welcome💛🤗...your appointments: 😎',
 
             'appointments'=> $appointments]);
 
 
     }
-     public function cancel_appointment($patient_id,$appointment_id){
+     public function cancel_appointment($appointment_id){
 
-        $appointment=Appointment::find($appointment_id);
+         $user=Auth::user();
 
-        if($patient_id==$appointment->patient_id){//check that this appointment for the passed patient
-
-            $appointment->status= 'cancelled';}
-
-        return response()->json([
-
-            'message'=> 'welcome...your appointments becomes cancelled',
-
-            ]);
-
-    }
-
-    public function cancell_all_appointments($patient_id){
-
-        $patient=Patient::find($patient_id);
-
-        if(!$patient){
-
-            return response()->json(['error'=> 'this patient doesn`t exist']);
-
+          if (!$user) {
+            return response()->json([
+                'status' => 'error 😑',
+                'message' => 'Register First 🙄'
+            ], 401);
         }
 
-        $patient->appointments()->update(['status'=> 'cancelled']);
 
-        return response()->json([
+        $patient=$user->patient;
 
-            'result'=>'all appointment cancelled successfully'
+         $appointment = Appointment::with(['patient', 'doctor'])
+            ->where('id', $appointment_id)
+            ->first();
 
-        ]);
+        if (!$appointment) {
+            return response()->json([
+                'error' => 'this appointment doesn`t exist 😒',
+            ], 404);
+        }
+
+        if($patient->id!=$appointment->patient_id){//check that this appointment for the passed patient
+
+             return response()->json([
+                'error' => 'you cannot cancel this appointment because it`s not to you 😑😑'
+            ], 403);;}
+
+             if ($appointment->status == 'cancelled') {
+            return response()->json([
+                'message' => 'this appointment is already cancelled..🙄🙄'
+            ], 400);
+        }
+        $appointment->status = 'cancelled';
+         $appointment->save();
+
+         return response()->json([
+
+            'message'=> 'welcome...your appointments becomes cancelled ✅🤷‍♀️🤷‍♀️',
+
+            'appointment'=>$appointment
+
+            ]);}
+
+    public function cancel_all_appointments(){
+
+        $user=Auth::user();
+
+         if (!$user) {
+            return response()->json([
+                'status' => 'error 😑',
+                'message' => 'Register First 🙄'
+            ], 401);
+        }
+
+        $patient=$user->patient;
+
+         $activeAppointmentsCount = $patient->appointments()
+            ->whereIn('status', ['scheduled', 'pending'])
+            ->count();
+
+         if ($activeAppointmentsCount === 0) {
+            return response()->json([
+                'status' => 'info 😊👩‍🔬',
+                'message' => 'you don`t have any active appointment to cancel it 🧐🤦‍♀️'
+            ]);
+        }
+          DB::beginTransaction();
+
+        $cancelledCount = $patient->appointments()
+            ->whereIn('status', ['scheduled', 'pending'])
+            ->update([
+                'status' => 'cancelled',
+            ]);
+
+
+        DB::commit();
+
+          return response()->json([
+            'status' => 'success 👩‍🔬🥼✅',
+            'message' => 'successfully canceled for all your appointments ✅😑',]);
     }
 
 
-    public function invoice($patient_id,$appointment_id){
+    public function invoice($appointment_id){
 
-        $patient=Patient::find($patient_id);
+        $user=Auth::user();
 
-        $appointment=Appointment::find($appointment_id);
+          if (!$user) {
+            return response()->json([
+                'status' => 'error 😑',
+                'message' => 'Register First 🙄'
+            ], 401);
+        }
+
+        $patient=$user->patient;
+        try{
+        $appointment = $patient->appointments()
+            ->where('id', $appointment_id)
+            ->with('invoice')
+            ->first();
 
         if(!$appointment){
 
-            return response()->json(['error'=> 'this appointment doesn`t exist']);
+            return response()->json(['error'=> 'this appointment is not for you 🙄🧐']);
         }
 
-         if($patient_id==$appointment->patient_id){
 
-        $invoice=$appointment->invoice;
+         if (!$appointment->invoice) {
+            return response()->json([
+                'status' => 'info',
+                'message' => 'The invoice for this appointment has not been determined yet 💵💵'
+            ]);
+                }
 
         return response()->json([
-            'message'=> 'welcome...your invoice:',
-            'invoice'=> $invoice]);}
+            'status' => 'success',
+            'message' => 'you can pay in any method you want 💵😊',
+            'data' => $appointment->invoice
+        ]);}
 
-    }
-public function prescriptions($medical_record_id){
+       catch (Exception $e) {
+        return response()->json(['error 🧐 '=> $e->getMessage()]);
+       }}
 
-        $medical_record=MedicalRecord::with('prescriptions')->find($medical_record_id);
-        if(!$medical_record){
-            return response()->json(['medical_record'=>'this medical record doesn`t exist']);
+    public function prescriptions($medical_record_id){
+
+         $user=Auth::user();
+
+          if (!$user) {
+            return response()->json([
+                'status' => 'error 😑',
+                'message' => 'Register First 🙄'
+            ], 401);
         }
 
-        $perscription=$medical_record->prescriptions;
+        $patient=$user->patient;
 
-      return response()->json(['message'=>'the perscription :',
-      'perscription'=>$perscription]);
+     $medicalRecord = MedicalRecord::with(['prescriptions', 'patient'])->find($medical_record_id);
+
+      if (!$medicalRecord) {
+        return response()->json([
+            'status' => 'error',
+            'message' => 'thid medical record doesn`t exist '
+        ], 404);
     }
 
-    public function showMedicalRecord($patient_id){
 
-        $patient=Patient::find($patient_id);
+    if($medicalRecord->patient_id!=$patient->id)
 
-        if(!$patient){
+        return response()->json(['error'=>'this medical record is not for you']);
 
-            return response()->json(['patient'=>'this patient doesn`t exist']);
 
+    $medical_record=MedicalRecord::with('prescriptions')->find($medical_record_id);
+
+
+    $prescription=$medical_record->prescriptions;
+
+      return response()->json([
+
+      'message'=>'the prescription : ',
+
+      'perscription'=>$prescription]);
+    }
+
+    public function showMedicalRecord(){
+
+        $user=Auth::user();
+
+         if (!$user) {
+            return response()->json([
+                'status' => 'error 😑',
+                'message' => 'Register First 🙄'
+            ], 401);
         }
 
-        $medical_record=$patient->medical_record()->get();
+        $patient=$user->patient;
+        $medical_record=$patient->medicalRecord()->get();
 
         return response()->json([
 
-            'message'=>'your medical record is',
+            'message'=>'your medical record is 💛🤧',
 
-            $medical_record
+            'data'=>$medical_record
         ]
         );
     }

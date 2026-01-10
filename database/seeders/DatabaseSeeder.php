@@ -43,6 +43,7 @@ class DatabaseSeeder extends Seeder
             RatingSeeder::class,
             NotificationSeeder::class,
             ClinicSePatientSeeder::class,
+            RolesAndPermissionsSeeder::class,
         ]);
     }
 }

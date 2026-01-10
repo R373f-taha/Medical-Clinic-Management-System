@@ -4,18 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Spatie\Permission\Traits\HasRoles;
 
 class Doctor extends Model
 {
-    protected $fillable = [
-        'user_id',
-        'specialization',
-        'qualifications',
-        'available_hours',
-        'experience_years',
-        'services',
-    ];
-   use HasFactory;
+   use HasFactory,HasRoles;
    protected $table = 'doctors';
    protected $guarded=[];
    protected $casts = [
