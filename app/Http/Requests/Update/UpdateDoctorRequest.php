@@ -33,6 +33,7 @@ class UpdateDoctorRequest extends FormRequest
             'available_hours'  => 'nullable|integer|min:0',
             'experience_years' => 'nullable|integer|min:0',
             'Current_rate'     => 'nullable|numeric|min:0|max:5',
+            'services'         => 'nullable|string',
         ];
     }
 }

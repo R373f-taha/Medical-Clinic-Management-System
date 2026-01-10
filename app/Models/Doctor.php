@@ -7,9 +7,20 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Doctor extends Model
 {
+    protected $fillable = [
+        'user_id',
+        'specialization',
+        'qualifications',
+        'available_hours',
+        'experience_years',
+        'services',
+    ];
    use HasFactory;
    protected $table = 'doctors';
    protected $guarded=[];
+   protected $casts = [
+      'services' => 'array',
+  ];
  public function user(){
     return $this->belongsTo(User::class);
  }

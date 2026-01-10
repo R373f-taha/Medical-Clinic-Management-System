@@ -29,6 +29,7 @@
                         <th style="padding:12px;">Qualifications</th>
                         <th style="padding:12px;">Available Hours</th>
                         <th style="padding:12px;">Experience</th>
+                        <th style="padding:12px;">service</th>
                         <th style="padding:12px;">Actions</th>
                     </tr>
                 </thead>
@@ -54,6 +55,10 @@
 
                             <td style="padding:10px;">
                                 {{ $doctor->experience_years ?? '-' }}
+                            </td>
+
+                            <td style="padding:10px;">
+                            {{ implode('، ', $doctor->services) }}
                             </td>
 
 

@@ -27,7 +27,8 @@ class StoreDoctorRequest extends FormRequest
             'qualifications'    => 'required|string|max:255',
             'available_hours'   => 'required|integer|min:0',
             'experience_years'  => 'nullable|integer|min:0',
-            'current_rate'      => 'required|numeric|min:0|max:5',//numeric for float/double values...
+            'services'         => 'nullable|string',
+           
         ];
     }
 }
