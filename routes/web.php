@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminDashboardController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\ProfileController;
@@ -48,6 +49,8 @@ Route::get('/dashboard', function () {
         return redirect() -> route('doctor.dashboard');
     return view('dashboard');
 })->name('dashboard')->middleware('auth');
+
+Route::get('Adashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
