@@ -54,7 +54,7 @@
                 
                 <div style="margin-bottom:15px;">
                     <label style="font-weight:600;">Available Hours</label>
-                    <input type="number" name="available_hours" value="40"
+                    <input type="number" name="available_hours"
                            style="width:100%; padding:10px; border-radius:6px;
                                   border:1px solid #ccc;" required>
                 </div>
@@ -67,7 +67,13 @@
                                   border:1px solid #ccc;" required>
                 </div>
 
-                
+                <div style="margin-bottom:15px;">
+                    <label style="font-weight:600;">services</label>
+                    <textarea name="services" rows="2"
+                              style="width:100%; padding:10px; border-radius:6px;
+                                     border:1px solid #ccc;" required></textarea>
+                </div>
+
 
                 <div style="display:flex; gap:10px;">
                     <button type="submit"

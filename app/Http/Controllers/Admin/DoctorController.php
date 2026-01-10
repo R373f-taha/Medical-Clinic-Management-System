@@ -42,7 +42,7 @@ class DoctorController extends Controller
        
         $data = $request->validated();
 
-        $this->doctorService->store($data);
+        $doctor=$this->doctorService->store($data);
 
         return redirect()
             ->route('doctors.index')
