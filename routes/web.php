@@ -37,11 +37,17 @@ Route::get('/', function () {
 // testing doctor dashboard...
 Route::get('Ddashboard', [DoctorDashboardController::class, 'index'])->name('doctor.dashboard');
 
+// Route::get('/dashboard', function () {
+//     if(Auth::user()->doctor)
+//         return redirect() -> route('doctor.dashboard');
+//     return view('dashboard');
+// })->name('dashboard');//->middleware(['auth', 'verified'])
+
 Route::get('/dashboard', function () {
     if(Auth::user()->doctor)
         return redirect() -> route('doctor.dashboard');
     return view('dashboard');
-})->name('dashboard');//->middleware(['auth', 'verified'])
+})->name('dashboard')->middleware('auth');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

@@ -31,7 +31,7 @@ class RolesAndPermissionsSeeder extends Seeder
         Permission::create(['name'=> 'manage invoices']);
         Permission::create(['name'=> 'view medical records']);
         Permission::create(['name'=>'create prescriptions']);
-        Permission::create(['name'=> 'api:view invoices']);
+        Permission::create(['name'=> 'view rating']);
 
 
         //permissions for  patients
@@ -42,6 +42,7 @@ class RolesAndPermissionsSeeder extends Seeder
         Permission::create(['name'=> 'api:view own prescriptions']);
         Permission::create(['name'=> 'api:view own medical record']);
         Permission::create(['name'=> 'api:create rating']);
+        Permission::create(['name'=> 'api:view invoices']);
 
           //Permission::create(['name'=> 'view own mwedical record']);
 
@@ -62,8 +63,6 @@ class RolesAndPermissionsSeeder extends Seeder
         $patient->givePermissionTo([
             'api:view own appointments', 'api:book appointment','api:cancel own appointments',
             'api:view own prescriptions','api:view own medical record','api:create rating',
-
-
         ]);
 
     }
