@@ -25,10 +25,6 @@ class UpdateAppointmentRequest extends FormRequest
         return [
             'patient_id'   =>['nullable','exists:patients,id'],
             'doctor_id'         => 'nullable|exists:doctors,id',
-            'medical_record_id' => [
-                'nullable',
-                'exists:medical_records,id',
-            ],
             'appointment_date'  => 'nullable|date',
             'status'            => 'nullable|in:scheduled,completed,cancelled',
             'notes'             => 'nullable|string',
