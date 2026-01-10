@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+@can('manage clinic') 
 <div class="container">
     <h1 class="mb-4">Clinic Information</h1>
 
@@ -18,5 +19,6 @@
             Edit Information
         </a>
     </div>
+    @endcan
 </div>
 @endsection
