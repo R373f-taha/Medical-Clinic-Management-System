@@ -84,4 +84,22 @@ class DoctorDashboardController extends Controller
         }
         return $stat;
     }
+
+
+     public function DoctorRate($doctor_id){//the result should be in the blade section
+
+         $doctor = Doctor::find($doctor_id);
+
+    // if (!$doctor) {
+    //     return response()->json([
+    //         'status' => 'error',
+    //         'message' => 'doctor doesn`t exist'
+    //     ], 404);
+    // }
+
+    $averageRating = Rating::where('doctor_id', $doctor_id)->avg('rating');
+    $totalRatings = Rating::where('doctor_id', $doctor_id)->count();
+
+     }
+
 }

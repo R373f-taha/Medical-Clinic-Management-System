@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Rating extends Model
 {
+    protected $guarded = []; 
    use HasFactory;
    protected $table = 'ratings';
    public function patient(){
