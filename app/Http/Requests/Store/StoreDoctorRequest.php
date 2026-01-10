@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Store;
 
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -27,7 +27,7 @@ class StoreDoctorRequest extends FormRequest
             'qualifications'    => 'required|string|max:255',
             'available_hours'   => 'required|integer|min:0',
             'experience_years'  => 'nullable|integer|min:0',
-            'Current_rate'      => 'required|numeric|min:0|max:5',//numeric for float/double values...
+            'current_rate'      => 'required|numeric|min:0|max:5',//numeric for float/double values...
         ];
     }
 }

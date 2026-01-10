@@ -16,12 +16,12 @@ class DoctorFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => User::factory(), 
+            'user_id' => User::factory(),
             'specialization' => fake()->randomElement(['Cardiology', 'Neurology', 'Pediatrics', 'Dermatology', 'General Surgery']),
             'qualifications' => 'Master of Medicine and Surgery (MBBS)',
             'available_hours' => fake()->numberBetween(4, 12),
             'experience_years' => fake()->numberBetween(1, 30),
-            'Current_rate' => fake()->numberBetween(1, 5),
+            
         ];
     }
 }

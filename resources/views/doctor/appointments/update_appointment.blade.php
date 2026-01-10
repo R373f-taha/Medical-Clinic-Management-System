@@ -5,7 +5,18 @@
 
     <div style="max-width:800px; margin:auto; background:#fff; border-radius:8px;
                 box-shadow:0 2px 8px rgba(0,0,0,0.1); padding:30px;">
-
+                @if (session('delete'))
+                    <div style="
+                        background-color:#f8d7da;
+                        color:#721c24;
+                        padding:12px 15px;
+                        border-radius:6px;
+                        margin-bottom:20px;
+                        border:1px solid #f5c6cb;
+                    ">
+                        {{ session('delete') }}
+                    </div>
+                @endif
         <!-- Header -->
         <h2 style="color:#ff7a00; margin-bottom:25px;">
             Update Appointment

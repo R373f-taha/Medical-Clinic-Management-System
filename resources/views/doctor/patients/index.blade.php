@@ -13,6 +13,7 @@
                 <thead style="background-color:#e5e5e5;">
                     <tr>
                         <th style="padding:12px; text-align:left;">ID</th>
+                        <th style="padding:12px; text-align:left;">Name</th>
                         <th style="padding:12px; text-align:left;">Gender</th>
                         <th style="padding:12px; text-align:left;">Blood Type</th>
                         <th style="padding:12px; text-align:left;">Height (cm)</th>
@@ -25,6 +26,7 @@
                     @forelse ($patients as $patient)
                         <tr style="border-bottom:1px solid #ddd;">
                             <td style="padding:10px;">{{ $patient->id }}</td>
+                            <td style="padding:10px;">{{ $patient->user->name }}</td>
                             <td style="padding:10px;">{{ $patient->gender }}</td>
                             <td style="padding:10px;">
                                 {{ $patient->blood_type ?? 'N/A' }}

@@ -21,7 +21,6 @@
                         <th style="padding:12px;">ID</th>
                         <th style="padding:12px;">Patient</th>
                         <th style="padding:12px;">Doctor</th>
-                        <th style="padding:12px;">Medical Record</th>
                         <th style="padding:12px;">Appointment Date</th>
                         <th style="padding:12px;">Status</th>
                         <th style="padding:12px;">Reason</th>
@@ -41,10 +40,6 @@
 
                             <td style="padding:10px;">
                                 Doctor #{{ $appointment->doctor_id }}
-                            </td>
-
-                            <td style="padding:10px;">
-                                MR #{{ $appointment->medical_record_id }}
                             </td>
 
                             <td style="padding:10px;">

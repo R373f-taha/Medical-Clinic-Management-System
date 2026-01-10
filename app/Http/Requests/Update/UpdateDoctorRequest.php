@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Update;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -26,7 +26,7 @@ class UpdateDoctorRequest extends FormRequest
             'user_id' => [
                 'nullable',
                 'exists:users,id',
-                Rule::unique('doctor', 'user_id')->ignore($this->doctor),
+                Rule::unique('doctors', 'user_id')->ignore($this->doctor),
             ],
             'specialization'   => 'nullable|string|max:255',
             'qualifications'   => 'nullable|string|max:255',

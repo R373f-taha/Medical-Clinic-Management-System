@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Employee;
+namespace App\Http\Requests\Update;
 
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -14,11 +14,9 @@ class UpdateBookingRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'doctor_id'        => 'nullable|exists:doctors,id',
-            'appointment_date' => 'nullable|date',
-            'status'           => 'nullable|in:scheduled,completed,cancelled',
-            'reason'           => 'nullable|string',
-            'notes'            => 'nullable|string',
+            'appointment_date' => 'required|date',
+            'reason' => 'nullable|string',
+            'status' => 'required|in:hold,scheduled,cancelled,completed',
         ];
     }
 }

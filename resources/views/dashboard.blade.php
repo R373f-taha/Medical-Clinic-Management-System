@@ -1,8 +1,12 @@
-@extends('layouts.app')
+@extends('doctor.layouts.app')
 
 @section('title', 'Dashboard')
 
 @section('content')
+
+    @if(Auth::user()->doctor)
+        @include('partials.doctorDashboard')
+    @else
     <div class="container-fluid py-4">
         <div class="row">
             <div class="col-lg-6 col-12">
@@ -1148,3 +1152,4 @@
     <!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
     <script src="../assets/js/soft-ui-dashboard.min.js?v=1.1.0"></script>
 @endsection
+@endif

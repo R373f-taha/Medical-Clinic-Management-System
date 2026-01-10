@@ -4,7 +4,18 @@
 <div style="background-color:#f3f3f3; min-height:100vh; padding:30px">
 
     <div style="max-width:1200px; margin:auto;">
-
+                @if (session('success'))
+                    <div style="
+                        background-color:#d4edda;
+                        color:#155724;
+                        padding:12px 15px;
+                        border-radius:6px;
+                        margin-bottom:20px;
+                        border:1px solid #c3e6cb;
+                    ">
+                        {{ session('success') }}
+                    </div>
+                @endif
         <!-- Header + Add Button -->
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
             <h2 style="color:#ff7a00;">

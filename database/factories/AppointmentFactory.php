@@ -5,25 +5,30 @@ namespace Database\Factories;
 use App\Models\Appointment;
 use App\Models\Patient;
 use App\Models\Doctor;
-use App\Models\MedicalRecord;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Carbon\Carbon;
 
 class AppointmentFactory extends Factory
 {
     protected $model = Appointment::class;
 
-    public function definition(): array
+    public function definition()
     {
+        $patient = Patient::inRandomOrder()->first();
+        $doctor  = Doctor::inRandomOrder()->first();
+
         return [
-            'patient_id' => Patient::inRandomOrder()->first()->id,
-            'doctor_id' => Doctor::inRandomOrder()->first()->id,
-           // 'medical_record_id' => MedicalRecord::inRandomOrder()->first()->id,
-            'notes' => fake()->optional()->sentence(),
-            'appointment_date' => fake()->dateTimeBetween('now', '+1 month'),
-
-            'status' => fake()->randomElement(['scheduled', 'completed', 'cancelled']),
-
-            'reason' => fake()->optional()->sentence(),
+            'patient_id'       => $patient->id,
+            'doctor_id'        => $doctor->id,
+            'medical_record_id'=> null, // ممكن تملأه لاحقاً
+            'appointment_date' => Carbon::now()->addDays($this->faker->numberBetween(1, 30))
+                                            ->setTime($this->faker->numberBetween(8,16), [0,30][$this->faker->numberBetween(0,1)]),
+            'status'           => $this->faker->randomElement(['hold','scheduled','completed','cancelled']),
+            'reason'           => $this->faker->randomElement([
+                                    'Check-up', 'Headache', 'Back pain', 'Flu symptoms'
+                                  ]),
+            'notes'            => $this->faker->sentence(),
+            'hold_expires_at'  => Carbon::now()->addHours(2),
         ];
     }
 }
