@@ -9,61 +9,90 @@ use Spatie\Permission\Models\Role;
 
 class RolesAndPermissionsSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
+        // Reset cached roles and permissions
         app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
-        //store the queries in the cache insteade of the memeory to make the application faster
+
+        // ============ WEB Permissions (For Admin Panel) ============
+        $webPermissions = [
+            'access admin panel',
+            'manage users',
+            'manage patients',
+            'manage appointments',
+            'manage doctors',
+            'view reports',
+            'manage medical records',
+            'manage employees',
+            'manage clinic',
+            'manage ratings',
+            'manage invoices',
+            'view medical records',
+            'create prescriptions',
+            'view rating',
+            'assign permissions' ,
+            'assign roles' ,
+             'revoke permissions',
+             'manage permissions',
+        ];
+
+        foreach ($webPermissions as $permission) {
+            Permission::firstOrCreate([
+                'name' => $permission,
+                'guard_name' => 'web'
+            ]);
+        }
+
+        // ============ API Permissions (For Patients) ============
+        // Important: All must have guard_name = 'api'
+        $apiPermissions = [
+            ['name' => 'api:view own appointments', 'guard_name' => 'api'],
+            ['name' => 'api:book appointment', 'guard_name' => 'api'],
+            ['name' => 'api:cancel own appointments', 'guard_name' => 'api'],
+            ['name' => 'api:view own prescriptions', 'guard_name' => 'api'],
+            ['name' => 'api:view own medical record', 'guard_name' => 'api'],
+            ['name' => 'api:create rating', 'guard_name' => 'api'],
+            ['name' => 'api:view invoices', 'guard_name' => 'api'],
+            ['name' => 'api:update appointment', 'guard_name' => 'api'],
 
 
-        Permission::create(['name'=>'access admin panel']);
-        Permission::create(['name'=>'manage users']);
-        Permission::create(['name'=> 'manage patients']);
-        Permission::create(['name'=> 'manage appointments']);
-        Permission::create(['name'=> 'manage doctors']);
-        Permission::create(['name'=> 'view reports']);
-        Permission::create(['name'=> 'manage medical records']);
-        Permission::create(['name'=> 'manage employees']);
-        Permission::create(['name'=> 'manage clinic']);
-        Permission::create(['name'=> 'manage ratings']);
-        Permission::create(['name'=> 'manage invoices']);
-        Permission::create(['name'=> 'view medical records']);
-        Permission::create(['name'=>'create prescriptions']);
-        Permission::create(['name'=> 'view rating']);
+        ];
 
+        foreach ($apiPermissions as $permissionData) {
+            Permission::firstOrCreate($permissionData);
+        }
 
-        //permissions for  patients
-
-        Permission::create(['name'=> 'api:view own appointments']);
-        Permission::create(['name'=> 'api:book appointment']);
-        Permission::create(['name'=> 'api:cancel own appointments']);
-        Permission::create(['name'=> 'api:view own prescriptions']);
-        Permission::create(['name'=> 'api:view own medical record']);
-        Permission::create(['name'=> 'api:create rating']);
-        Permission::create(['name'=> 'api:view invoices']);
-
-          //Permission::create(['name'=> 'view own mwedical record']);
-
-        $clinicManager=Role::create(['name'=> 'clinicManager']);
+        // ============ Create Roles ============
+        // WEB Roles
+        $clinicManager = Role::firstOrCreate(['name' => 'clinicManager', 'guard_name' => 'web']);
         $clinicManager->givePermissionTo([
-           'access admin panel','manage users','manage patients','manage appointments',
-           'manage doctors','view reports', 'manage medical records','manage employees'
-           ,'manage clinic','manage ratings', 'manage invoices'
-          ]);
-        $doctor=Role::create(['name'=> 'doctor']);
-        $doctor->givePermissionTo(['manage patients',
-          'manage medical records','manage appointments',
-          'view rating']);
-        $employee=Role::create(['name'=> 'employee']);
-        $employee->givePermissionTo([
-            'manage doctors','manage appointments']);
-        $patient=Role::create(['name'=> 'patient']);
-        $patient->givePermissionTo([
-            'api:view own appointments', 'api:book appointment','api:cancel own appointments',
-            'api:view own prescriptions','api:view own medical record','api:create rating',
+            'access admin panel', 'manage users', 'manage patients', 'manage appointments',
+            'manage doctors', 'view reports', 'manage medical records', 'manage employees',
+            'manage clinic', 'manage ratings', 'manage invoices', 'assign permissions' ,
+            'assign roles' , 'revoke permissions','manage permissions',
         ]);
 
+        $doctor = Role::firstOrCreate(['name' => 'doctor', 'guard_name' => 'web']);
+        $doctor->givePermissionTo([
+            'manage patients', 'manage medical records', 'manage appointments', 'view rating'
+        ]);
+
+        $employee = Role::firstOrCreate(['name' => 'employee', 'guard_name' => 'web']);
+        $employee->givePermissionTo([
+            'manage doctors', 'manage appointments'
+        ]);
+
+        // Patient Role (API Only)
+        $patient = Role::firstOrCreate(['name' => 'patient', 'guard_name' => 'api']);
+
+        // Assign API permissions to patient
+        $patient->givePermissionTo([
+            'api:view own appointments', 'api:book appointment', 'api:cancel own appointments',
+            'api:view own prescriptions', 'api:view own medical record', 'api:create rating',
+            'api:view invoices'
+        ]);
+
+        // Reset cache again to ensure fresh data
+        app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
     }
 }

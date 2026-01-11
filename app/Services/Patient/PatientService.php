@@ -23,7 +23,8 @@ class PatientService
             'email'=>$data['email'],
             'password'=>Hash::make($data['password']),
         ]);
-        $data=array_filter($data);
+        $user->assignRole('patient');
+
         $patient=Patient::create([
             'user_id'=>$user->id,
             'blood_type'=>$data['blood_type']??'A+',

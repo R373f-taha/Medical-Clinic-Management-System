@@ -19,7 +19,7 @@ return new class extends Migration
     $table->foreignId('doctor_id') ->constrained('doctors')->cascadeOnDelete();
 
     // السجل الطبي (يُنشأ لاحقاً من الطبيب)
-    $table->foreignId('medical_record_id')->nullable() ->constrained('medical_records')->nullOnDelete();
+    //$table->foreignId('medical_record_id')->nullable() ->constrained('medical_records')->nullOnDelete();
 
     $table->dateTime('appointment_date');
 

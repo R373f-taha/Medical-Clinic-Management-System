@@ -5,13 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\DB;
+use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Traits\HasRoles;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class User extends Authenticatable implements JWTSubject
 {
     use HasFactory, Notifiable, HasRoles;
-
+  protected $guard_name = 'api';
     protected $fillable = [
         'name',
         'email',
@@ -30,8 +32,7 @@ class User extends Authenticatable implements JWTSubject
             'password' => 'hashed',
         ];
     }
-
-    public function patient()
+        public function patient()
     {
         return $this->hasOne(Patient::class);
     }
@@ -56,10 +57,13 @@ class User extends Authenticatable implements JWTSubject
     }
     public function getJWTCustomClaims(){
        return [
-            
+
             'email' => $this->email,
             'name' => $this->name,];
 
     }
+
+
+
 
 }
