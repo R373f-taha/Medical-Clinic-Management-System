@@ -63,7 +63,7 @@ class RolesAndPermissionsSeeder extends Seeder
         }
 
 
-          $clinicManager = Role::create(['name' => 'clinicManager']);
+          $clinicManager = Role::firstOrCreate(['name' => 'clinicManager','guard_name' => 'web']);
           //تعريف مصفوفة بصلاحيات مدير العيادة 
           $managerPermissions = [
               'access admin panel',
@@ -82,11 +82,11 @@ class RolesAndPermissionsSeeder extends Seeder
           $clinicManager->syncPermissions($managerPermissions);
 
           
-        $doctor=Role::create(['name'=> 'doctor']);
+        $doctor=Role::firstOrCreate(['name'=> 'doctor' ,'guard_name' => 'web']);
         $doctor->givePermissionTo(['manage patients',
           'manage medical records','manage appointments',
           'view rating']);
-        $employee=Role::create(['name'=> 'employee']);
+        $employee=Role::firstOrCreate(['name'=> 'employee' ,'guard_name' => 'web']);
         $employee->givePermissionTo([
             'manage doctors', 'manage appointments'
         ]);
