@@ -71,6 +71,14 @@
                                   border:1px solid #ccc;" required>
                 </div>
 
+                <div style="margin-bottom:15px;">
+                    <label style="font-weight:600;">services</label>
+                    <input type="text" name="services"
+                           value="{{ old('services',  implode('، ', $doctor->services) ) }}"
+                           style="width:100%; padding:10px; border-radius:6px;
+                                  border:1px solid #ccc;" required>
+                </div>
+
         
                 <div style="display:flex; gap:10px;">
                     <button type="submit"

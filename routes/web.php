@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminDashboardController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\ProfileController;
@@ -37,11 +38,19 @@ Route::get('/', function () {
 // testing doctor dashboard...
 Route::get('Ddashboard', [DoctorDashboardController::class, 'index'])->name('doctor.dashboard');
 
+// Route::get('/dashboard', function () {
+//     if(Auth::user()->doctor)
+//         return redirect() -> route('doctor.dashboard');
+//     return view('dashboard');
+// })->name('dashboard');//->middleware(['auth', 'verified'])
+
 Route::get('/dashboard', function () {
     if(Auth::user()->doctor)
         return redirect() -> route('doctor.dashboard');
     return view('dashboard');
-})->name('dashboard');//->middleware(['auth', 'verified'])
+})->name('dashboard')->middleware('auth');
+
+Route::get('Adashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

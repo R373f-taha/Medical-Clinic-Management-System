@@ -11,6 +11,9 @@ class Doctor extends Model
    use HasFactory,HasRoles;
    protected $table = 'doctors';
    protected $guarded=[];
+   protected $casts = [
+      'services' => 'array',
+  ];
  public function user(){
     return $this->belongsTo(User::class);
  }
