@@ -24,70 +24,34 @@ class AppointmentController extends Controller
         $this->appointmentService = $appointmentService;
     }
 
-    public function index()
-    {
-        return response()->json($this->appointmentService->getAll());
-    }
-
-    public function store(StoreAppointmentRequest $request)
-    {
-        $data = $request->validated();
-
-        $appointment = $this->appointmentService->store($data);
-
-
-        return response()->json([
-            'message' => 'تم إنشاء الموعد بنجاح',
-            'data' => $appointment
-        ]);
-    }
-
-    public function show(Appointment $appointment)
-    {
-        return response()->json($appointment);
-    }
 
     public function update(UpdateUpdateAppointmentRequest $request, Appointment $appointment)
     {
+
+       $check=$this->appointmentService->checkPatientAccess($appointment,'api:update appointment');
+
+        if ($check) return $check;
+
         $data = array_filter($request->validated(), fn($value) => !is_null($value));
-        // Saving old values from the null value...
         $appointment->update($data);
-        // Only the entered values will be updated...
         return response()->json([
-            'message' => 'تم تحديث الموعد',
+            'message' => 'this appointment is updated',
             'data' => $appointment
         ]);
     }
 
 
-    public function destroy(Appointment $appointment)
-    {
-        $this->appointmentService->delete($appointment);
-
-        return response()->json([
-            'message' => 'تم حذف الموعد'
-        ]);
-    }
     ////////////////////////////////////appointments management///////////////////////////////////////
 
     public function takeAppointment(StoreAppointmentRequest $appointment){
 
+        $check=$this->appointmentService->checkPatientAccess($appointment,'api:book appointment');
+
+        if ($check) return $check;
+
         try{
 
             $user=Auth::user();
-
-             if (!$user) {
-            return response()->json([
-                'status' => 'error 😑',
-                'message' => 'Register First 🙄'
-            ], 401);
-        }
-
-            if(!$user->patient){
-                  return response()->json([
-                    'message'=>'you must ba a patient person to take an appointment 😑',
-                    'instruction'=>'make a patient account 🧐'],403);
-            }
 
         $patient=$user->patient;
 
@@ -123,17 +87,13 @@ class AppointmentController extends Controller
 
 
     }
-    public function show_appointments(){
+    public function show_appointments(Request $request){
+
+     $check=$this->appointmentService->checkPatientAccess($request, 'api:view own appointments');
+
+        if ($check) return $check;
 
         $user=Auth::user();
-
-         if (!$user) {
-            return response()->json([
-                'status' => 'error 😑',
-                'message' => 'Register First 🙄'
-            ], 401);
-        }
-
 
         $patient=$user->patient;
 
@@ -147,17 +107,13 @@ class AppointmentController extends Controller
 
 
     }
-     public function cancel_appointment($appointment_id){
+     public function cancel_appointment(Request $request,$appointment_id){
+
+        $check=$this->appointmentService->checkPatientAccess($request,'api:cancel own appointments');
+
+        if ($check) return $check;
 
          $user=Auth::user();
-
-          if (!$user) {
-            return response()->json([
-                'status' => 'error 😑',
-                'message' => 'Register First 🙄'
-            ], 401);
-        }
-
 
         $patient=$user->patient;
 
@@ -193,16 +149,13 @@ class AppointmentController extends Controller
 
             ]);}
 
-    public function cancel_all_appointments(){
+    public function cancel_all_appointments(Request $request){
+
+        $check=$this->appointmentService->checkPatientAccess($request,'api:cancel own appointments');
+
+        if ($check) return $check;
 
         $user=Auth::user();
-
-         if (!$user) {
-            return response()->json([
-                'status' => 'error 😑',
-                'message' => 'Register First 🙄'
-            ], 401);
-        }
 
         $patient=$user->patient;
 
@@ -233,16 +186,13 @@ class AppointmentController extends Controller
     }
 
 
-    public function invoice($appointment_id){
+    public function invoice(Request $request  ,$appointment_id){
+
+        $check=$this->appointmentService->checkPatientAccess($request,'api:view invoices');
+
+        if ($check) return $check;
 
         $user=Auth::user();
-
-          if (!$user) {
-            return response()->json([
-                'status' => 'error 😑',
-                'message' => 'Register First 🙄'
-            ], 401);
-        }
 
         $patient=$user->patient;
         try{
@@ -274,22 +224,20 @@ class AppointmentController extends Controller
         return response()->json(['error 🧐 '=> $e->getMessage()]);
        }}
 
-    public function prescriptions($medical_record_id){
+    public function prescriptions(Request $request,$medical_record_id){
 
-         $user=Auth::user();
+       $check=$this->appointmentService->checkPatientAccess($request,'api:view own prescriptions');
 
-          if (!$user) {
-            return response()->json([
-                'status' => 'error 😑',
-                'message' => 'Register First 🙄'
-            ], 401);
-        }
+        if ($check) return $check;
 
-        $patient=$user->patient;
+       $user=Auth::user();
 
-     $medicalRecord = MedicalRecord::with(['prescriptions', 'patient'])->find($medical_record_id);
+       $patient=$user->patient;
+
+       $medicalRecord = MedicalRecord::with(['prescriptions', 'patient'])->find($medical_record_id);
 
       if (!$medicalRecord) {
+
         return response()->json([
             'status' => 'error',
             'message' => 'thid medical record doesn`t exist '
@@ -314,18 +262,17 @@ class AppointmentController extends Controller
       'perscription'=>$prescription]);
     }
 
-    public function showMedicalRecord(){
+    public function showMedicalRecord(Request $request){
+
+       $check=$this->appointmentService->checkPatientAccess($request,'api:view own medical record');
+
+
+       if ($check) return $check;
 
         $user=Auth::user();
 
-         if (!$user) {
-            return response()->json([
-                'status' => 'error 😑',
-                'message' => 'Register First 🙄'
-            ], 401);
-        }
-
         $patient=$user->patient;
+
         $medical_record=$patient->medicalRecord()->get();
 
         return response()->json([

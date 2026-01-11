@@ -25,6 +25,7 @@ class PatientController extends Controller
         $this->patientService = $patientService;
     }
     public function register(StorePatientRequest $patient){
+
         try{
             $result=$this->patientService->registerPatient($patient->validated());
 
@@ -35,7 +36,7 @@ class PatientController extends Controller
                     'user'=>$result['user'],
                     'token'=>$result['token'],
                    'patient'=>$result['patient']  ]],201);
-          
+
             }
 
                 catch(\Exception $e){

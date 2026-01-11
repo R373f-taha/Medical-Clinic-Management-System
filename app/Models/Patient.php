@@ -4,12 +4,15 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Spatie\Permission\Traits\HasRoles;
 
 class Patient extends Model
 {
-    use HasFactory;
+    use HasFactory,HasRoles;
+
+    protected $guard_name = "api";
     protected $fillable = [
-        'user_id',      
+        'user_id',
         'blood_type',
         'height',
         'weight',

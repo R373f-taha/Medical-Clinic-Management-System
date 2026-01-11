@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Patient;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Store\StoreRateRequest;
 use App\Http\Requests\UpdateRateRequest;
-
+use App\Services\Patient\AppointmentService;
 use App\Models\Doctor;
 use App\Models\Rating;
 use App\Services\Patient\RatingService;
@@ -15,10 +15,11 @@ use Illuminate\Support\Facades\Auth;
 class RatingController extends Controller
 {
     protected $ratingService;
-
-    public function __construct(RatingService $ratingService)
+   protected $appointmentService;
+    public function __construct(RatingService $ratingService, AppointmentService $appointmentService)
     {
         $this->ratingService = $ratingService;
+        $this->appointmentService = $appointmentService;
     }
 
     public function index()
@@ -28,6 +29,10 @@ class RatingController extends Controller
 
     public function addRating(StoreRateRequest $request)
     {
+          $check=$this->appointmentService->checkPatientAccess($request,'api:create rating');
+
+        if ($check) return $check;
+
          $user=Auth::user();
 
          if (!$user) {
