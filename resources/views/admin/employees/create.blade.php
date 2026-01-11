@@ -2,6 +2,7 @@
 
 @section('content')
 <div class="container">
+@can('manage employees')
     <h1 class="mb-4">Add Employee</h1>
 
     {{-- Display Errors --}}
@@ -111,5 +112,6 @@
             </a>
         </div>
     </form>
+    @endcan
 </div>
 @endsection

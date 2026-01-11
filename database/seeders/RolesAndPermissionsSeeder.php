@@ -62,22 +62,31 @@ class RolesAndPermissionsSeeder extends Seeder
             Permission::firstOrCreate($permissionData);
         }
 
-        // ============ Create Roles ============
-        // WEB Roles
-        $clinicManager = Role::firstOrCreate(['name' => 'clinicManager', 'guard_name' => 'web']);
-        $clinicManager->givePermissionTo([
-            'access admin panel', 'manage users', 'manage patients', 'manage appointments',
-            'manage doctors', 'view reports', 'manage medical records', 'manage employees',
-            'manage clinic', 'manage ratings', 'manage invoices', 'assign permissions' ,
-            'assign roles' , 'revoke permissions','manage permissions',
-        ]);
 
-        $doctor = Role::firstOrCreate(['name' => 'doctor', 'guard_name' => 'web']);
-        $doctor->givePermissionTo([
-            'manage patients', 'manage medical records', 'manage appointments', 'view rating'
-        ]);
+          $clinicManager = Role::create(['name' => 'clinicManager']);
+          //تعريف مصفوفة بصلاحيات مدير العيادة 
+          $managerPermissions = [
+              'access admin panel',
+              'manage users',
+              'manage patients',
+              'manage appointments',
+              'manage doctors',
+              'manage employees',
+              'manage clinic',
+              'manage medical records',
+              'manage invoices',
+              'manage ratings',
+              'view reports'
+          ];
+          // إسناد الصلاحيات للدور
+          $clinicManager->syncPermissions($managerPermissions);
 
-        $employee = Role::firstOrCreate(['name' => 'employee', 'guard_name' => 'web']);
+          
+        $doctor=Role::create(['name'=> 'doctor']);
+        $doctor->givePermissionTo(['manage patients',
+          'manage medical records','manage appointments',
+          'view rating']);
+        $employee=Role::create(['name'=> 'employee']);
         $employee->givePermissionTo([
             'manage doctors', 'manage appointments'
         ]);
@@ -95,4 +104,7 @@ class RolesAndPermissionsSeeder extends Seeder
         // Reset cache again to ensure fresh data
         app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
     }
+
+
 }
+   

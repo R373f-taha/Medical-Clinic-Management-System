@@ -2,7 +2,7 @@
 
 @section('content')
 <div style="background-color:#f3f3f3; min-height:100vh; padding:30px">
-
+@can('manage doctors')
     <div style="max-width:800px; margin:auto;">
 
        
@@ -16,7 +16,7 @@
                     box-shadow:0 2px 8px rgba(0,0,0,0.1);
                     padding:25px;">
 
-            <form action="{{ route('doctors.update', $doctor->id) }}" method="POST">
+            <form action="{{ route('admin.doctors.update', $doctor->id) }}" method="POST">
                 @csrf
                 @method('PUT')
 
@@ -71,6 +71,14 @@
                                   border:1px solid #ccc;" required>
                 </div>
 
+                <div style="margin-bottom:15px;">
+                    <label style="font-weight:600;">services</label>
+                    <input type="text" name="services"
+                           value="{{ old('services',  implode('، ', $doctor->services) ) }}"
+                           style="width:100%; padding:10px; border-radius:6px;
+                                  border:1px solid #ccc;" required>
+                </div>
+
         
                 <div style="display:flex; gap:10px;">
                     <button type="submit"
@@ -80,7 +88,7 @@
                         Update
                     </button>
 
-                    <a href="{{ route('doctors.index') }}"
+                    <a href="{{ route('admin.doctors.index') }}"
                        style="background-color:#6c757d; color:#fff;
                               padding:10px 20px; text-decoration:none;
                               border-radius:6px;">
@@ -93,6 +101,6 @@
         </div>
 
     </div>
-
+    @endcan
 </div>
 @endsection

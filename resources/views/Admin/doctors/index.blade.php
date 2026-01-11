@@ -1,17 +1,19 @@
+
 @extends('layouts.app')
 
 @section('content')
 <div style="background-color:#f3f3f3; min-height:100vh; padding:30px">
 
+    @can('manage doctors')
+
     <div style="max-width:1200px; margin:auto;">
 
-        
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
             <h2 style="color:#ff7a00;">
                 Doctors
             </h2>
 
-            <a href="{{ route('doctors.create') }}"
+            <a href="{{ route('admin.doctors.create') }}"
                style="background-color:#ff7a00; color:#fff; padding:10px 16px;
                       text-decoration:none; border-radius:6px;">
                 + Add New Doctor
@@ -29,6 +31,7 @@
                         <th style="padding:12px;">Qualifications</th>
                         <th style="padding:12px;">Available Hours</th>
                         <th style="padding:12px;">Experience</th>
+                        <th style="padding:12px;">service</th>
                         <th style="padding:12px;">Actions</th>
                     </tr>
                 </thead>
@@ -56,31 +59,34 @@
                                 {{ $doctor->experience_years ?? '-' }}
                             </td>
 
+                            <td style="padding:10px;">
+                                {{ implode('، ', $doctor->services) }}
+                            </td>
 
                             <td style="padding:10px;">
-                                <a href="{{ route('doctors.edit', $doctor->id) }}"
+                                @can('manage doctors')
+                                <a href="{{ route('admin.doctors.edit', $doctor->id) }}"
                                    style="background-color:#6c757d; color:#fff; padding:6px 12px;
                                           text-decoration:none; border-radius:4px; margin-right:4px;">
                                     Update
                                 </a>
-                                <a href="{{ route('doctors.show', $doctor->id) }}"
+                                <a href="{{ route('admin.doctors.show', $doctor->id) }}"
                                    style="background-color:#6c757d; color:#fff; padding:10px 16px;
                                         text-decoration:none; border-radius:6px; display:inline-block; margin-bottom:20px;">
                                   View Appointments 
                                 </a>
-
-                                <form action="{{ route('doctors.destroy', $doctor->id) }}"
+                                <form action="{{ route('admin.doctors.destroy', $doctor->id) }}"
                                       method="POST" style="display:inline;">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit"
-                                            style="background-color:#ff7a00; color:#fff;
-                                                   padding:6px 12px; border:none;
+                                            style="background-color:#ff7a00; color:#fff; padding:6px 12px; border:none;
                                                    border-radius:4px; cursor:pointer;"
                                             onclick="return confirm('هل أنت متأكد من الحذف؟')">
                                         Delete
                                     </button>
                                 </form>
+                                @endcan
                             </td>
                         </tr>
                     @endforeach
@@ -97,6 +103,12 @@
         </a>
 
     </div>
+
+    @else
+        <div class="alert alert-danger">
+            You do not have permission to manage doctors.
+        </div>
+    @endcan
 
 </div>
 @endsection

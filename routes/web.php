@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminDashboardController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\ProfileController;
@@ -24,6 +25,7 @@ use App\Http\Controllers\Employee\ScheduleController;
 use App\Http\Controllers\Employee\BookingController;
 
 
+use App\Http\Controllers\Admin\DoctorScheduleController;
 
 
 
@@ -49,47 +51,52 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->name('dashboard')->middleware('auth');
 
+
+
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-// Route::prefix('admin')->name('admin.')->middleware(['auth','role:admin'])->group(function () {
-//     Route::resources([
-//         'clinics'        => ClinicController::class,
-//         'clinic-doctors' => ClinicDoctorController::class,
-//         'doctors'        => DoctorController::class,
-//         'employees'      => EmployeeController::class,
-//         'invoices'       => InvoiceController::class,
-//         'notifications'  => NotificationController::class,
-//     ]);
-// });
-////////////////////////////////////////////////////////
 
-Route::prefix('admin')->name('admin.')->group(function () {
-    Route::resource('employees', EmployeeController::class);
-});
 
-Route::prefix('admin')->name('admin.')->group(function () {
 
-    Route::get('appointments', [AppointmentMonitorController::class, 'index'])
-        ->name('appointments.index');
 
-    Route::delete('appointments/{id}', [AppointmentMonitorController::class, 'destroy'])
-        ->name('appointments.destroy');
-});
 
-Route::prefix('admin')->name('admin.')->group(function () {
-    // عرض بيانات العيادة
-    Route::get('clinic', [ClinicController::class, 'index'])->name('clinic.index');
 
-    // تعديل بيانات العيادة
+//  الخاص بمدير العيادة (Admin)
+Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:clinicManager'])->group(function () {
+    
+    // صفحة الداشبورد الرئيسية للمدير
+    Route::get('dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
+
+    // إدارة الموارد 
+    Route::resources([
+        'employees'      => EmployeeController::class,
+        'clinics'        => ClinicController::class,
+        'clinic-doctors' => ClinicDoctorController::class,
+        'doctors'        => DoctorController::class,
+        'invoices'       => InvoiceController::class,
+        'notifications'  => NotificationController::class,
+    ]);
+
+    // إدارة المواعيد
+    Route::get('appointments', [AppointmentMonitorController::class, 'index'])->name('appointments.index');
+    Route::delete('appointments/{id}', [AppointmentMonitorController::class, 'destroy'])->name('appointments.destroy');
+
+    // إدارة بيانات العيادة
+    Route::get('clinic-settings', [ClinicController::class, 'index'])->name('clinic.index');
     Route::get('clinic/{clinic}/edit', [ClinicController::class, 'edit'])->name('clinic.edit');
-
-    // حفظ التعديلات
     Route::put('clinic/{clinic}', [ClinicController::class, 'update'])->name('clinic.update');
 });
+
+
+
+
+
+
+
 
 ///////////////////////////////////////////////
 
@@ -117,10 +124,19 @@ Route::prefix('employee')->name('employee.')->group(function () {
 
     Route::post('bookings/{id}/reject', [BookingController::class, 'reject'])
         ->name('bookings.reject');
+
+    Route::delete('bookings/{id}', [BookingController::class, 'destroy'])
+        ->name('bookings.destroy');
+
+    Route::post('bookings/{id}/complete', [BookingController::class, 'complete'])
+        ->name('bookings.complete');
 });
 
 
 
+Route::get('employee/schedule', [ScheduleController::class, 'index'])
+    ->name('employee.schedule');
+    
 Route::prefix('patient')->name('patient.')->middleware(['auth','role:patient'])->group(function () {
     Route::resources([
         'profile'      => PatientController::class,
@@ -158,6 +174,7 @@ Route::post('doctor/store_appointments', [App\Http\Controllers\Doctor\Appointmen
 Route::get('doctor/{appointment}/update_appointments', [App\Http\Controllers\Doctor\AppointmentController::class,'update'])->name('doctor.appointments.update');
 Route::put('doctor/{appointment}/edit_appointments', [App\Http\Controllers\Doctor\AppointmentController::class,'edit'])->name('doctor.appointments.edit');
 
+Route::resource('prescriptions', PrescriptionController::class);
 
 // Auth routes
 require __DIR__.'/auth.php';

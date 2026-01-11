@@ -21,12 +21,22 @@ class DoctorService
 
     public function store(array $data)
     {
+        if(isset($data['services']) && is_string($data['services'])) {
+            $data['services'] = array_filter(array_map('trim', explode('،', $data['services'])));
+        }
         
         return Doctor::create($data);
     }
 
     public function update(Doctor $doctor, array $data)
     {
+        if(isset($data['services'])) {
+            
+            $data['services'] = array_filter(
+                array_map('trim', explode('،', $data['services']))
+            );
+        }
+    
         $doctor->update($data);
         return $doctor;
     }

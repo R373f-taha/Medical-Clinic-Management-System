@@ -9,7 +9,6 @@ class AppointmentSeeder extends Seeder
 {
     public function run()
     {
-        // نعمل 20 appointment
         Appointment::factory()->count(20)->create();
 
         $this->command->info('Appointments seeded successfully using factory!');

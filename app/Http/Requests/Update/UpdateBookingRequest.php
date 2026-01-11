@@ -15,8 +15,7 @@ class UpdateBookingRequest extends FormRequest
     {
         return [
             'appointment_date' => 'required|date',
-            'reason' => 'nullable|string',
-            'status' => 'required|in:hold,scheduled,cancelled,completed',
+            'reason'           => 'nullable|string',
         ];
     }
 }

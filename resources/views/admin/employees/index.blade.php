@@ -2,6 +2,7 @@
 
 @section('content')
 <div class="container">
+@can('manage employees')
     <h1 class="mb-4">Employees List</h1>
 
     @if(session('success'))
@@ -45,6 +46,7 @@
                             Edit
                         </a>
 
+                        @can('manage employees')
                         <form action="{{ route('admin.employees.destroy', $employee) }}"
                               method="POST" style="display:inline">
                             @csrf
@@ -54,6 +56,7 @@
                                 Delete
                             </button>
                         </form>
+                        @endcan
                     </td>
                 </tr>
             @empty
@@ -65,5 +68,6 @@
             @endforelse
         </tbody>
     </table>
+    @endcan
 </div>
 @endsection

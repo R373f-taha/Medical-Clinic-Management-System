@@ -2,6 +2,7 @@
 
 @section('content')
 <div style="background-color:#f3f3f3; min-height:100vh; padding:30px">
+@can('manage doctors')
     <div style="max-width:1200px; margin:auto;">
 
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
@@ -63,5 +64,6 @@
         </a>
 
     </div>
+    @endcan
 </div>
 @endsection
