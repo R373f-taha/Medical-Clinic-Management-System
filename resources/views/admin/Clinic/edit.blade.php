@@ -3,7 +3,7 @@
 @section('content')
 <div class="container">
     <h1 class="mb-4">Edit Clinic Information</h1>
-
+   @can('manage clinic') 
     @if($errors->any())
         <div class="alert alert-danger">
             <ul class="mb-0">
@@ -45,5 +45,6 @@
         <button class="btn btn-success">Save Changes</button>
         <a href="{{ route('admin.clinic.index') }}" class="btn btn-secondary">Back</a>
     </form>
+    @endcan
 </div>
 @endsection

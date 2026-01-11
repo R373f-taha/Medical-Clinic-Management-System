@@ -46,12 +46,26 @@ class RolesAndPermissionsSeeder extends Seeder
 
           //Permission::create(['name'=> 'view own mwedical record']);
 
-        $clinicManager=Role::create(['name'=> 'clinicManager']);
-        $clinicManager->givePermissionTo([
-           'access admin panel','manage users','manage patients','manage appointments',
-           'manage doctors','view reports', 'manage medical records','manage employees'
-           ,'manage clinic','manage ratings', 'manage invoices'
-          ]);
+
+          $clinicManager = Role::create(['name' => 'clinicManager']);
+          //تعريف مصفوفة بصلاحيات مدير العيادة 
+          $managerPermissions = [
+              'access admin panel',
+              'manage users',
+              'manage patients',
+              'manage appointments',
+              'manage doctors',
+              'manage employees',
+              'manage clinic',
+              'manage medical records',
+              'manage invoices',
+              'manage ratings',
+              'view reports'
+          ];
+          // إسناد الصلاحيات للدور
+          $clinicManager->syncPermissions($managerPermissions);
+
+          
         $doctor=Role::create(['name'=> 'doctor']);
         $doctor->givePermissionTo(['manage patients',
           'manage medical records','manage appointments',
@@ -66,4 +80,7 @@ class RolesAndPermissionsSeeder extends Seeder
         ]);
 
     }
+
+
 }
+   

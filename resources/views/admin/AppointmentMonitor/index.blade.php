@@ -2,6 +2,7 @@
 
 @section('content')
 <div class="container mt-4">
+    @can('manage appointments')
     <h1>Appointments</h1>
 
     @if(session('success'))
@@ -30,15 +31,18 @@
                 <td>{{ ucfirst($appointment->status) ?? '-' }}</td>
                 <td>{{ $appointment->appointment_date->format('Y-m-d H:i') }}</td>
                 <td>
+                @can('manage appointments')
                     <form action="{{ route('admin.appointments.destroy', $appointment->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this appointment?');">
                         @csrf
                         @method('DELETE')
                         <button class="btn btn-danger btn-sm">Delete</button>
                     </form>
+                    @endcan
                 </td>
             </tr>
             @endforeach
         </tbody>
     </table>
+    @endcan
 </div>
 @endsection
