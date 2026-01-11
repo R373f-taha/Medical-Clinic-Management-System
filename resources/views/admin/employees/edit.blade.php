@@ -2,6 +2,7 @@
 
 @section('content')
 <div class="container">
+@can('manage employees')
     <h1 class="mb-4">Edit Employee</h1>
 
     @if ($errors->any())
@@ -68,5 +69,6 @@
             <a href="{{ route('admin.employees.index') }}" class="btn btn-secondary">Back</a>
         </div>
     </form>
+    @endcan
 </div>
 @endsection
