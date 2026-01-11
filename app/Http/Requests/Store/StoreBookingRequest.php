@@ -14,11 +14,10 @@ class StoreBookingRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'patient_id' => 'required|exists:patients,id',
-            'doctor_id' => 'required|exists:doctors,id',
+            'patient_id'       => 'required|exists:patients,id',
+            'doctor_id'        => 'required|exists:doctors,id',
             'appointment_date' => 'required|date',
-            'reason' => 'nullable|string',
-            'status' => 'required|in:hold,scheduled,cancelled,completed',
+            'reason'           => 'nullable|string',
         ];
     }
 }
