@@ -12,6 +12,8 @@ use App\Http\Controllers\Admin\EmployeeController;
 use App\Http\Controllers\Admin\InvoiceController;
 use App\Http\Controllers\Admin\NotificationController;
 use App\Http\Controllers\Admin\AppointmentMonitorController;
+use App\Http\Controllers\Admin\AdminMedicalRecordController;
+
 use App\Http\Controllers\Doctor\DoctorDashboardController;
 use App\Http\Controllers\Patient\PatientController;
 use App\Http\Controllers\Patient\AppointmentController as PatientAppointmentController;
@@ -70,6 +72,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:clinicManager'
     
     // صفحة الداشبورد الرئيسية للمدير
     Route::get('dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
+
+    ////Admin Medical-Record
+    Route::resource('medical-records', AdminMedicalRecordController::class);
 
     // إدارة الموارد 
     Route::resources([

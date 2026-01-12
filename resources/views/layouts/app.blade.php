@@ -11,14 +11,14 @@
     <link href="{{ asset('assets/css/soft-ui-dashboard.css?v=1.0.7') }}" rel="stylesheet" />
 </head>
 
-<body class="g-sidenav-show bg-gray-100">
-    @if (Auth::user()->doctor)
-        @include('doctor.partials.sidebar')
-    @else
-        @include('partials.sidebar')
-    @endif
-
-
+    <body class="g-sidenav-show bg-gray-100">
+        @auth
+            @if (Auth::user()->doctor)
+                @include('doctor.partials.sidebar')
+            @else
+                @include('partials.sidebar')
+            @endif
+        @endauth
     <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
         @include('partials.navbar')
 
