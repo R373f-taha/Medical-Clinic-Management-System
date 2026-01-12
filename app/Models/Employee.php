@@ -8,12 +8,17 @@ use Spatie\Permission\Traits\HasRoles;
 
 class Employee extends Model
 {
-     use HasFactory,HasRoles;
-   protected $table = 'employees';
-    protected $fillable = ['user_id','name','qualifications','age','phone', 'email',
-'gender','date_of_birth'];
+    use HasFactory, HasRoles;
 
-  public function user(){
-    return $this->belongsTo(User::class);
-  }
+    protected $guard_name = 'web';
+
+    protected $fillable = [
+        'user_id', 'name', 'qualifications', 'age', 
+        'phone', 'email', 'gender', 'date_of_birth'
+    ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }
