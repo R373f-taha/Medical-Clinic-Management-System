@@ -12,14 +12,8 @@
 </head>
 
 <body class="g-sidenav-show bg-gray-100">
-    @if (Auth::user()->doctor)
-        @include('doctor.partials.sidebar')
-    @elseif(Auth::user()->employee)
-        @include('employeeDashInfo.partials.sidebar')
-    @else
-        @include('partials.sidebar')
-    @endif
 
+    @include('employeeDashInfo.partials.sidebar')
 
     <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
         @include('partials.navbar')

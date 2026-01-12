@@ -30,10 +30,10 @@ class RolesAndPermissionsSeeder extends Seeder
             'view medical records',
             'create prescriptions',
             'view rating',
-            'assign permissions' ,
-            'assign roles' ,
-             'revoke permissions',
-             'manage permissions',
+            'assign permissions',
+            'assign roles',
+            'revoke permissions',
+            'manage permissions',
         ];
 
         foreach ($webPermissions as $permission) {
@@ -63,7 +63,7 @@ class RolesAndPermissionsSeeder extends Seeder
         }
 
 
-          $clinicManager = Role::create(['name' => 'clinicManager']);
+          $clinicManager = Role::firstOrCreate(['name' => 'clinicManager','guard_name' => 'web']);
           //تعريف مصفوفة بصلاحيات مدير العيادة 
           $managerPermissions = [
               'access admin panel',
@@ -82,13 +82,14 @@ class RolesAndPermissionsSeeder extends Seeder
           $clinicManager->syncPermissions($managerPermissions);
 
           
-        $doctor=Role::create(['name'=> 'doctor']);
+        $doctor=Role::firstOrCreate(['name'=> 'doctor' ,'guard_name' => 'web']);
         $doctor->givePermissionTo(['manage patients',
           'manage medical records','manage appointments',
           'view rating']);
-        $employee=Role::create(['name'=> 'employee']);
+        $employee=Role::firstOrCreate(['name'=> 'employee' ,'guard_name' => 'web']);
         $employee->givePermissionTo([
-            'manage doctors', 'manage appointments'
+            'manage doctors',
+            'manage appointments'
         ]);
 
         // Patient Role (API Only)
@@ -96,15 +97,16 @@ class RolesAndPermissionsSeeder extends Seeder
 
         // Assign API permissions to patient
         $patient->givePermissionTo([
-            'api:view own appointments', 'api:book appointment', 'api:cancel own appointments',
-            'api:view own prescriptions', 'api:view own medical record', 'api:create rating',
+            'api:view own appointments',
+            'api:book appointment',
+            'api:cancel own appointments',
+            'api:view own prescriptions',
+            'api:view own medical record',
+            'api:create rating',
             'api:view invoices'
         ]);
 
         // Reset cache again to ensure fresh data
         app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
     }
-
-
 }
-   

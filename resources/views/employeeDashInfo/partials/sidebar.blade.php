@@ -6,7 +6,7 @@
         <a class="navbar-brand m-0" href=" https://demos.creative-tim.com/soft-ui-dashboard/pages/dashboard.html "
             target="_blank">
             <img src="../assets/img/logo-ct-dark.png" class="navbar-brand-img h-100" alt="main_logo">
-            <span class="ms-1 font-weight-bold">Welcome Doctor</span>
+            <span class="ms-1 font-weight-bold">Welcome Employee</span>
         </a>
     </div>
     <hr class="horizontal dark mt-0">
@@ -39,7 +39,7 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link  " href="{{ route('doctor.patients.index') }}">
+                <a class="nav-link  " href="{{ route('employee.bookings.index') }}">
                     <div
                         class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
                         <svg width="12px" height="12px" viewBox="0 0 42 42" version="1.1"
@@ -61,11 +61,11 @@
                             </g>
                         </svg>
                     </div>
-                    <span class="nav-link-text ms-1">Patients</span>
+                    <span class="nav-link-text ms-1">Bookings</span>
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link  " href="{{ route('doctor.medical_records.index') }}">
+                <a class="nav-link  " href="{{ route('employee.schedule') }}">
                     <div
                         class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
                         <svg width="12px" height="12px" viewBox="0 0 43 36" version="1.1"
@@ -87,10 +87,10 @@
                             </g>
                         </svg>
                     </div>
-                    <span class="nav-link-text ms-1">Medical Records</span>
+                    <span class="nav-link-text ms-1">Schedule</span>
                 </a>
             </li>
-            <li class="nav-item">
+            {{-- <li class="nav-item">
                 <a class="nav-link  " href="{{ route('doctor.appointments.doctorAppointments') }}">
                     <div
                         class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
@@ -147,7 +147,7 @@
                     </div>
                     <span class="nav-link-text ms-1">Todays Appointments</span>
                 </a>
-            </li>
+            </li> --}}
             <li class="nav-item mt-3">
                 <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Account pages</h6>
             </li>

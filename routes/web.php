@@ -28,9 +28,7 @@ use App\Http\Controllers\Employee\BookingController;
 
 
 use App\Http\Controllers\Admin\DoctorScheduleController;
-
-
-
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Employee\EmployeeDashboardController;
 use App\Http\Controllers\Employee\EmployeeInvoiceController;
 use Illuminate\Support\Facades\Auth;
@@ -38,20 +36,8 @@ use Illuminate\Support\Facades\Auth;
 Route::get('/', function () {
     return view('welcome');
 });
-// testing doctor dashboard...
-Route::get('Ddashboard', [DoctorDashboardController::class, 'index'])->name('doctor.dashboard');
 
-// Route::get('/dashboard', function () {
-//     if(Auth::user()->doctor)
-//         return redirect() -> route('doctor.dashboard');
-//     return view('dashboard');
-// })->name('dashboard');//->middleware(['auth', 'verified'])
-
-Route::get('/dashboard', function () {
-    if(Auth::user()->doctor)
-        return redirect() -> route('doctor.dashboard');
-    return view('dashboard');
-})->name('dashboard')->middleware('auth');
+Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard')->middleware('auth');
 
 
 
@@ -69,14 +55,8 @@ Route::middleware('auth')->group(function () {
 
 //  الخاص بمدير العيادة (Admin)
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:clinicManager'])->group(function () {
-    
-    // صفحة الداشبورد الرئيسية للمدير
-    Route::get('dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
 
-    ////Admin Medical-Record
-    Route::resource('medical-records', AdminMedicalRecordController::class);
-
-    // إدارة الموارد 
+    // إدارة الموارد
     Route::resources([
         'employees'      => EmployeeController::class,
         'clinics'        => ClinicController::class,
@@ -104,43 +84,29 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:clinicManager'
 
 
 ///////////////////////////////////////////////
+    Route::prefix('employee')->name('employee.')->middleware(['auth'])->group(function () {
+
+        // ===== إدارة الحجوزات =====
+        Route::middleware('permission:manage appointments')->group(function () {
+            Route::get('bookings', [BookingController::class, 'index'])->name('bookings.index');
+            Route::get('bookings/create', [BookingController::class, 'create'])->name('bookings.create');
+            Route::post('bookings', [BookingController::class, 'store'])->name('bookings.store');
+            Route::get('bookings/{id}/edit', [BookingController::class, 'edit'])->name('bookings.edit');
+            Route::put('bookings/{id}', [BookingController::class, 'update'])->name('bookings.update');
+            Route::post('bookings/{id}/approve', [BookingController::class, 'approve'])->name('bookings.approve');
+            Route::post('bookings/{id}/reject', [BookingController::class, 'reject'])->name('bookings.reject');
+            Route::delete('bookings/{id}', [BookingController::class, 'destroy'])->name('bookings.destroy');
+            Route::post('bookings/{id}/complete', [BookingController::class, 'complete'])->name('bookings.complete');
+        });
+    
+        // ===== جدول الأطباء =====
+        Route::get('schedule', [ScheduleController::class, 'index'])
+            ->name('schedule')
+            ->middleware('permission:manage doctors'); 
+    });
 
 
-
-Route::prefix('employee')->name('employee.')->group(function () {
-
-    Route::get('bookings', [BookingController::class, 'index'])
-        ->name('bookings.index');
-
-    Route::get('bookings/create', [BookingController::class, 'create'])
-        ->name('bookings.create');
-
-    Route::post('bookings', [BookingController::class, 'store'])
-        ->name('bookings.store');
-
-    Route::get('bookings/{id}/edit', [BookingController::class, 'edit'])
-        ->name('bookings.edit');
-
-    Route::put('bookings/{id}', [BookingController::class, 'update'])
-        ->name('bookings.update');
-
-    Route::post('bookings/{id}/approve', [BookingController::class, 'approve'])
-        ->name('bookings.approve');
-
-    Route::post('bookings/{id}/reject', [BookingController::class, 'reject'])
-        ->name('bookings.reject');
-
-    Route::delete('bookings/{id}', [BookingController::class, 'destroy'])
-        ->name('bookings.destroy');
-
-    Route::post('bookings/{id}/complete', [BookingController::class, 'complete'])
-        ->name('bookings.complete');
-});
-
-
-
-Route::get('employee/schedule', [ScheduleController::class, 'index'])
-    ->name('employee.schedule');
+    
     
 Route::prefix('patient')->name('patient.')->middleware(['auth','role:patient'])->group(function () {
     Route::resources([
@@ -151,35 +117,82 @@ Route::prefix('patient')->name('patient.')->middleware(['auth','role:patient'])-
     ]);
 });
 
-Route::prefix('doctor')->name('doctor.')->middleware(['auth','role:doctor'])->group(function () {
-    Route::resources([
-        'medical-records'  => MedicalRecordController::class,
-        'prescriptions'    => PrescriptionController::class,
-    ]);
+/**/
+Route::prefix('doctor')
+    ->name('doctor.')
+    ->middleware(['auth', 'role:doctor'])
+    ->group(function () {
+
+    // ================== Patients ==================
+    Route::get('patients', [\App\Http\Controllers\Doctor\PatientController::class, 'index'])
+        ->name('patients.index')
+        ->middleware('permission:manage patients');
+
+    // ==================  medical-records  ==================
+    Route::prefix('medical-records')
+        ->middleware('permission:manage medical records')
+        ->group(function () {
+
+            Route::get('/', [MedicalRecordController::class, 'index'])->name('medical_records.index');
+            Route::get('/create', [MedicalRecordController::class, 'create'])->name('medical_records.create');
+            Route::post('/', [MedicalRecordController::class, 'store'])->name('medical_records.store');
+            Route::get('{medicalRecord}/edit', [MedicalRecordController::class, 'edit'])->name('medical_records.edit');
+            Route::put('{medicalRecord}', [MedicalRecordController::class, 'update'])->name('medical_records.update');
+        });
+
+    // ================== appointments ==================
+    Route::prefix('appointments')
+        ->middleware('permission:manage appointments')
+        ->group(function () {
+
+            Route::get('/', [\App\Http\Controllers\Doctor\AppointmentController::class, 'doctorAppointments'])
+                ->name('appointments.doctorAppointments');
+
+            Route::get('/today', [\App\Http\Controllers\Doctor\AppointmentController::class, 'today'])
+                ->name('appointments.today');
+
+            Route::get('/create', [\App\Http\Controllers\Doctor\AppointmentController::class, 'create'])
+                ->name('appointments.create');
+
+            Route::post('/', [\App\Http\Controllers\Doctor\AppointmentController::class, 'store'])
+                ->name('appointments.store');
+
+            Route::get('{appointment}/edit', [\App\Http\Controllers\Doctor\AppointmentController::class, 'edit'])
+                ->name('appointments.edit');
+
+            Route::put('{appointment}', [\App\Http\Controllers\Doctor\AppointmentController::class, 'update'])
+                ->name('appointments.update');
+        });
 });
 
+
+/*
+Route::prefix('doctor')->name('doctor.')->middleware(['auth', 'role:doctor'])->group(function () {
+
+    Route::get('doctor/patients', [App\Http\Controllers\Doctor\PatientController::class, 'index'])->name('patients.index');
+    Route::get('doctor/medical_records', [App\Http\Controllers\Doctor\MedicalRecordController::class, 'index'])->name('medical_records.index');
+    Route::get('doctor/create_medical_records', [App\Http\Controllers\Doctor\MedicalRecordController::class, 'create'])->name('medical_records.create');
+    Route::post('doctor/store_medical_records', [App\Http\Controllers\Doctor\MedicalRecordController::class, 'store'])->name('medical_records.store');
+    Route::get('doctor/{medicalRecord}/edit_medical_records', [App\Http\Controllers\Doctor\MedicalRecordController::class, 'edit'])->name('medical_records.edit');
+    Route::put('doctor/{medicalRecord}/update_medical_records', [App\Http\Controllers\Doctor\MedicalRecordController::class, 'update'])->name('medical_records.update');
+
+    Route::get('doctor/appointments', [App\Http\Controllers\Doctor\AppointmentController::class, 'doctorAppointments'])->name('appointments.doctorAppointments');
+    Route::get('doctor/today_appointments', [App\Http\Controllers\Doctor\AppointmentController::class, 'today'])->name('appointments.today');
+    Route::get('doctor/create_appointments', [App\Http\Controllers\Doctor\AppointmentController::class, 'create'])->name('appointments.create');
+    Route::post('doctor/store_appointments', [App\Http\Controllers\Doctor\AppointmentController::class, 'store'])->name('appointments.store');
+    Route::get('doctor/{appointment}/update_appointments', [App\Http\Controllers\Doctor\AppointmentController::class, 'update'])->name('appointments.update');
+    Route::put('doctor/{appointment}/edit_appointments', [App\Http\Controllers\Doctor\AppointmentController::class, 'edit'])->name('appointments.edit');
+});
+*/
+
+
 Route::prefix('employee')->name('employee.')
-->middleware(['auth','role:employee'])->group(function () {
-      Route::resource('invoices', EmployeeInvoiceController::class); });
+    ->middleware(['auth', 'role:employee'])->group(function () {
+        Route::resource('invoices', EmployeeInvoiceController::class);
+    });
 
 
-    // Route::get('/dashboard', [EmployeeDashboardController::class, 'index'])->name('dashboard');
-// Temp Routes for testing doctor baldes...
-Route::get('doctor/patients', [App\Http\Controllers\Doctor\PatientController::class,'index'])->name('doctor.patients.index');
-Route::get('doctor/medical_records', [App\Http\Controllers\Doctor\MedicalRecordController::class,'index'])->name('doctor.medical_records.index');
-Route::get('doctor/create_medical_records', [App\Http\Controllers\Doctor\MedicalRecordController::class,'create'])->name('doctor.medical_records.create');
-Route::post('doctor/store_medical_records', [App\Http\Controllers\Doctor\MedicalRecordController::class,'store'])->name('doctor.medical_records.store');
-Route::get('doctor/{medicalRecord}/edit_medical_records', [App\Http\Controllers\Doctor\MedicalRecordController::class,'edit'])->name('doctor.medical_records.edit');
-Route::put('doctor/{medicalRecord}/update_medical_records', [App\Http\Controllers\Doctor\MedicalRecordController::class,'update'])->name('doctor.medical_records.update');
-
-Route::get('doctor/appointments', [App\Http\Controllers\Doctor\AppointmentController::class,'doctorAppointments'])->name('doctor.appointments.doctorAppointments');
-Route::get('doctor/today_appointments', [App\Http\Controllers\Doctor\AppointmentController::class,'today'])->name('doctor.appointments.today');
-Route::get('doctor/create_appointments', [App\Http\Controllers\Doctor\AppointmentController::class,'create'])->name('doctor.appointments.create');
-Route::post('doctor/store_appointments', [App\Http\Controllers\Doctor\AppointmentController::class,'store'])->name('doctor.appointments.store');
-Route::get('doctor/{appointment}/update_appointments', [App\Http\Controllers\Doctor\AppointmentController::class,'update'])->name('doctor.appointments.update');
-Route::put('doctor/{appointment}/edit_appointments', [App\Http\Controllers\Doctor\AppointmentController::class,'edit'])->name('doctor.appointments.edit');
-
-Route::resource('prescriptions', PrescriptionController::class);
+Route::resource( 'prescriptions', PrescriptionController::class);
 
 // Auth routes
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

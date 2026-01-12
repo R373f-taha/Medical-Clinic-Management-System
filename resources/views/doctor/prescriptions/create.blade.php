@@ -11,7 +11,7 @@
             </h2>
         </div>
 
-        
+
         <div style="background:#ffffff; border-radius:8px;
                     box-shadow:0 2px 8px rgba(0,0,0,0.1);
                     padding:25px;">
@@ -33,7 +33,7 @@
                     </select>
                 </div>
 
-               
+
                 <div style="margin-bottom:15px;">
                     <label style="font-weight:600;">Medicine Name</label>
                     <input type="text" name="medicine_name"
@@ -41,7 +41,7 @@
                                   border:1px solid #ccc;" required>
                 </div>
 
-                
+
                 <div style="margin-bottom:15px;">
                     <label style="font-weight:600;">Dosage</label>
                     <input type="number" name="dosage"
@@ -49,7 +49,7 @@
                                   border:1px solid #ccc;" required>
                 </div>
 
-               
+
                 <div style="margin-bottom:15px;">
                     <label style="font-weight:600;">Frequency (times/day)</label>
                     <input type="number" name="frequency"
@@ -57,7 +57,7 @@
                                   border:1px solid #ccc;" required>
                 </div>
 
-                
+
                 <div style="margin-bottom:15px;">
                     <label style="font-weight:600;">Refills</label>
                     <input type="text" name="refills"
@@ -65,7 +65,7 @@
                                   border:1px solid #ccc;" required>
                 </div>
 
-               
+
                 <div style="margin-bottom:15px;">
                     <label style="font-weight:600;">Instructions</label>
                     <textarea name="instructions" rows="2"
@@ -73,7 +73,7 @@
                                      border:1px solid #ccc;" required></textarea>
                 </div>
 
-               
+
                 <div style="margin-bottom:20px;">
                     <label style="font-weight:600;">Duration (days)</label>
                     <input type="number" name="duration"
@@ -81,7 +81,7 @@
                                   border:1px solid #ccc;" required>
                 </div>
 
-                
+
                 <div style="display:flex; gap:10px;">
                     <button type="submit"
                             style="background-color:#ff7a00; color:#fff;
