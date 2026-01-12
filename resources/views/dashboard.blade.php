@@ -3,11 +3,11 @@
 @section('title', 'Dashboard')
 
 @section('content')
-    @if(Auth::user()->doctor)
+    @if(Auth::user()->can('doctor'))
         @include('partials.doctorDashboard')
-    @else
+    @elseif(Auth::user()->can('employee'))
 
-
+    @elseif(Auth::user()->can('clinicManager'))
 <div class="row">
 
     <div class="col-lg-8 col-md-12 mb-4">

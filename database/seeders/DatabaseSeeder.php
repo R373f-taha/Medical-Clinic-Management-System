@@ -2,6 +2,9 @@
 
 namespace Database\Seeders;
 
+use App\Models\Doctor;
+use App\Models\Employee;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 use App\Models\User;
 use Spatie\Permission\Models\Role;
@@ -58,20 +61,20 @@ class DatabaseSeeder extends Seeder
     
 
         $this->call([
+            RolesAndPermissionsSeeder::class,
             ClinicSeeder::class,
             UserSeeder::class,
             DoctorSeeder::class,
             EmployeeSeeder::class,
             MedicalRecordSeeder::class,
-             AppointmentSeeder::class,
+            AppointmentSeeder::class,
             PrescriptionSeeder::class,
             ImageSeeder::class,
             InvoiceSeeder::class,
             RatingSeeder::class,
             NotificationSeeder::class,
             ClinicSePatientSeeder::class,
-            RolesAndPermissionsSeeder::class,
         ]);
+
     }
 }
-

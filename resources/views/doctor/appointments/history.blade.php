@@ -113,7 +113,7 @@
         </div>
 
     </div>
-        <a href="{{ route('doctor.dashboard') }}"
+        <a href="{{ route('dashboard') }}"
             style="display:inline-block; margin-top:20px; padding:10px 20px; background-color:#ff7a00; color:#fff; text-decoration:none; border-radius:6px; box-shadow:0 2px 6px rgba(0,0,0,0.1); transition:background-color 0.3s;">
             Go Back
         </a>
