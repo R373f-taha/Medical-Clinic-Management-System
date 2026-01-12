@@ -26,7 +26,9 @@ class AppointmentFactory extends Factory
             'patient_id'       => $patient->id,
             'doctor_id'        => $doctor->id,
             'medical_record_id'=> null,
-            'appointment_date' => $date->setTime($hour, $minute),
+            'appointment_date' => Carbon::now()
+                ->addDays($this->faker->unique()->numberBetween(1, 30))
+                ->setTime($hour, $minute),
             'status'           => $this->faker->randomElement([
                 'hold','scheduled','completed','cancelled'
             ]),

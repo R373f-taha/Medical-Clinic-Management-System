@@ -82,45 +82,31 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:clinicManager'
 
 
 ///////////////////////////////////////////////
+    Route::prefix('employee')->name('employee.')->middleware(['auth'])->group(function () {
+
+        // ===== إدارة الحجوزات =====
+        Route::middleware('permission:manage appointments')->group(function () {
+            Route::get('bookings', [BookingController::class, 'index'])->name('bookings.index');
+            Route::get('bookings/create', [BookingController::class, 'create'])->name('bookings.create');
+            Route::post('bookings', [BookingController::class, 'store'])->name('bookings.store');
+            Route::get('bookings/{id}/edit', [BookingController::class, 'edit'])->name('bookings.edit');
+            Route::put('bookings/{id}', [BookingController::class, 'update'])->name('bookings.update');
+            Route::post('bookings/{id}/approve', [BookingController::class, 'approve'])->name('bookings.approve');
+            Route::post('bookings/{id}/reject', [BookingController::class, 'reject'])->name('bookings.reject');
+            Route::delete('bookings/{id}', [BookingController::class, 'destroy'])->name('bookings.destroy');
+            Route::post('bookings/{id}/complete', [BookingController::class, 'complete'])->name('bookings.complete');
+        });
+    
+        // ===== جدول الأطباء =====
+        Route::get('schedule', [ScheduleController::class, 'index'])
+            ->name('schedule')
+            ->middleware('permission:manage doctors'); 
+    });
 
 
-
-Route::prefix('employee')->name('employee.')->group(function () {
-
-    Route::get('bookings', [BookingController::class, 'index'])
-        ->name('bookings.index');
-
-    Route::get('bookings/create', [BookingController::class, 'create'])
-        ->name('bookings.create');
-
-    Route::post('bookings', [BookingController::class, 'store'])
-        ->name('bookings.store');
-
-    Route::get('bookings/{id}/edit', [BookingController::class, 'edit'])
-        ->name('bookings.edit');
-
-    Route::put('bookings/{id}', [BookingController::class, 'update'])
-        ->name('bookings.update');
-
-    Route::post('bookings/{id}/approve', [BookingController::class, 'approve'])
-        ->name('bookings.approve');
-
-    Route::post('bookings/{id}/reject', [BookingController::class, 'reject'])
-        ->name('bookings.reject');
-
-    Route::delete('bookings/{id}', [BookingController::class, 'destroy'])
-        ->name('bookings.destroy');
-
-    Route::post('bookings/{id}/complete', [BookingController::class, 'complete'])
-        ->name('bookings.complete');
-});
-
-
-
-Route::get('employee/schedule', [ScheduleController::class, 'index'])
-    ->name('employee.schedule');
-
-Route::prefix('patient')->name('patient.')->middleware(['auth', 'role:patient'])->group(function () {
+    
+    
+Route::prefix('patient')->name('patient.')->middleware(['auth','role:patient'])->group(function () {
     Route::resources([
         'profile'      => PatientController::class,
         'appointments' => PatientAppointmentController::class,

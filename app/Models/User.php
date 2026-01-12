@@ -14,6 +14,7 @@ class User extends Authenticatable implements JWTSubject
 {
     use HasFactory, Notifiable, HasRoles;
   protected $guard_name = 'web';
+ 
     protected $fillable = [
         'name',
         'email',

@@ -63,43 +63,30 @@ class RolesAndPermissionsSeeder extends Seeder
         }
 
 
-        $clinicManager = Role::firstOrCreate([
-            'name' => 'clinicManager',
-            'guard_name' => 'web'
-        ]);
+          $clinicManager = Role::firstOrCreate(['name' => 'clinicManager','guard_name' => 'web']);
+          //تعريف مصفوفة بصلاحيات مدير العيادة 
+          $managerPermissions = [
+              'access admin panel',
+              'manage users',
+              'manage patients',
+              'manage appointments',
+              'manage doctors',
+              'manage employees',
+              'manage clinic',
+              'manage medical records',
+              'manage invoices',
+              'manage ratings',
+              'view reports'
+          ];
+          // إسناد الصلاحيات للدور
+          $clinicManager->syncPermissions($managerPermissions);
 
-        //تعريف مصفوفة بصلاحيات مدير العيادة
-        $managerPermissions = [
-            'access admin panel',
-            'manage users',
-            'manage patients',
-            'manage appointments',
-            'manage doctors',
-            'manage employees',
-            'manage clinic',
-            'manage medical records',
-            'manage invoices',
-            'manage ratings',
-            'view reports'
-        ];
-        // إسناد الصلاحيات للدور
-        $clinicManager->syncPermissions($managerPermissions);
-
-
-        $doctor = Role::firstOrCreate([
-            'name' => 'doctor',
-            'guard_name' => 'web'
-        ]);
-        $doctor->givePermissionTo([
-            'manage patients',
-            'manage medical records',
-            'manage appointments',
-            'view rating'
-        ]);
-        $employee = Role::firstOrCreate([
-            'name' => 'employee',
-            'guard_name' => 'web'
-        ]);
+          
+        $doctor=Role::firstOrCreate(['name'=> 'doctor' ,'guard_name' => 'web']);
+        $doctor->givePermissionTo(['manage patients',
+          'manage medical records','manage appointments',
+          'view rating']);
+        $employee=Role::firstOrCreate(['name'=> 'employee' ,'guard_name' => 'web']);
         $employee->givePermissionTo([
             'manage doctors',
             'manage appointments'
