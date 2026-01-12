@@ -4,11 +4,26 @@ namespace Database\Seeders;
 
 use App\Models\Employee;
 use Illuminate\Database\Seeder;
+use Spatie\Permission\Models\Role;
 
 class EmployeeSeeder extends Seeder
+
 {
-    public function run(): void
+  
+     public function run(): void
     {
-        Employee::factory()->count(10)->create();
+
+        $employeeRole = Role::firstOrCreate([
+            'name' => 'employee',
+            'guard_name' => 'web'
+        ]);
+
+    Employee ::factory()
+            ->count(5)
+            ->create()
+            ->each(function ($employee) use ($employeeRole) {
+                $employee->user->assignRole($employeeRole);
+            });
     }
+    
 }

@@ -8,79 +8,103 @@ use Illuminate\Validation\ValidationException;
 
 class BookingService
 {
-    // إنشاء موعد
-    public function createBooking(array $data)
+    /**
+     * Create a new booking with status 'hold'.
+     *
+     * @param array $data
+     * @throws \Illuminate\Validation\ValidationException
+     * @return void
+     */
+    public function createBooking(array $data): void
     {
         $this->validateWorkingHours($data['appointment_date']);
-
-        $this->ensureNoConflict(
-            $data['doctor_id'],
-            $data['appointment_date']
-        );
+        $this->ensureNoConflict($data['doctor_id'], $data['appointment_date']);
 
         Appointment::create([
             'patient_id'       => $data['patient_id'],
             'doctor_id'        => $data['doctor_id'],
             'appointment_date' => $data['appointment_date'],
             'reason'           => $data['reason'] ?? null,
-            'status'           => 'scheduled',
+            'status'           => 'hold',
         ]);
     }
 
-    // تعديل موعد
-    public function updateBooking($id, $date, $reason)
+    /**
+     * Update an existing booking's date and reason.
+     *
+     * @param int $id
+     * @param string $date
+     * @param string|null $reason
+     * @throws \Illuminate\Validation\ValidationException
+     * @return void
+     */
+    public function updateBooking(int $id, string $date, ?string $reason): void
     {
         $booking = Appointment::findOrFail($id);
 
         $this->validateWorkingHours($date);
 
-        if ($booking->appointment_date != $date) {
-            $this->ensureNoConflict(
-                $booking->doctor_id,
-                $date,
-                $booking->id
-            );
+        if ($booking->appointment_date !== $date) {
+            $this->ensureNoConflict($booking->doctor_id, $date, $booking->id);
         }
 
         $booking->update([
             'appointment_date' => $date,
             'reason'           => $reason,
-            'status'           => 'scheduled',
         ]);
     }
 
-    // الموافقة على موعد
-    public function approve($id)
+    /**
+     * Approve a booking by setting status to 'scheduled'.
+     *
+     * @param int $id
+     * @throws \Illuminate\Validation\ValidationException
+     * @return void
+     */
+    public function approve(int $id): void
     {
         $booking = Appointment::findOrFail($id);
 
         $this->validateWorkingHours($booking->appointment_date);
         $this->ensureNoConflict($booking->doctor_id, $booking->appointment_date, $booking->id);
 
-        $booking->update([
-            'status' => 'scheduled',
-        ]);
+        $booking->update(['status' => 'scheduled']);
     }
 
-    // رفض موعد
-    public function reject($id)
+    /**
+     * Reject a booking by setting status to 'cancelled'.
+     *
+     * @param int $id
+     * @return void
+     */
+    public function reject(int $id): void
     {
-        Appointment::findOrFail($id)->update([
-            'status' => 'cancelled',
-        ]);
+        Appointment::findOrFail($id)->update(['status' => 'cancelled']);
     }
 
-    // تحديد موعد كمكتمل
-    public function complete($id)
+    /**
+     * Mark a booking as completed.
+     *
+     * @param int $id
+     * @return void
+     */
+    public function complete(int $id): void
     {
-        Appointment::findOrFail($id)->update([
-            'status' => 'completed',
-        ]);
+        Appointment::findOrFail($id)->update(['status' => 'completed']);
     }
 
-    // ================== PRIVATE ==================
+    // ================= Helpers =================
 
-    private function ensureNoConflict($doctorId, $date, $ignoreId = null)
+    /**
+     * Ensure that the doctor does not have another appointment at the same date/time.
+     *
+     * @param int $doctorId
+     * @param string $date
+     * @param int|null $ignoreId
+     * @throws \Illuminate\Validation\ValidationException
+     * @return void
+     */
+    private function ensureNoConflict(int $doctorId, string $date, ?int $ignoreId = null): void
     {
         $query = Appointment::where('doctor_id', $doctorId)
             ->where('appointment_date', $date);
@@ -96,7 +120,15 @@ class BookingService
         }
     }
 
-    private function validateWorkingHours($date)
+    /**
+     * Validate that the appointment time is within working hours (10:00 - 18:00)
+     * and on a 30-minute interval.
+     *
+     * @param string $date
+     * @throws \Illuminate\Validation\ValidationException
+     * @return void
+     */
+    private function validateWorkingHours(string $date): void
     {
         $time = Carbon::parse($date);
 

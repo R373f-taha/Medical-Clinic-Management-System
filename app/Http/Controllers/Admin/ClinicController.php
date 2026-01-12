@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Clinic;
 use App\Services\Admin\ClinicService;
 use App\Http\Requests\Update\UpdateClinicRequest;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class ClinicController extends Controller
 {
@@ -19,11 +21,16 @@ class ClinicController extends Controller
     // عرض بيانات العيادة
     public function index()
     {
-        $clinic = $this->clinicService->get();
-        return view('admin.Clinic.index', compact('clinic'));
+        try {
+            $clinic = $this->clinicService->get();
+            return view('admin.Clinic.index', compact('clinic'));
+        } catch (\Throwable $e) {
+            Log::error('Fetching clinic failed: '.$e->getMessage());
+            return back()->withErrors(['error' => 'Unable to fetch clinic data.']);
+        }
     }
 
-    // تعديل بيانات العيادة
+    // صفحة تعديل بيانات العيادة
     public function edit(Clinic $clinic)
     {
         return view('admin.Clinic.edit', compact('clinic'));
@@ -32,9 +39,18 @@ class ClinicController extends Controller
     // حفظ التعديلات
     public function update(UpdateClinicRequest $request, Clinic $clinic)
     {
-        $this->clinicService->update($clinic, $request->validated());
+        DB::beginTransaction();
+        try {
+            $this->clinicService->update($clinic, $request->validated());
+            DB::commit();
 
-        return redirect()->route('admin.clinic.index')
-                         ->with('success', 'تم تعديل بيانات العيادة بنجاح');
+            return redirect()->route('admin.clinic.index')
+                             ->with('success', 'Clinic data updated successfully.');
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            Log::error('Update clinic failed: '.$e->getMessage());
+
+            return back()->withErrors(['error' => 'Failed to update clinic data.'])->withInput();
+        }
     }
 }
