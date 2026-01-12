@@ -9,7 +9,7 @@ class AdminMedicalRecordController extends Controller
 {
     public function index()
     {
-        $records = MedicalRecord::with([
+        $records = MedicalRecord::with([  
                 'doctor.user',
                 'patient.user'
             ])
