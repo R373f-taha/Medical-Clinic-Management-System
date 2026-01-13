@@ -34,6 +34,7 @@ class RolesAndPermissionsSeeder extends Seeder
             'assign roles',
             'revoke permissions',
             'manage permissions',
+            'manage prescriptions'
         ];
 
         foreach ($webPermissions as $permission) {
@@ -64,7 +65,7 @@ class RolesAndPermissionsSeeder extends Seeder
 
 
           $clinicManager = Role::firstOrCreate(['name' => 'clinicManager','guard_name' => 'web']);
-          //تعريف مصفوفة بصلاحيات مدير العيادة 
+          //تعريف مصفوفة بصلاحيات مدير العيادة
           $managerPermissions = [
               'access admin panel',
               'manage users',
@@ -81,9 +82,9 @@ class RolesAndPermissionsSeeder extends Seeder
           // إسناد الصلاحيات للدور
           $clinicManager->syncPermissions($managerPermissions);
 
-          
+
         $doctor=Role::firstOrCreate(['name'=> 'doctor' ,'guard_name' => 'web']);
-        $doctor->givePermissionTo(['manage patients',
+        $doctor->givePermissionTo(['manage patients','manage prescriptions',
           'manage medical records','manage appointments',
           'view rating']);
         $employee=Role::firstOrCreate(['name'=> 'employee' ,'guard_name' => 'web']);
