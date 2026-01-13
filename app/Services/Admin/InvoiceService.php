@@ -10,9 +10,7 @@ class InvoiceService
 {
     public function getAll()
     {
-        return Invoice::with(['patient', 'appointment'])
-            ->latest()
-            ->get();
+        return Invoice::with(['patient', 'appointment'])->latest();
     }
 
     public function getPatients()
@@ -32,8 +30,7 @@ class InvoiceService
 
     public function update(Invoice $invoice, array $data)
     {
-        $invoice->update($data);
-        return $invoice;
+        return $invoice->update($data);
     }
 
     public function delete(Invoice $invoice)

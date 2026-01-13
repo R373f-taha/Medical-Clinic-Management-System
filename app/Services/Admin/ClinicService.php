@@ -8,7 +8,6 @@ class ClinicService
 {
     public function get()
     {
-        // نجيب أول سجل موجود
         return Clinic::first();
     }
 

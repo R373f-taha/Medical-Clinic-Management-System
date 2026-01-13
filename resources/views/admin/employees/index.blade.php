@@ -40,21 +40,24 @@
                     <td>{{ $employee->email }}</td>
                     <td>{{ $employee->gender }}</td>
                     <td>{{ $employee->date_of_birth ?? '-' }}</td>
-                    <td>
-                        <a href="{{ route('admin.employees.edit', $employee) }}"
-                           class="btn btn-sm btn-warning">
-                            Edit
+                    <td class="d-flex gap-2 justify-content-center align-items-center">
+                        {{-- أيقونة التعديل --}}
+                        <a href="{{ route('admin.employees.edit', $employee) }}" title="Edit">
+                            <i class="fas fa-edit action-icon"
+                               style="font-size:1.5rem; color:#ffc107; cursor:pointer;"></i>
                         </a>
 
+                        {{-- أيقونة الحذف --}}
                         @can('manage employees')
                         <form action="{{ route('admin.employees.destroy', $employee) }}"
-                              method="POST" style="display:inline">
+                              method="POST" style="display:inline"
+                              onsubmit="return confirm('Are you sure you want to delete this employee?')">
                             @csrf
                             @method('DELETE')
-                            <button class="btn btn-sm btn-danger"
-                                    onclick="return confirm('Are you sure you want to delete this employee?')">
-                                Delete
-                            </button>
+                            <i class="fas fa-trash action-icon danger"
+                               title="Delete"
+                               style="font-size:1.5rem; color:#dc3545; cursor:pointer;"
+                               onclick="this.closest('form').submit()"></i>
                         </form>
                         @endcan
                     </td>
@@ -68,6 +71,6 @@
             @endforelse
         </tbody>
     </table>
-    @endcan
+@endcan
 </div>
 @endsection

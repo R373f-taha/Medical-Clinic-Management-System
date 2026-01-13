@@ -89,7 +89,8 @@ class RolesAndPermissionsSeeder extends Seeder
         $employee=Role::firstOrCreate(['name'=> 'employee' ,'guard_name' => 'web']);
         $employee->givePermissionTo([
             'manage doctors',
-            'manage appointments'
+            'manage appointments',
+            'manage invoices'
         ]);
 
         // Patient Role (API Only)

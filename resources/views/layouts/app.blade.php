@@ -12,11 +12,11 @@
 </head>
 
 <body class="g-sidenav-show bg-gray-100">
-    @if (Auth::user()->doctor)
+    @if (Auth::user()->hasRole('doctor'))
         @include('doctor.partials.sidebar')
-    @elseif(Auth::user()->employee)
+    @elseif(Auth::user()->hasRole('employee'))
         @include('employeeDashInfo.partials.sidebar')
-    @else
+           @elseif(Auth::user()->hasRole('clinicManager'))
         @include('partials.sidebar')
     @endif
 
