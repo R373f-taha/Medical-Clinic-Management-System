@@ -5,6 +5,7 @@
 
     <div style="max-width:1200px; margin:auto;">
 
+        {{-- Header --}}
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
             <h2 style="color:#ff7a00;">Prescriptions</h2>
 
@@ -16,6 +17,7 @@
             </a>
         </div>
 
+        {{-- Table --}}
         <div style="overflow-x:auto; background:#ffffff;
                     border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.1);">
 
@@ -44,17 +46,18 @@
                         <td>{{ $prescription->instructions }}</td>
                         <td>{{ $prescription->duration }}</td>
                         <td>
+                            {{-- Edit --}}
                             <a href="{{ route('prescriptions.edit', $prescription->id) }}" title="Edit">
                                 <i class="fas fa-edit action-icon text-warning" style="font-size:1.3rem;"></i>
                             </a>
 
-                            <form action="{{ route('prescriptions.destroy', $prescription->id) }}" method="POST" style="display:inline;">
+                            {{-- Delete with SweetAlert2 --}}
+                            <form id="delete-form-{{ $prescription->id }}" action="{{ route('prescriptions.destroy', $prescription->id) }}" method="POST" style="display:inline;">
                                 @csrf
                                 @method('DELETE')
                                 <i class="fas fa-trash action-icon text-danger" style="font-size:1.3rem; cursor:pointer;"
                                    title="Delete"
-                                   onclick="return confirm('Are you sure you want to delete this prescription?') ? this.closest('form').submit() : false;">
-                                </i>
+                                   onclick="confirmDeletePrescription({{ $prescription->id }})"></i>
                             </form>
                         </td>
                     </tr>
@@ -69,6 +72,7 @@
 
         </div>
 
+        {{-- Back Button --}}
         <a href="{{ url()->previous() }}"
            style="display:inline-block; margin-top:20px;
                   padding:10px 20px; background-color:#ff7a00;
@@ -81,6 +85,28 @@
 
 </div>
 
+{{-- SweetAlert2 Script --}}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+function confirmDeletePrescription(id) {
+    Swal.fire({
+        title: 'Delete Prescription?',
+        text: "This prescription will be permanently deleted!",
+        icon: 'error',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete it',
+        cancelButtonText: 'Cancel',
+        confirmButtonColor: '#dc3545',
+        reverseButtons: true
+    }).then((result) => {
+        if (result.isConfirmed) {
+            document.getElementById('delete-form-' + id).submit();
+        }
+    });
+}
+</script>
+
+{{-- Styles --}}
 <style>
 .action-icon {
     transition: transform 0.2s;

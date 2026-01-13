@@ -76,8 +76,9 @@ class RolesAndPermissionsSeeder extends Seeder
               'manage medical records',
               'manage invoices',
               'manage ratings',
-              'view reports'
-          ];
+              'view reports',
+              'view notifications'
+                        ];
           // إسناد الصلاحيات للدور
           $clinicManager->syncPermissions($managerPermissions);
 
@@ -85,7 +86,7 @@ class RolesAndPermissionsSeeder extends Seeder
         $doctor=Role::firstOrCreate(['name'=> 'doctor' ,'guard_name' => 'web']);
         $doctor->givePermissionTo(['manage patients',
           'manage medical records','manage appointments',
-          'view rating']);
+          'view rating','view notifications ']);
         $employee=Role::firstOrCreate(['name'=> 'employee' ,'guard_name' => 'web']);
         $employee->givePermissionTo([
             'manage doctors',

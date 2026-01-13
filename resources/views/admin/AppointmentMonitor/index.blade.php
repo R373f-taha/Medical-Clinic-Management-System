@@ -1,4 +1,4 @@
-@extends('layouts.app') 
+@extends('layouts.app')
 
 @section('content')
 <div class="container mt-4">
@@ -33,16 +33,17 @@
                     <td>{{ $appointment->appointment_date->format('Y-m-d H:i') }}</td>
                     <td>
                         @can('manage appointments')
-                        <form action="{{ route('admin.appointments.destroy', $appointment->id) }}"
+                        <form id="delete-form-{{ $appointment->id }}"
+                              action="{{ route('admin.appointments.destroy', $appointment->id) }}"
                               method="POST"
-                              style="display:inline"
-                              onsubmit="return confirm('هل أنت متأكد من الحذف؟');">
+                              style="display:inline">
                             @csrf
                             @method('DELETE')
+
                             <i class="fas fa-trash action-icon danger"
                                title="Delete"
                                style="font-size:1.5rem; cursor:pointer; color:#dc3545;"
-                               onclick="this.closest('form').submit()"></i>
+                               onclick="confirmDelete({{ $appointment->id }})"></i>
                         </form>
                         @endcan
                     </td>
@@ -53,6 +54,27 @@
     </div>
     @endcan
 </div>
+
+{{-- SweetAlert --}}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+function confirmDelete(id) {
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this appointment deletion!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete it',
+        cancelButtonText: 'Cancel',
+        reverseButtons: true
+    }).then((result) => {
+        if (result.isConfirmed) {
+            document.getElementById('delete-form-' + id).submit();
+        }
+    });
+}
+</script>
 
 <style>
 .table th, .table td {
@@ -67,8 +89,8 @@
 }
 
 .action-icon.danger:hover {
-    color: #a71d2a; /* تغيير لون عند المرور */
-    transform: scale(1.2); /* تكبير بسيط عند المرور */
+    color: #a71d2a;
+    transform: scale(1.2);
     transition: 0.2s;
 }
 </style>

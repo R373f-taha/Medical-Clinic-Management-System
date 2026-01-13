@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Clinic;
 use App\Models\Doctor;
-use App\Models\Clinic_Doctor;
 use App\Services\Admin\ClinicDoctorService;
 use Illuminate\Http\Request;
 
