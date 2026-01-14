@@ -51,7 +51,7 @@ class AppServiceProvider extends ServiceProvider
                     return [
                         'type' => 'invoice',
                         'title' => 'Invoice Paid',
-                        'message' => 'Patient ' . $invoice->patient->name .
+                        'message' => 'Patient ' . $invoice->patient->user->name .
                                      ' paid an amount of ' . $invoice->total_amount,
                         'date' => $invoice->invoice_date,
                     ];
@@ -68,7 +68,7 @@ class AppServiceProvider extends ServiceProvider
                     return [
                         'type' => 'rating',
                         'title' => 'New Doctor Rating',
-                        'message' => 'Dr. ' . $rating->doctor->name .
+                        'message' => 'Dr. ' . $rating->doctor->user->name .
                                      ' received a rating of ' . $rating->rating,
                         'date' => $rating->created_at,
                     ];
