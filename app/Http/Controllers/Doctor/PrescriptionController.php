@@ -9,10 +9,7 @@ use App\Models\Prescription;
 use App\Services\Doctor\PrescriptionService;
 use Illuminate\Http\Request;
 use App\Models\MedicalRecord;
-
-
-// doctor controller responsible for displaying , editing and deleting prescription 
-
+use Barryvdh\DomPDF\Facade\Pdf;
 class PrescriptionController extends Controller
 {
     protected $prescriptionService;
@@ -21,7 +18,10 @@ class PrescriptionController extends Controller
     {
         $this->prescriptionService = $prescriptionService;
     }
-
+    /**
+     * View all Prescriptions for the current doctor
+     * @return \Illuminate\Contracts\View\View
+     */
     public function index()
     {
         try{
@@ -32,9 +32,16 @@ class PrescriptionController extends Controller
             return back()->with('error', 'Failed to load prescriptions');
         }
     }
-
-    public function create() {
-        try{
+    public function show(Prescription $prescription)
+    {
+        return view('doctor.prescriptions.show', compact('prescription'));
+    }
+    /**
+     * Create a Prescription
+     * @return \Illuminate\Contracts\View\View
+     */
+    public function create()
+    {
         $medicalRecords = MedicalRecord::all();
         return view('doctor.prescriptions.create', compact('medicalRecords'));
         }
@@ -42,24 +49,32 @@ class PrescriptionController extends Controller
             return back()->with('error', 'Failed to load create prescription page');
         }
     }
-
+    /**
+     * Store a Prescription
+     * @param StorePrescriptionRequest $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function store(StorePrescriptionRequest $request)
     {
-        try{
-        $data = $request->validated();
-        $this->prescriptionService->store($data);
-        return redirect()->route('prescriptions.index')
-            ->with('success', 'Prescription created successfully');
+        try {
+            $data = $request->validated();
+            $this->prescriptionService->store($data);
+            return redirect()->route('doctor.prescriptions.index')
+                ->with('success', 'Prescription Created...!');
+        } catch (\Throwable $e) {
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with('delete', "Failed...!");
         }
-        catch (\Exception $e) {
-            return back()->with('error', 'Failed to create prescription');
-            }
     }
-
-    
-
-    public function edit(Prescription $prescription) {
-        try{
+    /**
+     * Edit a Prescription
+     * @param Prescription $prescription
+     * @return \Illuminate\Contracts\View\View
+     */
+    public function edit(Prescription $prescription)
+    {
         $medicalRecords = MedicalRecord::all();
         return view('doctor.prescriptions.edit', compact('prescription', 'medicalRecords'));
         }
@@ -67,31 +82,50 @@ class PrescriptionController extends Controller
             return back()->with('error', 'Failed to load edit prescription page');
         }
     }
-
+    /**
+     * Update a Prescription
+     * @param UpdatePrescriptionRequest $request
+     * @param Prescription $prescription
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function update(UpdatePrescriptionRequest $request, Prescription $prescription)
     {
-        try{
-        $data = array_filter($request->validated(), fn($value) => !is_null($value));
-        $this->prescriptionService->update($prescription, $data);
-
-        return redirect()
-            ->route('prescriptions.index')
-            ->with('success', 'Prescription updated successfully');
-        }
-        catch (\Exception $e) {
-            return back()->with('error', 'Failed to update prescription');
+        try {
+            $data = array_filter($request->validated(), fn($value) => !is_null($value));
+            $this->prescriptionService->update($prescription, $data);
+            return redirect()
+                ->route('doctor.prescriptions.index')
+                ->with('success', 'Prescription Updated...!');
+        } catch (\Throwable $e) {
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with('delete', "Failed...!");
         }
     }
 
-
+    /**
+     * Destroy a Prescription
+     * @param Prescription $prescription
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function destroy(Prescription $prescription)
     {
         try{
         $this->prescriptionService->delete($prescription);
-        return  redirect()->route('prescriptions.index')->with('success', 'Prescription deleted successfully');
-        }
-        catch (\Exception $e) {
-            return back()->with('error', 'Failed to delete prescription');
-        }
+
+        return  redirect()->route('doctor.prescriptions.index')->with('success', 'Prescription Deleted...!');
+    }
+
+    public function download(Prescription $prescription)
+    {
+        $pdf = Pdf::loadView(
+            'doctor.prescriptions.pdf',
+            compact('prescription')
+        )->setPaper('a4');
+
+        return $pdf->download(
+            'prescription_' . $prescription->id . '.pdf'
+        );
     }
 }

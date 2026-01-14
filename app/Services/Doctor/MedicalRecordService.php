@@ -8,6 +8,10 @@ use Illuminate\Support\Facades\Auth;
 
 class MedicalRecordService
 {
+    /**
+     * get all MedicalRecords
+     * @return \Illuminate\Database\Eloquent\Collection<int, MedicalRecord>
+     */
     public function getAll()
     {
         $doctor = Auth::user()->doctor;
@@ -17,7 +21,9 @@ class MedicalRecordService
             ->latest()
             ->get();
     }
-
+    /**
+     * Create a MedicalRecord
+     */
     public function create()
     {
         $doctor = Auth::user()->doctor;
@@ -30,7 +36,11 @@ class MedicalRecordService
 
         return $patients;
     }
-
+    /**
+     * Store a MedicalRecord
+     * @param array $data
+     * @return MedicalRecord
+     */
     public function store(array $data)
     {
         return MedicalRecord::create([
@@ -42,7 +52,12 @@ class MedicalRecordService
             'follow_up_date'=> $data['follow_up_date'],
         ]);
     }
-
+    /**
+     * Update a MedicalRecord
+     * @param MedicalRecord $medicalRecord
+     * @param array $data
+     * @return MedicalRecord
+     */
     public function update(MedicalRecord $medicalRecord, array $data)
     {
         $medicalRecord->update(

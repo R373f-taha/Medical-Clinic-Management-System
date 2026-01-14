@@ -1,114 +1,133 @@
-
 @extends('layouts.app')
 
 @section('content')
-<div style="background-color:#f3f3f3; min-height:100vh; padding:30px">
+<div class="container-fluid mt-3">
 
     @can('manage doctors')
-
-    <div style="max-width:1200px; margin:auto;">
-
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-            <h2 style="color:#ff7a00;">
-                Doctors
-            </h2>
-
-            <a href="{{ route('admin.doctors.create') }}"
-               style="background-color:#ff7a00; color:#fff; padding:10px 16px;
-                      text-decoration:none; border-radius:6px;">
-                + Add New Doctor
-            </a>
-        </div>
-
-        <div style="overflow-x:auto; background:#ffffff; border-radius:8px;
-                    box-shadow:0 2px 8px rgba(0,0,0,0.1)">
-
-            <table style="width:100%; border-collapse:collapse; text-align:center;">
-                <thead style="background-color:#e5e5e5;">
-                    <tr>
-                        <th style="padding:12px;">doctor name</th>
-                        <th style="padding:12px;">Specialization</th>
-                        <th style="padding:12px;">Qualifications</th>
-                        <th style="padding:12px;">Available Hours</th>
-                        <th style="padding:12px;">Experience</th>
-                        <th style="padding:12px;">service</th>
-                        <th style="padding:12px;">Actions</th>
-                    </tr>
-                </thead>
-
-                <tbody>
-                    @foreach ($doctors as $doctor)
-                        <tr style="border-bottom:1px solid #ddd;">
-                            <td style="padding:10px;">
-                              {{ $doctor->user->name }}
-                            </td>
-
-                            <td style="padding:10px;">
-                                {{ $doctor->specialization }}
-                            </td>
-
-                            <td style="padding:10px;">
-                                {{ $doctor->qualifications }}
-                            </td>
-
-                            <td style="padding:10px;">
-                                {{ $doctor->available_hours }}
-                            </td>
-
-                            <td style="padding:10px;">
-                                {{ $doctor->experience_years ?? '-' }}
-                            </td>
-
-                            <td style="padding:10px;">
-                                {{ implode('، ', $doctor->services) }}
-                            </td>
-
-                            <td style="padding:10px;">
-                                @can('manage doctors')
-                                <a href="{{ route('admin.doctors.edit', $doctor->id) }}"
-                                   style="background-color:#6c757d; color:#fff; padding:6px 12px;
-                                          text-decoration:none; border-radius:4px; margin-right:4px;">
-                                    Update
-                                </a>
-                                <a href="{{ route('admin.doctors.show', $doctor->id) }}"
-                                   style="background-color:#6c757d; color:#fff; padding:10px 16px;
-                                        text-decoration:none; border-radius:6px; display:inline-block; margin-bottom:20px;">
-                                  View Appointments 
-                                </a>
-                                <form action="{{ route('admin.doctors.destroy', $doctor->id) }}"
-                                      method="POST" style="display:inline;">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit"
-                                            style="background-color:#ff7a00; color:#fff; padding:6px 12px; border:none;
-                                                   border-radius:4px; cursor:pointer;"
-                                            onclick="return confirm('هل أنت متأكد من الحذف؟')">
-                                        Delete
-                                    </button>
-                                </form>
-                                @endcan
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-
-        </div>
-
-        <a href="{{ url()->previous() }}"
-           style="display:inline-block; margin-top:20px; padding:10px 20px;
-                  background-color:#ff7a00; color:#fff; text-decoration:none;
-                  border-radius:6px; box-shadow:0 2px 6px rgba(0,0,0,0.1);">
-            Go Back
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4 class="mb-0 text-warning">Doctors</h4>
+        <a href="{{ route('admin.doctors.create') }}" class="btn btn-warning btn-sm">
+            <i class="fas fa-plus"></i> Add Doctor
         </a>
-
     </div>
 
-    @else
-        <div class="alert alert-danger">
-            You do not have permission to manage doctors.
-        </div>
-    @endcan
+    <div class="table-responsive bg-white rounded shadow-sm p-2">
+        <table class="table table-bordered table-striped align-middle text-center mb-0">
+            <thead class="table-secondary">
+                <tr>
+                    <th>Name</th>
+                    <th>Specialization</th>
+                    <th>Qualifications</th>
+                    <th>Available Hours</th>
+                    <th>Experience</th>
+                    <th>Services</th>
+                    <th style="width:100px;">Actions</th>
+                </tr>
+            </thead>
 
+            <tbody>
+                @forelse($doctors as $doctor)
+                <tr>
+                    <td class="text-truncate" style="max-width:150px;">{{ $doctor->user->name }}</td>
+                    <td>{{ $doctor->specialization }}</td>
+                    <td>{{ $doctor->qualifications }}</td>
+                    <td>{{ $doctor->available_hours }}</td>
+                    <td>{{ $doctor->experience_years ?? '-' }}</td>
+                    <td>{{ implode(', ', $doctor->services) }}</td>
+
+                    {{-- ACTIONS --}}
+                    <td>
+                        <div class="d-flex justify-content-center gap-1">
+
+                            {{-- Edit --}}
+                            <a href="{{ route('admin.doctors.edit', $doctor->id) }}">
+                                <i class="fas fa-edit action-icon edit" title="Update Doctor"></i>
+                            </a>
+
+                            {{-- View Appointments --}}
+                            <a href="{{ route('admin.doctors.show', $doctor->id) }}">
+                                <i class="fas fa-calendar-check action-icon view" title="View Appointments"></i>
+                            </a>
+
+                            {{-- Delete --}}
+                            <form id="delete-form-{{ $doctor->id }}" action="{{ route('admin.doctors.destroy', $doctor->id) }}" method="POST" style="display:inline;">
+                                @csrf
+                                @method('DELETE')
+                                <button type="button" class="action-icon delete" title="Delete Doctor" onclick="confirmDelete({{ $doctor->id }})">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </form>
+
+                        </div>
+                    </td>
+                </tr>
+                @empty
+                <tr>
+                    <td colspan="7" class="text-muted py-3">No doctors found.</td>
+                </tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
+
+    {{-- Back Button --}}
+    <a href="{{ url()->previous() }}" class="btn btn-warning btn-sm mt-3">
+        Go Back
+    </a>
+
+    @else
+    <div class="alert alert-danger">
+        You do not have permission to manage doctors.
+    </div>
+    @endcan
 </div>
+
+{{-- SweetAlert --}}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+function confirmDelete(id) {
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "This action will permanently delete the doctor!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete it',
+        cancelButtonText: 'Cancel',
+        reverseButtons: true
+    }).then((result) => {
+        if (result.isConfirmed) {
+            document.getElementById('delete-form-' + id).submit();
+        }
+    });
+}
+</script>
+
+{{-- STYLE --}}
+<style>
+.table th, .table td {
+    padding: 0.35rem;
+    white-space: nowrap;
+}
+
+.text-truncate {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.action-icon {
+    font-size: 1.1rem;
+    cursor: pointer;
+}
+
+.action-icon.edit { color: #6c757d; }
+.action-icon.view { color: #0dcaf0; }
+.action-icon.delete { color: #ff7a00; border: none; background: none; padding: 0; }
+
+.action-icon:hover { opacity: 0.7; }
+
+@media (max-width: 768px) {
+    .container-fluid { max-width: 100vw; padding: 0.5rem; }
+    .table th, .table td { font-size: 0.75rem; }
+}
+</style>
 @endsection
