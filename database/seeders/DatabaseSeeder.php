@@ -47,17 +47,7 @@ class DatabaseSeeder extends Seeder
         $user->assignRole($adminrole);
 
         
-        $employeenrole = Role::firstOrCreate([
-            'name' => 'employee', 'guard_name' => 'web']);
-        $user = User::updateOrCreate(
-            ['email' => 'employee@example.com'],
-            [
-                'name'     => 'employee',
-                'password' => Hash::make('password123123'),
-            ]
-        );
-        $user->assignRole($employeenrole);
-    
+  
 
         $this->call([
             RolesAndPermissionsSeeder::class,

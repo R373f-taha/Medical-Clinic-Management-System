@@ -7,6 +7,9 @@ use Illuminate\Support\Facades\Auth;
 
 class PatientService
 {
+    /**
+     * get all patient for the current doctor
+     */
     public function getAll()
     {
         $doctor = Auth::user()->doctor;

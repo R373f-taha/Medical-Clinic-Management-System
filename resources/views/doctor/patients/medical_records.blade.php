@@ -4,11 +4,20 @@
 <div style="background-color:#f3f3f3; min-height:100vh; padding:30px">
 
     <div style="max-width:1200px; margin:auto;">
-
+        @if (session('success'))
+            <div style="
+                background-color:#d4edda;
+                color:#155724;
+                padding:12px 15px;
+                border-radius:6px;
+                margin-bottom:20px;
+                border:1px solid #c3e6cb;
+            ">
+                {{ session('success') }}
+            </div>
+        @endif
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-            <h2 style="color:#ff7a00;">
-                Medical Records
-            </h2>
+            <h2 style="color:#ff7a00;">Medical Records</h2>
 
             <a href="{{ route('doctor.medical_records.create') }}"
                 style="background-color:#ff7a00; color:#fff; padding:10px 16px; text-decoration:none; border-radius:6px;">
@@ -33,37 +42,22 @@
                     @forelse ($records as $record)
                         <tr style="border-bottom:1px solid #ddd;">
                             <td style="padding:10px;">{{ $record->id }}</td>
+                            <td style="padding:10px;">{{ $record->patient->user->name ?? 'N/A' }}</td>
+                            <td style="padding:10px;">{{ $record->diagnosis ?? 'N/A' }}</td>
+                            <td style="padding:10px;">{{ $record->notes ?? 'N/A' }}</td>
+                            <td style="padding:10px;">{{ $record->treatment_plan ?? 'N/A' }}</td>
+                            <td style="padding:10px;">{{ $record->follow_up_date ?? '-' }}</td>
 
+                            <!-- Actions -->
                             <td style="padding:10px;">
-                                {{ $record->patient->user->name ?? 'N/A' }}
-                            </td>
-
-                            <td style="padding:10px;">
-                                {{ $record->diagnosis ?? 'N/A' }}
-                            </td>
-
-                            <td style="padding:10px;">
-                                {{ $record->notes ?? 'N/A' }}
-                            </td>
-
-                            <td style="padding:10px;">
-                                {{ $record->treatment_plan ?? 'N/A' }}
-                            </td>
-
-                            <td style="padding:10px;">
-                                {{ $record->follow_up_date ?? '-' }}
-                            </td>
-
-                            <td style="padding:10px;">
-                                <a href="{{ route('doctor.medical_records.edit',$record) }}"
-                                    style="background-color:#6c757d; color:#fff; padding:6px 12px; text-decoration:none; border-radius:4px;">
-                                    Edit
+                                <a href="{{ route('doctor.medical_records.edit',$record) }}" title="Edit">
+                                    <i class="fas fa-edit action-icon text-warning" style="font-size:1.4rem;"></i>
                                 </a>
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" style="padding:20px; text-align:center; color:#888;">
+                            <td colspan="7" style="padding:20px; text-align:center; color:#888;">
                                 No medical records found
                             </td>
                         </tr>
@@ -71,6 +65,7 @@
                 </tbody>
             </table>
         </div>
+
         <a href="{{ route('dashboard') }}"
             style="display:inline-block; margin-top:20px; padding:10px 20px; background-color:#ff7a00; color:#fff; text-decoration:none; border-radius:6px; box-shadow:0 2px 6px rgba(0,0,0,0.1); transition:background-color 0.3s;">
             Go Back
@@ -78,4 +73,15 @@
     </div>
 
 </div>
+
+<style>
+.action-icon {
+    transition: transform 0.2s;
+}
+.action-icon:hover {
+    transform: scale(1.3);
+    cursor: pointer;
+}
+</style>
+
 @endsection

@@ -61,9 +61,9 @@
                 </table>
             </div>
         </div>
-        
+
         <div class="mt-4 no-print text-center">
-            <button onclick="window.print()" class="btn btn-dark btn-lg">Print Invoice (PDF)</button>
+            <button onclick="window.print()" class="btn btn-dark btn-lg">Print Invoice</button>
         </div>
     </div>
 </div>
