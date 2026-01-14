@@ -16,5 +16,10 @@ class RoleSeeder extends Seeder
         if ($user) {
             $user->assignRole($employee);
         }
+        
+        // $admin = User::where('email', 'admin@example.com')->first();
+        // if ($admin) {
+        //     $admin->assignRole('clinicManager');
+        // }
     }
 }

@@ -55,10 +55,10 @@ Route::middleware('auth')->group(function () {
 
 
 
-//  الخاص بمدير العيادة (Admin)
+//  Admin Routes
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:clinicManager'])->group(function () {
 
-    // إدارة الموارد
+    // manage resourcse
     Route::resources([
         'employees'      => EmployeeController::class,
         'clinics'        => ClinicController::class,
@@ -68,14 +68,20 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:clinicManager'
         'notifications'  => NotificationController::class,
     ]);
 
-    // إدارة المواعيد
+    // manage appointment
     Route::get('appointments', [AppointmentMonitorController::class, 'index'])->name('appointments.index');
     Route::delete('appointments/{id}', [AppointmentMonitorController::class, 'destroy'])->name('appointments.destroy');
 
-    // إدارة بيانات العيادة
+    // manage clinic
     Route::get('clinic-settings', [ClinicController::class, 'index'])->name('clinic.index');
     Route::get('clinic/{clinic}/edit', [ClinicController::class, 'edit'])->name('clinic.edit');
     Route::put('clinic/{clinic}', [ClinicController::class, 'update'])->name('clinic.update');
+
+    // Admin Medical Records
+    Route::get('medical-records', [AdminMedicalRecordController::class, 'index'])
+        ->name('medical-records.index');
+    Route::delete('medical-records/{id}', [AdminMedicalRecordController::class, 'destroy'])
+        ->name('medical-records.destroy');
 
 
 });
