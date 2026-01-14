@@ -1,4 +1,4 @@
-@extends('doctor.layouts.app')
+@extends('layouts.app')
 
 @section('content')
 <div style="background:#f4f6f8; min-height:100vh; padding:40px 20px;">

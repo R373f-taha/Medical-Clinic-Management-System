@@ -14,7 +14,10 @@ class PatientController extends Controller
     {
         $this->patientService = $patientService;
     }
-
+    /**
+     * View all Patients for the current doctor
+     * @return \Illuminate\Contracts\View\View
+     */
     public function index()
     {
         $patients = $this->patientService->getAll();

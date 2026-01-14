@@ -4,12 +4,22 @@
 <div style="background-color:#f3f3f3; min-height:100vh; padding:30px">
 
     <div style="max-width:1200px; margin:auto;">
-
-        {{-- Header --}}
+        @if (session('success'))
+            <div style="
+                background-color:#d4edda;
+                color:#155724;
+                padding:12px 15px;
+                border-radius:6px;
+                margin-bottom:20px;
+                border:1px solid #c3e6cb;
+            ">
+                {{ session('success') }}
+            </div>
+        @endif
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
             <h2 style="color:#ff7a00;">Prescriptions</h2>
 
-            <a href="{{ route('prescriptions.create') }}"
+            <a href="{{ route('doctor.prescriptions.create') }}"
                style="background-color:#ff7a00; color:#fff;
                       padding:10px 16px; text-decoration:none;
                       border-radius:6px;">
@@ -46,19 +56,20 @@
                         <td>{{ $prescription->instructions }}</td>
                         <td>{{ $prescription->duration }}</td>
                         <td>
-                            {{-- Edit --}}
-                            <a href="{{ route('prescriptions.edit', $prescription->id) }}" title="Edit">
+                            <a href="{{ route('doctor.prescriptions.edit', $prescription->id) }}" title="Edit">
                                 <i class="fas fa-edit action-icon text-warning" style="font-size:1.3rem;"></i>
                             </a>
 
-                            {{-- Delete with SweetAlert2 --}}
-                            <form id="delete-form-{{ $prescription->id }}" action="{{ route('prescriptions.destroy', $prescription->id) }}" method="POST" style="display:inline;">
+                            <form action="{{ route('doctor.prescriptions.destroy', $prescription->id) }}" method="POST" style="display:inline;">
                                 @csrf
                                 @method('DELETE')
                                 <i class="fas fa-trash action-icon text-danger" style="font-size:1.3rem; cursor:pointer;"
                                    title="Delete"
                                    onclick="confirmDeletePrescription({{ $prescription->id }})"></i>
                             </form>
+                            <a href="{{ route('doctor.prescriptions.show', $prescription->id) }}">
+                                <i class="fas fa-eye action-icon info" title="Show Prescription"></i>
+                            </a>
                         </td>
                     </tr>
                     @endforeach
