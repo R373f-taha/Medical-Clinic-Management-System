@@ -24,8 +24,13 @@ class PrescriptionController extends Controller
      */
     public function index()
     {
+        try{
         $prescriptions = $this->prescriptionService->getAll();
         return view('doctor.prescriptions.index', compact('prescriptions'));
+        }
+        catch (\Exception $e) {
+            return back()->with('error', 'Failed to load prescriptions');
+        }
     }
     public function show(Prescription $prescription)
     {
@@ -39,6 +44,10 @@ class PrescriptionController extends Controller
     {
         $medicalRecords = MedicalRecord::all();
         return view('doctor.prescriptions.create', compact('medicalRecords'));
+        }
+        catch (\Exception $e) {
+            return back()->with('error', 'Failed to load create prescription page');
+        }
     }
     /**
      * Store a Prescription
@@ -68,6 +77,10 @@ class PrescriptionController extends Controller
     {
         $medicalRecords = MedicalRecord::all();
         return view('doctor.prescriptions.edit', compact('prescription', 'medicalRecords'));
+        }
+        catch (\Exception $e) {
+            return back()->with('error', 'Failed to load edit prescription page');
+        }
     }
     /**
      * Update a Prescription
@@ -98,6 +111,7 @@ class PrescriptionController extends Controller
      */
     public function destroy(Prescription $prescription)
     {
+        try{
         $this->prescriptionService->delete($prescription);
 
         return  redirect()->route('doctor.prescriptions.index')->with('success', 'Prescription Deleted...!');
