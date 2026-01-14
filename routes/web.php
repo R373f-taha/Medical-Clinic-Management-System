@@ -137,13 +137,14 @@ Route::prefix('doctor')
             ->middleware('permission:manage medical records')
             ->group(function () {
 
-                Route::get('/', [MedicalRecordController::class, 'index'])->name('medical_records.index');
+                  Route::get('/', [MedicalRecordController::class, 'index'])->name('medical_records.index');
                 Route::get('/create', [MedicalRecordController::class, 'create'])->name('medical_records.create');
                 Route::post('/', [MedicalRecordController::class, 'store'])->name('medical_records.store');
                 Route::get('{medicalRecord}/edit', [MedicalRecordController::class, 'edit'])->name('medical_records.edit');
                 Route::put('{medicalRecord}', [MedicalRecordController::class, 'update'])->name('medical_records.update');
-            });
+                Route::delete('{medicalRecord}', [MedicalRecordController::class, 'destroy'])->name('medical_records.destroy');
 
+            });
         // ================== appointments ==================
         Route::prefix('appointments')
             ->middleware('permission:manage appointments')
@@ -175,8 +176,14 @@ Route::prefix('doctor')
             [PrescriptionController::class, 'download']
         )->name('prescriptions.download');
     });
+        // ================== Notifications ==================
+Route::prefix('doctor')->name('doctor.')->middleware(['auth'])->group(function () {
+    Route::get('/notifications', [NotificationController::class, 'index'])
+        ->name('notifications.index');
 
-
+    Route::post('/notifications/{notification}/read', [NotificationController::class, 'markAsRead'])
+        ->name('notifications.read');
+});
 /*
 Route::prefix('doctor')->name('doctor.')->middleware(['auth', 'role:doctor'])->group(function () {
 

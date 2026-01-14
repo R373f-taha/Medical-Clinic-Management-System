@@ -9,19 +9,27 @@
             @csrf
             @method('PUT')
 
+            {{-- Appointment Date --}}
             <div class="mb-3">
                 <label>Date</label>
-                <input type="datetime-local" name="appointment_date"
-                    value="{{ \Carbon\Carbon::parse($booking->appointment_date)->format('Y-m-d\TH:i') }}"
-                    class="form-control">
+                <input type="datetime-local" 
+                       name="appointment_date" 
+                       class="form-control @error('appointment_date') is-invalid @enderror"
+                       value="{{ old('appointment_date', \Carbon\Carbon::parse($booking->appointment_date)->format('Y-m-d\TH:i')) }}">
+                @error('appointment_date')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
             </div>
 
+            {{-- Reason --}}
             <div class="mb-3">
                 <label>Reason</label>
-                <textarea name="reason" class="form-control">{{ $booking->reason }}</textarea>
+                <textarea name="reason" 
+                          class="form-control @error('reason') is-invalid @enderror">{{ old('reason', $booking->reason) }}</textarea>
+                @error('reason')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
             </div>
-
-
 
             <button class="btn btn-primary">Update</button>
             <a href="{{ route('employee.bookings.index') }}" class="btn btn-secondary">Cancel</a>

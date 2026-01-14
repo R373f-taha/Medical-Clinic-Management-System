@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Employee;
-
+use Illuminate\Validation\ValidationException;
 use App\Http\Controllers\Controller;
 use App\Models\Appointment;
 use App\Models\Patient;
@@ -59,24 +59,40 @@ class BookingController extends Controller
      * @param StoreBookingRequest $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(StoreBookingRequest $request)
-    {
-        DB::beginTransaction();
-        try {
-            $this->service->createBooking($request->validated());
-            DB::commit();
 
-            return redirect()->route('employee.bookings.index')
-                ->with('success', 'Booking created successfully.');
-        } catch (\Throwable $e) {
-            DB::rollBack();
-            Log::error('Create booking failed', ['error' => $e->getMessage()]);
+public function store(StoreBookingRequest $request)
+{
+    DB::beginTransaction();
 
-            return back()
-                ->withErrors(['error' => $e->getMessage()])
-                ->withInput();
-        }
+    try {
+        $this->service->createBooking($request->validated());
+        DB::commit();
+
+        return redirect()
+            ->route('employee.bookings.index')
+            ->with('success', 'Booking created successfully.');
     }
+    catch (ValidationException $e) {
+        DB::rollBack();
+
+        // This keeps errors under the correct input fields
+        return back()
+            ->withErrors($e->errors())
+            ->withInput();
+    }
+    catch (\Throwable $e) {
+        DB::rollBack();
+
+        Log::error('Create booking failed', [
+            'error' => $e->getMessage()
+        ]);
+
+        return back()
+            ->withErrors(['error' => 'Something went wrong. Please try again.'])
+            ->withInput();
+    }
+}
+
 
     /**
      * Show the form for editing the specified booking.
@@ -97,24 +113,44 @@ class BookingController extends Controller
      * @param int $id
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(UpdateBookingRequest $request, $id)
-    {
-        DB::beginTransaction();
-        try {
-            $this->service->updateBooking($id, $request->appointment_date, $request->reason);
-            DB::commit();
 
-            return redirect()->route('employee.bookings.index')
-                ->with('success', 'Booking updated successfully.');
-        } catch (\Throwable $e) {
-            DB::rollBack();
-            Log::error('Update booking failed', ['id' => $id, 'error' => $e->getMessage()]);
+public function update(UpdateBookingRequest $request, $id)
+{
+    DB::beginTransaction();
 
-            return back()
-                ->withErrors(['error' => $e->getMessage()])
-                ->withInput();
-        }
+    try {
+        $this->service->updateBooking(
+            $id,
+            $request->appointment_date,
+            $request->reason
+        );
+
+        DB::commit();
+
+        return redirect()
+            ->route('employee.bookings.index')
+            ->with('success', 'Booking updated successfully.');
     }
+    catch (ValidationException $e) {
+        DB::rollBack();
+
+        return back()
+            ->withErrors($e->errors())
+            ->withInput();
+    }
+    catch (\Throwable $e) {
+        DB::rollBack();
+
+        Log::error('Update booking failed', [
+            'id'    => $id,
+            'error' => $e->getMessage()
+        ]);
+
+        return back()
+            ->withErrors(['error' => 'Something went wrong. Please try again.'])
+            ->withInput();
+    }
+}
 
     /**
      * Approve the specified booking.
@@ -130,7 +166,8 @@ class BookingController extends Controller
             DB::commit();
 
             return back()->with('success', 'Booking approved.');
-        } catch (\Throwable $e) {
+        } 
+        catch (\Throwable $e) {
             DB::rollBack();
             Log::error('Approve booking failed', ['id' => $id, 'error' => $e->getMessage()]);
 
@@ -152,7 +189,8 @@ class BookingController extends Controller
             DB::commit();
 
             return back()->with('success', 'Booking rejected.');
-        } catch (\Throwable $e) {
+        } 
+        catch (\Throwable $e) {
             DB::rollBack();
             Log::error('Reject booking failed', ['id' => $id, 'error' => $e->getMessage()]);
 
@@ -174,7 +212,8 @@ class BookingController extends Controller
             DB::commit();
 
             return back()->with('success', 'Booking deleted successfully.');
-        } catch (\Throwable $e) {
+        } 
+        catch (\Throwable $e) {
             DB::rollBack();
             Log::error('Delete booking failed', ['id' => $id, 'error' => $e->getMessage()]);
 
@@ -196,7 +235,8 @@ class BookingController extends Controller
             DB::commit();
 
             return back()->with('success', 'Booking marked as completed.');
-        } catch (\Throwable $e) {
+        } 
+        catch (\Throwable $e) {
             DB::rollBack();
             Log::error('Complete booking failed', ['id' => $id, 'error' => $e->getMessage()]);
 

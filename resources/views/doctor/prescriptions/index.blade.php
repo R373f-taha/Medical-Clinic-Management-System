@@ -4,6 +4,8 @@
 <div style="background-color:#f3f3f3; min-height:100vh; padding:30px">
 
     <div style="max-width:1200px; margin:auto;">
+
+        {{-- Success Message --}}
         @if (session('success'))
             <div style="
                 background-color:#d4edda;
@@ -16,26 +18,24 @@
                 {{ session('success') }}
             </div>
         @endif
+
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
             <h2 style="color:#ff7a00;">Prescriptions</h2>
-
+            @can('manage prescriptions')
             <a href="{{ route('doctor.prescriptions.create') }}"
-               style="background-color:#ff7a00; color:#fff;
-                      padding:10px 16px; text-decoration:none;
-                      border-radius:6px;">
+               style="background-color:#ff7a00; color:#fff; padding:10px 16px; text-decoration:none; border-radius:6px;">
                 + Add New Prescription
             </a>
+            @endcan
         </div>
 
         {{-- Table --}}
-        <div style="overflow-x:auto; background:#ffffff;
-                    border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.1);">
-
+        <div style="overflow-x:auto; background:#ffffff; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.1);">
             @if($prescriptions->count() > 0)
             <table style="width:100%; border-collapse:collapse; text-align:center;">
                 <thead style="background-color:#e5e5e5;">
                     <tr>
-                        <th>Patient ID</th>
+                        <th>Patient</th>
                         <th>Medicine Name</th>
                         <th>Dosage</th>
                         <th>Frequency</th>
@@ -48,25 +48,35 @@
                 <tbody>
                     @foreach($prescriptions as $prescription)
                     <tr style="border-bottom:1px solid #ddd;">
-                        <td>{{ $prescription->medical_record->patient_id ?? 'N/A' }}</td>
+                        <td>{{ $prescription->medical_record->patient->user->name ?? 'N/A' }}</td>
                         <td>{{ $prescription->medicine_name }}</td>
                         <td>{{ $prescription->dosage }}</td>
                         <td>{{ $prescription->frequency }}</td>
                         <td>{{ $prescription->refills }}</td>
                         <td>{{ $prescription->instructions }}</td>
                         <td>{{ $prescription->duration }}</td>
-                        <td>
+                        <td style="display:flex; gap:10px; justify-content:center; align-items:center;">
+                            {{-- Edit --}}
                             <a href="{{ route('doctor.prescriptions.edit', $prescription->id) }}" title="Edit">
                                 <i class="fas fa-edit action-icon text-warning" style="font-size:1.3rem;"></i>
                             </a>
 
-                            <form action="{{ route('doctor.prescriptions.destroy', $prescription->id) }}" method="POST" style="display:inline;">
+                            {{-- Delete --}}
+                            <form id="delete-form-{{ $prescription->id }}"
+                                  action="{{ route('doctor.prescriptions.destroy', $prescription->id) }}"
+                                  method="POST" style="display:inline;">
                                 @csrf
                                 @method('DELETE')
-                                <i class="fas fa-trash action-icon text-danger" style="font-size:1.3rem; cursor:pointer;"
-                                   title="Delete"
-                                   onclick="confirmDeletePrescription({{ $prescription->id }})"></i>
+                                <button type="button"
+                                        onclick="confirmDeletePrescription({{ $prescription->id }})"
+                                        style="background:none; border:none; padding:0;">
+                                    <i class="fas fa-trash action-icon text-danger"
+                                       style="font-size:1.3rem; cursor:pointer;"
+                                       title="Delete"></i>
+                                </button>
                             </form>
+
+                            {{-- Show --}}
                             <a href="{{ route('doctor.prescriptions.show', $prescription->id) }}">
                                 <i class="fas fa-eye action-icon info" title="Show Prescription"></i>
                             </a>
@@ -80,20 +90,17 @@
                 No prescriptions found.
             </div>
             @endif
-
         </div>
 
         {{-- Back Button --}}
         <a href="{{ url()->previous() }}"
-           style="display:inline-block; margin-top:20px;
-                  padding:10px 20px; background-color:#ff7a00;
-                  color:#fff; text-decoration:none;
+           style="display:inline-block; margin-top:20px; padding:10px 20px;
+                  background-color:#ff7a00; color:#fff; text-decoration:none;
                   border-radius:6px; box-shadow:0 2px 6px rgba(0,0,0,0.1);">
             Go Back
         </a>
 
     </div>
-
 </div>
 
 {{-- SweetAlert2 Script --}}
@@ -124,7 +131,11 @@ function confirmDeletePrescription(id) {
 }
 .action-icon:hover {
     transform: scale(1.2);
+    cursor: pointer;
 }
 </style>
+
+{{-- FontAwesome --}}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
 @endsection

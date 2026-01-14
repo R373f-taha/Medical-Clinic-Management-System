@@ -86,9 +86,14 @@ class RolesAndPermissionsSeeder extends Seeder
 
 
         $doctor=Role::firstOrCreate(['name'=> 'doctor' ,'guard_name' => 'web']);
-        $doctor->givePermissionTo(['manage patients','manage prescriptions',
-          'manage medical records','manage appointments',
-          'view rating','view notifications']);
+$doctor->syncPermissions([
+    'manage patients',
+    'manage prescriptions',
+    'manage medical records',
+    'manage appointments',
+    'view rating',
+    'view notifications',
+]);
         $employee=Role::firstOrCreate(['name'=> 'employee' ,'guard_name' => 'web']);
         $employee->givePermissionTo([
             'manage doctors',
