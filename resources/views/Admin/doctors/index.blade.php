@@ -33,7 +33,7 @@
                     <td>{{ $doctor->qualifications }}</td>
                     <td>{{ $doctor->available_hours }}</td>
                     <td>{{ $doctor->experience_years ?? '-' }}</td>
-                    <td>{{ implode('، ', $doctor->services) }}</td>
+                    <td>{{ implode(', ', $doctor->services) }}</td>
 
                     {{-- ACTIONS --}}
                     <td>
@@ -50,10 +50,10 @@
                             </a>
 
                             {{-- Delete --}}
-                            <form action="{{ route('admin.doctors.destroy', $doctor->id) }}" method="POST" style="display:inline;">
+                            <form id="delete-form-{{ $doctor->id }}" action="{{ route('admin.doctors.destroy', $doctor->id) }}" method="POST" style="display:inline;">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="action-icon delete" title="Delete Doctor" onclick="return confirm('هل أنت متأكد من الحذف؟')">
+                                <button type="button" class="action-icon delete" title="Delete Doctor" onclick="confirmDelete({{ $doctor->id }})">
                                     <i class="fas fa-trash"></i>
                                 </button>
                             </form>
@@ -82,6 +82,26 @@
     @endcan
 </div>
 
+{{-- SweetAlert --}}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+function confirmDelete(id) {
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "This action will permanently delete the doctor!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete it',
+        cancelButtonText: 'Cancel',
+        reverseButtons: true
+    }).then((result) => {
+        if (result.isConfirmed) {
+            document.getElementById('delete-form-' + id).submit();
+        }
+    });
+}
+</script>
+
 {{-- STYLE --}}
 <style>
 .table th, .table td {
@@ -99,34 +119,15 @@
     cursor: pointer;
 }
 
-.action-icon.edit {
-    color: #6c757d;
-}
+.action-icon.edit { color: #6c757d; }
+.action-icon.view { color: #0dcaf0; }
+.action-icon.delete { color: #ff7a00; border: none; background: none; padding: 0; }
 
-.action-icon.view {
-    color: #0dcaf0;
-}
-
-.action-icon.delete {
-    color: #ff7a00;
-    border: none;
-    background: none;
-    padding: 0;
-}
-
-.action-icon:hover {
-    opacity: 0.7;
-}
+.action-icon:hover { opacity: 0.7; }
 
 @media (max-width: 768px) {
-    .container-fluid {
-        max-width: 100vw;
-        padding: 0.5rem;
-    }
-
-    .table th, .table td {
-        font-size: 0.75rem;
-    }
+    .container-fluid { max-width: 100vw; padding: 0.5rem; }
+    .table th, .table td { font-size: 0.75rem; }
 }
 </style>
 @endsection

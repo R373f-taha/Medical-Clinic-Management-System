@@ -3,13 +3,14 @@
 namespace App\Services\Employee;
 
 use App\Models\Appointment;
+use App\Models\Notification;
 use Carbon\Carbon;
 use Illuminate\Validation\ValidationException;
 
 class BookingService
 {
     /**
-     * Create a new booking with status 'hold'.
+     * Create a new booking with status 'hold' and notify doctor & patient.
      *
      * @param array $data
      * @throws \Illuminate\Validation\ValidationException
@@ -20,17 +21,19 @@ class BookingService
         $this->validateWorkingHours($data['appointment_date']);
         $this->ensureNoConflict($data['doctor_id'], $data['appointment_date']);
 
-        Appointment::create([
+        $appointment = Appointment::create([
             'patient_id'       => $data['patient_id'],
             'doctor_id'        => $data['doctor_id'],
             'appointment_date' => $data['appointment_date'],
             'reason'           => $data['reason'] ?? null,
-            'status'           => 'hold',
+            'status'           => 'hold', // default status
         ]);
+
+        $this->notify($appointment, 'New appointment created');
     }
 
     /**
-     * Update an existing booking's date and reason.
+     * Update an existing booking's date and reason only.
      *
      * @param int $id
      * @param string $date
@@ -44,6 +47,7 @@ class BookingService
 
         $this->validateWorkingHours($date);
 
+        // Ensure no conflict if date is changed
         if ($booking->appointment_date !== $date) {
             $this->ensureNoConflict($booking->doctor_id, $date, $booking->id);
         }
@@ -52,6 +56,8 @@ class BookingService
             'appointment_date' => $date,
             'reason'           => $reason,
         ]);
+
+        $this->notify($booking, 'Appointment updated');
     }
 
     /**
@@ -64,11 +70,11 @@ class BookingService
     public function approve(int $id): void
     {
         $booking = Appointment::findOrFail($id);
-
         $this->validateWorkingHours($booking->appointment_date);
         $this->ensureNoConflict($booking->doctor_id, $booking->appointment_date, $booking->id);
 
         $booking->update(['status' => 'scheduled']);
+        $this->notify($booking, 'Appointment approved');
     }
 
     /**
@@ -79,7 +85,9 @@ class BookingService
      */
     public function reject(int $id): void
     {
-        Appointment::findOrFail($id)->update(['status' => 'cancelled']);
+        $booking = Appointment::findOrFail($id);
+        $booking->update(['status' => 'cancelled']);
+        $this->notify($booking, 'Appointment rejected');
     }
 
     /**
@@ -90,7 +98,22 @@ class BookingService
      */
     public function complete(int $id): void
     {
-        Appointment::findOrFail($id)->update(['status' => 'completed']);
+        $booking = Appointment::findOrFail($id);
+        $booking->update(['status' => 'completed']);
+        $this->notify($booking, 'Appointment completed');
+    }
+
+    /**
+     * Delete a booking and notify doctor & patient.
+     *
+     * @param int $id
+     * @return void
+     */
+    public function deleteBooking(int $id): void
+    {
+        $booking = Appointment::findOrFail($id);
+        $this->notify($booking, 'Appointment deleted');
+        $booking->delete();
     }
 
     // ================= Helpers =================
@@ -141,6 +164,36 @@ class BookingService
         if (!in_array($time->minute, [0, 30])) {
             throw ValidationException::withMessages([
                 'appointment_date' => 'Appointments must be every 30 minutes.',
+            ]);
+        }
+    }
+
+    /**
+     * Notify doctor and patient about the appointment action.
+     *
+     * @param Appointment $appointment
+     * @param string $title
+     * @return void
+     */
+    private function notify(Appointment $appointment, string $title): void
+    {
+        $message = $title . ' on ' . $appointment->appointment_date->format('Y-m-d H:i');
+
+        // Notify doctor
+        if ($appointment->doctor?->user) {
+            Notification::create([
+                'user_id' => $appointment->doctor->user->id,
+                'title'   => $title,
+                'message' => $message,
+            ]);
+        }
+
+        // Notify patient
+        if ($appointment->patient?->user) {
+            Notification::create([
+                'user_id' => $appointment->patient->user->id,
+                'title'   => $title,
+                'message' => $message,
             ]);
         }
     }

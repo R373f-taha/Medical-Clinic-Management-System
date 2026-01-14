@@ -32,13 +32,11 @@ class AppointmentMonitorController extends Controller
             // Fetch all appointments with patient and doctor info
             $appointments = $this->service->getAllAppointments();
 
-            // Return the view with the appointments data
             return view('Admin.AppointmentMonitor.index', compact('appointments'));
-        } catch (\Throwable $e) {
-            // Log the error for debugging purposes
+        } 
+        catch (\Throwable $e) {
             Log::error('Fetching appointments failed: ' . $e->getMessage());
 
-            // Return a user-friendly error message
             return back()->withErrors(['error' => 'Unable to fetch appointments.']);
         }
     }
@@ -53,22 +51,17 @@ class AppointmentMonitorController extends Controller
     {
         DB::beginTransaction();
         try {
-            // Attempt to delete the appointment using the service
             $this->service->deleteAppointment($id);
 
-            // Commit the transaction if successful
             DB::commit();
 
             return redirect()->route('admin.appointments.index')
                              ->with('success', 'Appointment deleted successfully.');
         } catch (\Throwable $e) {
-            // Rollback transaction if something goes wrong
             DB::rollBack();
 
-            // Log the detailed error for developers
             Log::error('Delete appointment failed: ' . $e->getMessage());
 
-            // Return a user-friendly error message
             return back()->withErrors(['error' => 'Failed to delete appointment.']);
         }
     }
