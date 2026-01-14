@@ -10,6 +10,7 @@ class Invoice extends Model
   use HasFactory;
   protected $table = 'invoices';
   protected $guarded=[];
+
   public function appointment(){
     return $this->belongsTo(Appointment::class);
   }

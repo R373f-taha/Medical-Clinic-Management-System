@@ -17,8 +17,11 @@ class AppointmentFactory extends Factory
         $patient = Patient::inRandomOrder()->first();
         $doctor  = Doctor::inRandomOrder()->first();
 
-        // توليد وقت غير مكرر لكل run
-        $date = Carbon::now()->addDays($this->faker->unique()->numberBetween(1, 30));
+        // توليد يوم عشوائي بين 1 و30 يوم من اليوم
+        $dayOffset = $this->faker->numberBetween(1, 30);
+        $date = Carbon::now()->addDays($dayOffset);
+
+        // توليد وقت عشوائي بين 10 صباحًا و5 مساءً
         $hour = $this->faker->numberBetween(10, 17);
         $minute = $this->faker->randomElement([0, 30]);
 
@@ -26,11 +29,9 @@ class AppointmentFactory extends Factory
             'patient_id'       => $patient->id,
             'doctor_id'        => $doctor->id,
             'medical_record_id'=> null,
-            'appointment_date' => Carbon::now()
-                ->addDays($this->faker->unique()->numberBetween(1, 30))
-                ->setTime($hour, $minute),
+            'appointment_date' => $date->setTime($hour, $minute),
             'status'           => $this->faker->randomElement([
-                'hold','scheduled','completed','cancelled'
+                'hold', 'scheduled', 'completed', 'cancelled'
             ]),
             'reason'           => $this->faker->sentence(),
             'notes'            => $this->faker->sentence(),

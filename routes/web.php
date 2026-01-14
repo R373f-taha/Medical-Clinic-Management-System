@@ -33,6 +33,8 @@ use App\Http\Controllers\Employee\EmployeeDashboardController;
 use App\Http\Controllers\Employee\EmployeeInvoiceController;
 use Illuminate\Support\Facades\Auth;
 
+use App\Models\Notification;
+
 Route::get('/', function () {
     return view('welcome');
 });
@@ -74,6 +76,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:clinicManager'
     Route::get('clinic-settings', [ClinicController::class, 'index'])->name('clinic.index');
     Route::get('clinic/{clinic}/edit', [ClinicController::class, 'edit'])->name('clinic.edit');
     Route::put('clinic/{clinic}', [ClinicController::class, 'update'])->name('clinic.update');
+
+
 });
 
 
@@ -196,3 +200,7 @@ Route::resource( 'prescriptions', PrescriptionController::class);
 
 // Auth routes
 require __DIR__ . '/auth.php';
+
+
+
+
