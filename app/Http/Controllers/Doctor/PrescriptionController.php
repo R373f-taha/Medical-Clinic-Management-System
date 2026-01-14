@@ -42,6 +42,7 @@ class PrescriptionController extends Controller
      */
     public function create()
     {
+        try{
         $medicalRecords = MedicalRecord::all();
         return view('doctor.prescriptions.create', compact('medicalRecords'));
         }
@@ -75,6 +76,7 @@ class PrescriptionController extends Controller
      */
     public function edit(Prescription $prescription)
     {
+        try{
         $medicalRecords = MedicalRecord::all();
         return view('doctor.prescriptions.edit', compact('prescription', 'medicalRecords'));
         }
@@ -113,9 +115,10 @@ class PrescriptionController extends Controller
     {
         try{
         $this->prescriptionService->delete($prescription);
-
+        }
+catch(\Throwable $e){
         return  redirect()->route('doctor.prescriptions.index')->with('success', 'Prescription Deleted...!');
-    }
+    }}
 
     public function download(Prescription $prescription)
     {
