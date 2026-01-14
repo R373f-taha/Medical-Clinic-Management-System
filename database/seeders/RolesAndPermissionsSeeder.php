@@ -34,7 +34,8 @@ class RolesAndPermissionsSeeder extends Seeder
             'assign roles',
             'revoke permissions',
             'manage permissions',
-            'manage prescriptions'
+            'manage prescriptions',
+            'view notifications'
         ];
 
         foreach ($webPermissions as $permission) {
@@ -87,7 +88,7 @@ class RolesAndPermissionsSeeder extends Seeder
         $doctor=Role::firstOrCreate(['name'=> 'doctor' ,'guard_name' => 'web']);
         $doctor->givePermissionTo(['manage patients','manage prescriptions',
           'manage medical records','manage appointments',
-          'view rating','view notifications ']);
+          'view rating','view notifications']);
         $employee=Role::firstOrCreate(['name'=> 'employee' ,'guard_name' => 'web']);
         $employee->givePermissionTo([
             'manage doctors',
