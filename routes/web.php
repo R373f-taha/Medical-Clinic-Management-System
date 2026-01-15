@@ -47,12 +47,6 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-
-
-
-
-
-
 //  الخاص بمدير العيادة (Admin)
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:clinicManager'])->group(function () {
 
@@ -77,12 +71,6 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:clinicManager'
 });
 
 
-
-
-
-
-
-
 ///////////////////////////////////////////////
     Route::prefix('employee')->name('employee.')->middleware(['auth'])->group(function () {
 
@@ -98,26 +86,13 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:clinicManager'
             Route::delete('bookings/{id}', [BookingController::class, 'destroy'])->name('bookings.destroy');
             Route::post('bookings/{id}/complete', [BookingController::class, 'complete'])->name('bookings.complete');
         });
-    
+
         // ===== جدول الأطباء =====
         Route::get('schedule', [ScheduleController::class, 'index'])
             ->name('schedule')
-            ->middleware('permission:manage doctors'); 
+            ->middleware('permission:manage doctors');
     });
 
-
-    
-    
-Route::prefix('patient')->name('patient.')->middleware(['auth','role:patient'])->group(function () {
-    Route::resources([
-        'profile'      => PatientController::class,
-        'appointments' => PatientAppointmentController::class,
-        'ratings'      => RatingController::class,
-        'images'       => ImageController::class,
-    ]);
-});
-
-/**/
 Route::prefix('doctor')
     ->name('doctor.')
     ->middleware(['auth', 'role:doctor'])

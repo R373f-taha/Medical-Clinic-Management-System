@@ -20,7 +20,7 @@ class ClinicFactory extends Factory
             'name' => fake()->company() . ' Clinic',
             'address' => fake()->address(),
             'phone' => fake()->phoneNumber(),
-            'email' => fake()->unique()->safeEmail(),
+            'email' => 'rahaftaha594@gmail.com',
         ];
     }
 }
