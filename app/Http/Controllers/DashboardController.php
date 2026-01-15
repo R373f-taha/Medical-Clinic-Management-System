@@ -10,36 +10,37 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+
 class DashboardController extends Controller
 {
     public function index()
     {
-        if(Auth::user()->hasRole("clinicManager")){
-        $profits = $this->profits();
-        $patients = $this->patientsperClinic();
-        $status = $this->appointmentsStatusStats();
-        return view("dashboard", compact(["profits", "patients", "status"]));
-        }else if(Auth::user()->hasRole("doctor")){
-                    $user = Auth::user();
-        $doctor = Doctor::where('user_id', $user->id)->firstOrFail();
+        if (Auth::user()->hasRole("clinicManager")) {
+            $profits = $this->profits();
+            $patients = $this->patientsperClinic();
+            $status = $this->appointmentsStatusStats();
+            return view("dashboard", compact(["profits", "patients", "status"]));
+        } else if (Auth::user()->hasRole("doctor")) {
+            $user = Auth::user();
+            $doctor = Doctor::where('user_id', $user->id)->firstOrFail();
 
-        $week = $this->weekRating();
-        $stat = $this->statistics();
-
-
-        $days = [];
-        $today = Carbon::today();
-
-        for ($i = 0; $i <= 6; $i++) {
-            $days[] = $today->copy()->addDays($i)->format('l');
-        }
+            $week = $this->weekRating();
+            $stat = $this->statistics();
 
 
-        $finalWeek = json_encode($week);
-        $finalDays = json_encode($days);
-        $finalStat = json_encode($stat);
-        return view('dashboard', compact('doctor', 'finalDays', 'finalWeek', 'finalStat'));
-        }else if(Auth::user()->hasRole('employee')){
+            $days = [];
+            $today = Carbon::today();
+
+            for ($i = 0; $i <= 6; $i++) {
+                $days[] = $today->copy()->addDays($i)->format('l');
+            }
+
+
+            $finalWeek = json_encode($week);
+            $finalDays = json_encode($days);
+            $finalStat = json_encode($stat);
+            return view('dashboard', compact('doctor', 'finalDays', 'finalWeek', 'finalStat'));
+        } else if (Auth::user()->hasRole('employee')) {
             return view('dashboard');
         }
     }
@@ -77,10 +78,11 @@ class DashboardController extends Controller
     public function patientsperClinic()
     {
         $specializations = [
-            'Dentistry',
-            'Pediatrics',
-            'Ophthalmology',
-            'Dermatology'
+            "Cardiology",
+            "Neurology",
+            "Pediatrics",
+            "Dermatology",
+            "GeneralSurgery"
         ];
 
         $stats = DB::table('doctors')
