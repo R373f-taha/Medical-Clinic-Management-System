@@ -16,6 +16,8 @@
                     box-shadow:0 2px 8px rgba(0,0,0,0.1);
                     padding:25px;">
 
+        @can('manage prescriptions')
+
             <form action="{{ route('doctor.prescriptions.store') }}" method="POST">
                 @csrf
 
@@ -104,6 +106,7 @@
         </div>
 
     </div>
+    @endcan
 
 </div>
 @endsection
