@@ -55,10 +55,10 @@ Route::middleware('auth')->group(function () {
 
 
 
-//  الخاص بمدير العيادة (Admin)
+//  Admin Routes
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:clinicManager'])->group(function () {
 
-    // إدارة الموارد
+    // manage resourcse
     Route::resources([
         'employees'      => EmployeeController::class,
         'clinics'        => ClinicController::class,
@@ -68,14 +68,20 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:clinicManager'
         'notifications'  => NotificationController::class,
     ]);
 
-    // إدارة المواعيد
+    // manage appointment
     Route::get('appointments', [AppointmentMonitorController::class, 'index'])->name('appointments.index');
     Route::delete('appointments/{id}', [AppointmentMonitorController::class, 'destroy'])->name('appointments.destroy');
 
-    // إدارة بيانات العيادة
+    // manage clinic
     Route::get('clinic-settings', [ClinicController::class, 'index'])->name('clinic.index');
     Route::get('clinic/{clinic}/edit', [ClinicController::class, 'edit'])->name('clinic.edit');
     Route::put('clinic/{clinic}', [ClinicController::class, 'update'])->name('clinic.update');
+
+    // Admin Medical Records
+    Route::get('medical-records', [AdminMedicalRecordController::class, 'index'])
+        ->name('medical-records.index');
+    Route::delete('medical-records/{id}', [AdminMedicalRecordController::class, 'destroy'])
+        ->name('medical-records.destroy');
 
 
 });
@@ -137,13 +143,14 @@ Route::prefix('doctor')
             ->middleware('permission:manage medical records')
             ->group(function () {
 
-                Route::get('/', [MedicalRecordController::class, 'index'])->name('medical_records.index');
+                  Route::get('/', [MedicalRecordController::class, 'index'])->name('medical_records.index');
                 Route::get('/create', [MedicalRecordController::class, 'create'])->name('medical_records.create');
                 Route::post('/', [MedicalRecordController::class, 'store'])->name('medical_records.store');
                 Route::get('{medicalRecord}/edit', [MedicalRecordController::class, 'edit'])->name('medical_records.edit');
                 Route::put('{medicalRecord}', [MedicalRecordController::class, 'update'])->name('medical_records.update');
-            });
+                Route::delete('{medicalRecord}', [MedicalRecordController::class, 'destroy'])->name('medical_records.destroy');
 
+            });
         // ================== appointments ==================
         Route::prefix('appointments')
             ->middleware('permission:manage appointments')
@@ -175,8 +182,14 @@ Route::prefix('doctor')
             [PrescriptionController::class, 'download']
         )->name('prescriptions.download');
     });
+        // ================== Notifications ==================
+Route::prefix('doctor')->name('doctor.')->middleware(['auth'])->group(function () {
+    Route::get('/notifications', [NotificationController::class, 'index'])
+        ->name('notifications.index');
 
-
+    Route::post('/notifications/{notification}/read', [NotificationController::class, 'markAsRead'])
+        ->name('notifications.read');
+});
 /*
 Route::prefix('doctor')->name('doctor.')->middleware(['auth', 'role:doctor'])->group(function () {
 

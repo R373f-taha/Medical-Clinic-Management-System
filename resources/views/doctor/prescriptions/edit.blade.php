@@ -10,6 +10,7 @@
             <h2 style="color:#ff7a00;">
                 Edit Prescription
             </h2>
+        @can('manage prescriptions')
 
             <a href="{{ route('doctor.prescriptions.index') }}"
                style="background-color:#6c757d; color:#fff;
@@ -120,6 +121,6 @@
         </div>
 
     </div>
-
+        @endcan
 </div>
 @endsection

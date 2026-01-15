@@ -51,6 +51,7 @@
         </table>
 
         <div style="margin-top:25px; display:flex; gap:10px;">
+        @can('manage prescriptions')
 
             <a href="{{ route('doctor.prescriptions.index') }}"
                style="padding:10px 18px; background:#ff7a00; color:#fff;
@@ -62,6 +63,8 @@
                       text-decoration:none; border-radius:6px;">
                 Download PDF
             </a>
+                    @endcan
+
         </div>
 
     </div>

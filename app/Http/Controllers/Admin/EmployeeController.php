@@ -101,7 +101,8 @@ class EmployeeController extends Controller
 
             return redirect()->route('admin.employees.index')
                              ->with('success', 'Employee updated successfully.');
-        } catch (\Throwable $e) {
+        }
+         catch (\Throwable $e) {
             DB::rollBack();
             Log::error('Update employee failed: ' . $e->getMessage());
             return back()->withErrors(['error' => 'Failed to update employee.'])->withInput();
@@ -123,7 +124,8 @@ class EmployeeController extends Controller
 
             return redirect()->route('admin.employees.index')
                              ->with('success', 'Employee deleted successfully.');
-        } catch (\Throwable $e) {
+        } 
+        catch (\Throwable $e) {
             DB::rollBack();
             Log::error('Delete employee failed: ' . $e->getMessage());
             return back()->withErrors(['error' => 'Failed to delete employee.']);

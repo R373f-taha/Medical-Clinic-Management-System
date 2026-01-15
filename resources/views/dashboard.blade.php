@@ -3,51 +3,65 @@
 @section('title', 'Dashboard')
 
 @section('content')
-    @if(Auth::user()->hasrole('doctor'))
-        @include('partials.doctorDashboard')
-    @elseif(Auth::user()->hasrole('employee'))
+@if(Auth::user()->hasrole('doctor'))
+    @include('partials.doctorDashboard')
+@elseif(Auth::user()->hasrole('employee'))
 
-    @elseif(Auth::user()->hasrole('clinicManager'))
-<div class="row">
+    <style>
+        body.employee-dashboard .main-content {
+    background-image: url('/images/logo2.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    min-height: 100vh;
+    background-size: cover;
 
-    <div class="col-lg-8 col-md-12 mb-4">
-        <div class="card h-100">
-            <div class="card-header pb-0">
-                <h6>Profits During the Weeks of the Current Month</h6>
-                <p class="text-sm">
-                    <span class="font-weight-bold">Weekly Profit Percentage</span>
-                </p>
-            </div>
-            <div class="card-body p-3">
-                <canvas id="weekly-profit-chart" height="300"></canvas>
+}
+
+    </style>
+
+
+@elseif(Auth::user()->hasrole('clinicManager'))
+    <div class="row">
+
+        <div class="col-lg-8 col-md-12 mb-4">
+            <div class="card h-100">
+                <div class="card-header pb-0">
+                    <h6>Profits During the Weeks of the Current Month</h6>
+                    <p class="text-sm">
+                        <span class="font-weight-bold">Weekly Profit Percentage</span>
+                    </p>
+                </div>
+                <div class="card-body p-3">
+                    <canvas id="weekly-profit-chart" height="300"></canvas>
+                </div>
             </div>
         </div>
+
+        <div class="col-lg-4 col-md-12">
+
+            <div class="card mb-4">
+                <div class="card-header pb-0">
+                    <h6>Number of Patients per Clinic</h6>
+                </div>
+                <div class="card-body p-3">
+                    <canvas id="patients-per-clinic-chart" height="200"></canvas>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header pb-0">
+                    <h6>Overview of Appointments</h6>
+                    <p class="text-sm">Current Appointment Status</p>
+                </div>
+                <div class="card-body">
+                    <canvas id="appointments-status-chart" height="200"></canvas>
+                </div>
+            </div>
+
+        </div>
+
     </div>
-
-    <div class="col-lg-4 col-md-12">
-
-        <div class="card mb-4">
-            <div class="card-header pb-0">
-            <h6>Number of Patients per Clinic</h6>
-            </div>
-            <div class="card-body p-3">
-                <canvas id="patients-per-clinic-chart" height="200"></canvas>
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="card-header pb-0">
-                <h6>Overview of Appointments</h6>
-                <p class="text-sm">Current Appointment Status</p>
-            </div>
-            <div class="card-body">
-                <canvas id="appointments-status-chart" height="200"></canvas>
-            </div>
-        </div>
-
-    </div>
-
-</div>
 
 
 
@@ -188,7 +202,7 @@
         new Chart(patientsClinicCtx, {
             type: "bar",
             data: {
-                labels: ["Dentistry", "Pediatrics", "Ophthalmology", "Dermatology"],
+                labels: ["Cardiology", "Neurology", "Pediatrics", "Dermatology", "GeneralSurgery"],
                 datasets: [{
                     label: "Patients Number",
                     data: {!! $patients !!},

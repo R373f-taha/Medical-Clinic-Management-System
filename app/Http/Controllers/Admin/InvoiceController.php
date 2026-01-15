@@ -109,7 +109,8 @@ class InvoiceController extends Controller
             $patients = $this->invoiceService->getPatients();
             $appointments = $this->invoiceService->getAppointments();
             return view('Admin.invoices.edit', compact('invoice', 'patients', 'appointments'));
-        } catch (\Throwable $e) {
+        }
+         catch (\Throwable $e) {
             Log::error('Load invoice edit form failed: ' . $e->getMessage());
             return back()->withErrors(['error' => 'Unable to load edit invoice form.']);
         }
@@ -132,7 +133,8 @@ class InvoiceController extends Controller
 
             return redirect()->route('admin.invoices.index')
                              ->with('success', 'Invoice updated successfully.');
-        } catch (\Throwable $e) {
+        } 
+        catch (\Throwable $e) {
             DB::rollBack();
             Log::error('Update invoice failed: ' . $e->getMessage());
             return back()->withErrors(['error' => 'Failed to update invoice.'])->withInput();
@@ -153,7 +155,8 @@ class InvoiceController extends Controller
             DB::commit();
 
             return back()->with('success', 'Invoice deleted successfully.');
-        } catch (\Throwable $e) {
+        }
+         catch (\Throwable $e) {
             DB::rollBack();
             Log::error('Delete invoice failed: ' . $e->getMessage());
             return back()->withErrors(['error' => 'Failed to delete invoice.']);

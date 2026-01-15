@@ -34,7 +34,8 @@ class DoctorController extends Controller
         try {
             $doctors = $this->doctorService->getAll();
             return view('Admin.doctors.index', compact('doctors'));
-        } catch (\Throwable $e) {
+        } 
+        catch (\Throwable $e) {
             Log::error('Fetching doctors failed: ' . $e->getMessage());
             return back()->withErrors(['error' => 'Unable to fetch doctors.']);
         }
@@ -50,7 +51,8 @@ class DoctorController extends Controller
         try {
             $users = $this->doctorService->getUsers();
             return view('Admin.doctors.create', compact('users'));
-        } catch (\Throwable $e) {
+        } 
+        catch (\Throwable $e) {
             Log::error('Fetching users failed: ' . $e->getMessage());
             return back()->withErrors(['error' => 'Unable to load create doctor form.']);
         }
@@ -72,7 +74,8 @@ class DoctorController extends Controller
 
             return redirect()->route('admin.doctors.index')
                              ->with('success', 'Doctor added successfully.');
-        } catch (\Throwable $e) {
+        } 
+        catch (\Throwable $e) {
             DB::rollBack();
             Log::error('Store doctor failed: ' . $e->getMessage());
             return back()->withErrors(['error' => 'Failed to add doctor.'])->withInput();
@@ -90,7 +93,8 @@ class DoctorController extends Controller
         try {
             $doctor = Doctor::with('appointments.patient.user')->findOrFail($id);
             return view('Admin.doctors.schedule', compact('doctor'));
-        } catch (\Throwable $e) {
+        }
+         catch (\Throwable $e) {
             Log::error('Show doctor schedule failed: ' . $e->getMessage());
             return back()->withErrors(['error' => 'Unable to display doctor schedule.']);
         }
@@ -107,7 +111,8 @@ class DoctorController extends Controller
         try {
             $users = $this->doctorService->getUsers();
             return view('Admin.doctors.edit', compact('doctor', 'users'));
-        } catch (\Throwable $e) {
+        }
+         catch (\Throwable $e) {
             Log::error('Edit doctor failed: ' . $e->getMessage());
             return back()->withErrors(['error' => 'Unable to load edit form.']);
         }
@@ -127,10 +132,12 @@ class DoctorController extends Controller
             $data = array_filter($request->validated(), fn($value) => !is_null($value));
             $this->doctorService->update($doctor, $data);
             DB::commit();
-
+ 
             return redirect()->route('admin.doctors.index')
-                             ->with('success', 'Doctor updated successfully.');
-        } catch (\Throwable $e) {
+                 ->with('success', 'Doctor updated successfully.');
+
+        } 
+        catch (\Throwable $e) {
             DB::rollBack();
             Log::error('Update doctor failed: ' . $e->getMessage());
             return back()->withErrors(['error' => 'Failed to update doctor.'])->withInput();
@@ -152,7 +159,8 @@ class DoctorController extends Controller
 
             return redirect()->route('admin.doctors.index')
                              ->with('success', 'Doctor deleted successfully.');
-        } catch (\Throwable $e) {
+        }
+         catch (\Throwable $e) {
             DB::rollBack();
             Log::error('Delete doctor failed: ' . $e->getMessage());
             return back()->withErrors(['error' => 'Failed to delete doctor.']);
