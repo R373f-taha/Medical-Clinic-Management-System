@@ -3,11 +3,9 @@
 @section('content')
 <div class="container-fluid px-3">
 
-    @can('manage medical records')
-
+@can('manage medical records')
         <h1 class="mb-4">Medical Records</h1>
 
-        {{-- Success message --}}
         @if(session('success'))
             <div class="alert alert-success">
                 {{ session('success') }}
@@ -26,8 +24,11 @@
                             <th style="width: 20%;">Patient</th>
                             <th style="width: 20%;">Doctor</th>
                             <th style="width: 25%;">Diagnosis</th>
-                            <th style="width: 30%;">Treatment Plan</th>
+                            <th style="width: 25%;">Treatment Plan</th>
                             <th style="width: 15%;">Follow-up Date</th>
+                            @can('manage medical records')
+                                <th style="width: 10%;">Actions</th>
+                            @endcan
                         </tr>
                     </thead>
 
@@ -45,11 +46,11 @@
                                 </td>
 
                                 <td class="text-wrap small">
-                                    {{ $record->diagnosis }}
+                                    {{ $record->diagnosis ?? '-' }}
                                 </td>
 
                                 <td class="text-wrap small">
-                                    {{ $record->treatment_plan }}
+                                    {{ $record->treatment_plan ?? '-' }}
                                 </td>
 
                                 <td>
@@ -58,10 +59,20 @@
                                         : 'N/A'
                                     }}
                                 </td>
+
+                                @can('manage medical records')
+                                    <td>
+                                        <form action="{{ route('admin.medical-records.destroy', $record->id) }}" method="POST" onsubmit="return confirm('Are you sure?')">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                                        </form>
+                                    </td>
+                                @endcan
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="6">No records found</td>
+                                <td colspan="7">No records found</td>
                             </tr>
                         @endforelse
                     </tbody>
