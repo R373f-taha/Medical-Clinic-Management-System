@@ -11,7 +11,7 @@
 
         <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
             <div class="ms-md-auto pe-md-3 d-flex align-items-center">
-         
+
             </div>
 
             <ul class="navbar-nav justify-content-end">
@@ -20,9 +20,10 @@
                 <li class="nav-item d-flex align-items-center">
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
-                        <button class="btn btn-link text-body" type="submit">
-                            <i class="fa fa-user me-1"></i> Log Out
-                        </button>
+                        <button class="btn btn-link text-dark fw-bold" type="submit">
+    <i class="fa fa-user me-1"></i> Log Out
+</button>
+
                     </form>
                 </li>
 
@@ -32,8 +33,8 @@
                         <i class="fa fa-bell cursor-pointer text-warning fs-4 bell-animate"></i>
 
                         @php
-                            $unreadCount = auth()->user()->hasRole('clinicManager') 
-                                ? $notificationsCount 
+                            $unreadCount = auth()->user()->hasRole('clinicManager')
+                                ? $notificationsCount
                                 : (auth()->user()->hasRole('doctor') ? $doctorUnreadCount : 0);
                         @endphp
 
