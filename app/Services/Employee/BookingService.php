@@ -10,8 +10,8 @@ use Illuminate\Validation\ValidationException;
 class BookingService
 {
     /**
-     * Create a new booking with status 'scheduled'
-     * and notify doctor.
+     * Create a new booking with status "scheduled"
+     * and notify the doctor.
      *
      * @param array $data
      * @throws ValidationException
@@ -36,12 +36,12 @@ class BookingService
             'status'           => 'scheduled',
         ]);
 
-        // إشعار الدكتور فقط عند الحجز بواسطة الموظف
+        // Notify the doctor when booking is created by an employee
         $this->notifyDoctor($appointment, 'New appointment created');
     }
 
     /**
-     * Update an existing booking's date and reason only.
+     * Update an existing booking date and reason only.
      *
      * @param int $id
      * @param string $date
@@ -56,29 +56,31 @@ class BookingService
         // Validate clinic working hours
         $this->validateWorkingHours($date);
 
-        // Ensure no conflict only if date changed
-        if (
+        // Ensure no conflict only when the date has changed
+        collect([
             Carbon::parse($booking->appointment_date)
                 ->ne(Carbon::parse($date))
-        ) {
-            $this->ensureNoConflict(
-                $booking->doctor_id,
-                $date,
-                $booking->id
-            );
-        }
+        ])->when(true, function ($collection) use ($booking, $date) {
+            if ($collection->first()) {
+                $this->ensureNoConflict(
+                    $booking->doctor_id,
+                    $date,
+                    $booking->id
+                );
+            }
+        });
 
         $booking->update([
             'appointment_date' => $date,
             'reason'           => $reason,
         ]);
 
-        // إشعار الدكتور عند تعديل الحجز
+        // Notify the doctor about the update
         $this->notifyDoctor($booking, 'Appointment updated');
     }
 
     /**
-     * Approve a booking by setting status to 'scheduled'.
+     * Approve a booking by setting status to "scheduled".
      *
      * @param int $id
      * @throws ValidationException
@@ -89,13 +91,18 @@ class BookingService
         $booking = Appointment::findOrFail($id);
 
         $this->validateWorkingHours($booking->appointment_date);
-        $this->ensureNoConflict(
-            $booking->doctor_id,
-            $booking->appointment_date,
-            $booking->id
-        );
+
+        // Ensure no time conflict before approval
+        collect([true])->when(true, function () use ($booking) {
+            $this->ensureNoConflict(
+                $booking->doctor_id,
+                $booking->appointment_date,
+                $booking->id
+            );
+        });
 
         $booking->update(['status' => 'scheduled']);
+
         $this->notifyDoctor($booking, 'Appointment approved');
     }
 
@@ -108,7 +115,9 @@ class BookingService
     public function reject(int $id): void
     {
         $booking = Appointment::findOrFail($id);
+
         $booking->update(['status' => 'cancelled']);
+
         $this->notifyDoctor($booking, 'Appointment rejected');
     }
 
@@ -121,7 +130,9 @@ class BookingService
     public function complete(int $id): void
     {
         $booking = Appointment::findOrFail($id);
+
         $booking->update(['status' => 'completed']);
+
         $this->notifyDoctor($booking, 'Appointment completed');
     }
 
@@ -134,14 +145,16 @@ class BookingService
     public function deleteBooking(int $id): void
     {
         $booking = Appointment::findOrFail($id);
+
         $this->notifyDoctor($booking, 'Appointment deleted');
+
         $booking->delete();
     }
 
     // ================= Helpers =================
 
     /**
-     * Ensure doctor does not have another appointment
+     * Ensure the doctor does not have another appointment
      * at the same time slot.
      *
      * @param int $doctorId
@@ -158,24 +171,21 @@ class BookingService
         $start = Carbon::parse($date)->startOfMinute();
         $end   = Carbon::parse($date)->endOfMinute();
 
-        $query = Appointment::where('doctor_id', $doctorId)
-            ->whereBetween('appointment_date', [$start, $end]);
-
-        if ($ignoreId) {
-            $query->where('id', '!=', $ignoreId);
-        }
-
-        if ($query->exists()) {
-            throw ValidationException::withMessages([
+        Appointment::where('doctor_id', $doctorId)
+            ->whereBetween('appointment_date', [$start, $end])
+            ->when($ignoreId, fn ($q) => $q->where('id', '!=', $ignoreId))
+            ->exists()
+            && throw ValidationException::withMessages([
                 'appointment_date' =>
                     'This appointment time is already booked.',
             ]);
-        }
     }
 
     /**
-     * Validate clinic working hours:
-     * - Between 10:00 and 18:00
+     * Validate clinic working hours.
+     *
+     * Rules:
+     * - From 10:00 to 18:00
      * - Every 30 minutes only
      *
      * @param string $date
@@ -186,23 +196,20 @@ class BookingService
     {
         $time = Carbon::parse($date);
 
-        if ($time->hour < 10 || $time->hour >= 18) {
-            throw ValidationException::withMessages([
-                'appointment_date' =>
-                    'Clinic working hours are from 10:00 to 18:00.',
+        collect([
+            $time->hour < 10 || $time->hour >= 18 =>
+                'Clinic working hours are from 10:00 to 18:00.',
+            !in_array($time->minute, [0, 30]) =>
+                'Appointments must be scheduled every 30 minutes.',
+        ])->each(function ($message, $condition) {
+            $condition && throw ValidationException::withMessages([
+                'appointment_date' => $message,
             ]);
-        }
-
-        if (!in_array($time->minute, [0, 30])) {
-            throw ValidationException::withMessages([
-                'appointment_date' =>
-                    'Appointments must be scheduled every 30 minutes.',
-            ]);
-        }
+        });
     }
 
     /**
-     * Notify doctor about the appointment.
+     * Notify the doctor about the appointment.
      *
      * @param Appointment $appointment
      * @param string $title
@@ -211,14 +218,15 @@ class BookingService
     private function notifyDoctor(Appointment $appointment, string $title): void
     {
         $message =
-            $title . ' on ' . Carbon::parse($appointment->appointment_date)->format('Y-m-d H:i');
+            $title . ' on ' .
+            Carbon::parse($appointment->appointment_date)
+                ->format('Y-m-d H:i');
 
-        if ($appointment->doctor?->user) {
-            Notification::create([
+        optional($appointment->doctor?->user)
+            && Notification::create([
                 'user_id' => $appointment->doctor->user->id,
                 'title'   => $title,
                 'message' => $message,
             ]);
-        }
     }
 }

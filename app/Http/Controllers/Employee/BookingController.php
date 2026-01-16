@@ -65,7 +65,7 @@ class BookingController extends Controller
         DB::beginTransaction();
 
         try {
-            // الموظف ينشئ الحجز → إشعار للدكتور مباشرة
+// The employee creates the appointment → notify the doctor immediately
             $this->service->createBooking($request->validated());
             DB::commit();
 

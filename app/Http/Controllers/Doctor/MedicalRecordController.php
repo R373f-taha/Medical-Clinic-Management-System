@@ -97,6 +97,6 @@ class MedicalRecordController extends Controller
     public function destroy(MedicalRecord $medicalRecord)
     {
         $this->medicalRecordService->delete($medicalRecord);
-        return back()->with('success', 'تم حذف السجل الطبي');
+        return back()->with('success', '  medicalRecord deleted successfully');
     }
 }
