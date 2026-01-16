@@ -20,4 +20,8 @@
 Homestead.json
 Homestead.yaml
 Thumbs.db
+<<<<<<< HEAD
 .env
+=======
+/node_modules
+>>>>>>> b5fe06a717c20405f3597425aa23e206641803c7

@@ -4,32 +4,31 @@
 <div class="container">
     <h3>Edit Booking</h3>
 
-    {{-- نموذج التعديل فقط للموظف اللي عنده صلاحية --}}
     @can('manage appointments')
         <form method="POST" action="{{ route('employee.bookings.update', $booking->id) }}">
             @csrf
             @method('PUT')
 
+            {{-- Appointment Date --}}
             <div class="mb-3">
                 <label>Date</label>
-                <input type="datetime-local" name="appointment_date"
-                    value="{{ \Carbon\Carbon::parse($booking->appointment_date)->format('Y-m-d\TH:i') }}"
-                    class="form-control">
+                <input type="datetime-local" 
+                       name="appointment_date" 
+                       class="form-control @error('appointment_date') is-invalid @enderror"
+                       value="{{ old('appointment_date', \Carbon\Carbon::parse($booking->appointment_date)->format('Y-m-d\TH:i')) }}">
+                @error('appointment_date')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
             </div>
 
+            {{-- Reason --}}
             <div class="mb-3">
                 <label>Reason</label>
-                <textarea name="reason" class="form-control">{{ $booking->reason }}</textarea>
-            </div>
-
-            <div class="mb-3">
-                <label>Status</label>
-                <select name="status" class="form-control">
-                    <option value="hold" {{ $booking->status=='hold'?'selected':'' }}>Hold</option>
-                    <option value="scheduled" {{ $booking->status=='scheduled'?'selected':'' }}>Scheduled</option>
-                    <option value="cancelled" {{ $booking->status=='cancelled'?'selected':'' }}>Cancelled</option>
-                    <option value="completed" {{ $booking->status=='completed'?'selected':'' }}>Completed</option>
-                </select>
+                <textarea name="reason" 
+                          class="form-control @error('reason') is-invalid @enderror">{{ old('reason', $booking->reason) }}</textarea>
+                @error('reason')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
             </div>
 
             <button class="btn btn-primary">Update</button>

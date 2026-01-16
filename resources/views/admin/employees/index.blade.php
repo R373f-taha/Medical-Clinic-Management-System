@@ -41,25 +41,29 @@
                     <td>{{ $employee->gender }}</td>
                     <td>{{ $employee->date_of_birth ?? '-' }}</td>
                     <td class="d-flex gap-2 justify-content-center align-items-center">
-                        {{-- أيقونة التعديل --}}
+
+                        {{-- Edit --}}
                         <a href="{{ route('admin.employees.edit', $employee) }}" title="Edit">
                             <i class="fas fa-edit action-icon"
                                style="font-size:1.5rem; color:#ffc107; cursor:pointer;"></i>
                         </a>
 
-                        {{-- أيقونة الحذف --}}
+                        {{-- Delete --}}
                         @can('manage employees')
-                        <form action="{{ route('admin.employees.destroy', $employee) }}"
-                              method="POST" style="display:inline"
-                              onsubmit="return confirm('Are you sure you want to delete this employee?')">
+                        <form id="delete-form-{{ $employee->id }}" 
+                              action="{{ route('admin.employees.destroy', $employee) }}" 
+                              method="POST" style="display:inline;">
                             @csrf
                             @method('DELETE')
-                            <i class="fas fa-trash action-icon danger"
-                               title="Delete"
-                               style="font-size:1.5rem; color:#dc3545; cursor:pointer;"
-                               onclick="this.closest('form').submit()"></i>
+                            <button type="button" class="action-icon danger" 
+                                    title="Delete" 
+                                    style="font-size:1.5rem; color:#dc3545; border:none; background:none; cursor:pointer;"
+                                    onclick="confirmDelete({{ $employee->id }})">
+                                <i class="fas fa-trash"></i>
+                            </button>
                         </form>
                         @endcan
+
                     </td>
                 </tr>
             @empty
@@ -73,4 +77,29 @@
     </table>
 @endcan
 </div>
+
+{{-- SweetAlert --}}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+function confirmDelete(id) {
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "This action will permanently delete this employee!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete it',
+        cancelButtonText: 'Cancel',
+        reverseButtons: true
+    }).then((result) => {
+        if (result.isConfirmed) {
+            document.getElementById('delete-form-' + id).submit();
+        }
+    });
+}
+</script>
+
+<style>
+.action-icon { font-size: 1.5rem; cursor: pointer; }
+.action-icon.danger:hover { opacity: 0.7; }
+</style>
 @endsection

@@ -34,7 +34,8 @@ class ScheduleController extends Controller
         try {
             $appointments = $this->scheduleService->getSchedule($request);
             return view('Employee.schedule.index', compact('appointments'));
-        } catch (\Throwable $e) {
+        } 
+        catch (\Throwable $e) {
             Log::error('Fetching schedule failed: '.$e->getMessage());
             return back()->withErrors(['error' => 'Unable to fetch schedule.']);
         }
@@ -55,7 +56,8 @@ class ScheduleController extends Controller
             DB::commit();
 
             return back()->with('success', 'Doctor schedule updated successfully.');
-        } catch (\Throwable $e) {
+        } 
+        catch (\Throwable $e) {
             DB::rollBack();
             Log::error('Update schedule failed', [
                 'doctor_id' => $doctorId, 

@@ -24,7 +24,8 @@ class ClinicController extends Controller
         try {
             $clinic = $this->clinicService->get();
             return view('admin.Clinic.index', compact('clinic'));
-        } catch (\Throwable $e) {
+        } 
+        catch (\Throwable $e) {
             Log::error('Fetching clinic failed: '.$e->getMessage());
             return back()->withErrors(['error' => 'Unable to fetch clinic data.']);
         }

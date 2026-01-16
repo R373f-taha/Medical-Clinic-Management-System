@@ -12,12 +12,20 @@ use Illuminate\Support\Facades\DB;
 
 class AppointmentService
 {
+    /**
+     * get All Appointment
+     * @return \Illuminate\Database\Eloquent\Collection<int, Appointment>
+     */
     public function getAll()
     {
         return Appointment::with('patient')
             ->latest()
             ->get();
     }
+    /**
+     * get current_doctor's Appointments
+     * @return \Illuminate\Database\Eloquent\Collection<int, Appointment>
+     */
     public function doctorAppointments()
     {
         return Appointment::with('patient')
@@ -25,6 +33,10 @@ class AppointmentService
             ->where('doctor_id', Auth::user()->doctor->id)
             ->get();
     }
+    /**
+     * get today's Appointment for the current doctor
+     * @return \Illuminate\Database\Eloquent\Collection<int, Appointment>
+     */
     public function today()
     {
         return Appointment::with('patient')
@@ -36,7 +48,9 @@ class AppointmentService
             ->orderBy('appointment_date', 'asc')
             ->get();
     }
-
+    /**
+     * Create an Appointment
+     */
     public function createAppointment()
     {
         $doctor = Auth::user()->doctor;
@@ -50,17 +64,33 @@ class AppointmentService
 
         return $patients;
     }
+    /**
+     * Store an Appointment
+     * @param array $data
+     * @throws \DomainException
+     * @return Appointment
+     */
     public function store(array $data)
     {
         try {
             DB::beginTransaction();
 
-            $doctorId  = Auth::user()->doctor->id;
+            $doctorId = Auth::user()->doctor->id;
             $patientId = $data['patient_id'];
+
             $appointmentTime = Carbon::parse($data['appointment_date']);
+
+            // Prevent booking appointments in the past
+            if ($appointmentTime->lessThanOrEqualTo(now())) {
+                throw new \DomainException(
+                    'Appointment time must be in the future'
+                );
+            }
+
             $from = $appointmentTime->copy()->subMinutes(30);
             $to   = $appointmentTime->copy()->addMinutes(30);
 
+            // Check patient conflict
             $patientConflict = Appointment::where('patient_id', $patientId)
                 ->where('status', 'scheduled')
                 ->whereBetween('appointment_date', [$from, $to])
@@ -69,10 +99,11 @@ class AppointmentService
 
             if ($patientConflict) {
                 throw new \DomainException(
-                    'This patient has an appointment with another doctor in this time'
+                    'This patient already has an appointment with another doctor at this time'
                 );
             }
 
+            // Check doctor conflict
             $doctorConflict = Appointment::where('doctor_id', $doctorId)
                 ->where('status', 'scheduled')
                 ->whereBetween('appointment_date', [$from, $to])
@@ -81,7 +112,7 @@ class AppointmentService
 
             if ($doctorConflict) {
                 throw new \DomainException(
-                    'This doctor has an appointment with another patient in this time'
+                    'This doctor already has an appointment with another patient at this time'
                 );
             }
 
@@ -96,6 +127,7 @@ class AppointmentService
             ]);
 
             DB::commit();
+
             return $appointment;
         } catch (\Throwable $e) {
             DB::rollBack();
@@ -103,7 +135,13 @@ class AppointmentService
         }
     }
 
-
+    /**
+     * Update an Appointment
+     * @param Appointment $appointment
+     * @param array $data
+     * @throws \DomainException
+     * @return Appointment
+     */
     public function update(Appointment $appointment, array $data)
     {
         try {
@@ -112,6 +150,13 @@ class AppointmentService
             $doctorId  = Auth::user()->doctor->id;
             $patientId = $appointment->patient_id;
             $appointmentTime = Carbon::parse($data['appointment_date']);
+
+            // Prevent booking appointments in the past
+            if ($appointmentTime->lessThanOrEqualTo(now())) {
+                throw new \DomainException(
+                    'Appointment time must be in the future'
+                );
+            }
 
             $from = $appointmentTime->copy()->subMinutes(30);
             $to   = $appointmentTime->copy()->addMinutes(30);

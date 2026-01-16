@@ -16,52 +16,83 @@ class AppointmentController extends Controller
     {
         $this->appointmentServices = $appointmentService;
     }
+    /**
+     * View all Appintments for the current doctor
+     * @return \Illuminate\Contracts\View\View
+     */
     public function index()
     {
-        $appointments = $this->appointmentServices->getAll();
+        $appointments = $this->appointmentServices->doctorAppointments();
         return view("doctor.appointments.history", compact("appointments"));
     }
-
+    /**
+     * Create an Appointment
+     * @return \Illuminate\Contracts\View\View
+     */
     public function create()
     {
         $patients = $this->appointmentServices->createAppointment();
         return view("doctor.appointments.create_appointment", compact("patients"));
     }
+    /**
+     * Store an Appointment
+     * @param StoreAppointmentRequest $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function store(StoreAppointmentRequest $request)
     {
         try {
             $data = $request->validated();
             $this->appointmentServices->store($data);
             return redirect()->route("doctor.appointments.doctorAppointments")->with("success", "Appointment Created..!");
-        } catch (\DomainException $e) {
+        } catch (\Throwable $e) {
             return redirect()
                 ->back()
                 ->withInput()
-                ->with('delete', $e->getMessage());
+                ->with('delete', 'Failed...!');
         }
     }
+    /**
+     * Current doctor Appointments
+     * @return \Illuminate\Contracts\View\View
+     */
     public function doctorAppointments()
     {
         $appointments = $this->appointmentServices->doctorAppointments();
         return view("doctor.appointments.history", compact("appointments"));
     }
+    /**
+     * Update an Appointment
+     * @param Appointment $appointment
+     * @return \Illuminate\Contracts\View\View
+     */
     public function update(Appointment $appointment)
     {
         return view("doctor.appointments.update_appointment", compact("appointment"));
     }
+    /**
+     * Edit an Appointment
+     * @param Appointment $appointment
+     * @param UpdateAppointmentRequest $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function edit(Appointment $appointment, UpdateAppointmentRequest $request)
     {
         try {
             $data = array_filter($request->validated(), fn($value) => !is_null($value));
             $this->appointmentServices->update($appointment, $data);
             return redirect()->route("doctor.appointments.doctorAppointments")->with("success", "Appointment Updated..!");
-        } catch (\DomainException $e) {
+        } catch (\Throwable $e) {
             return redirect()
                 ->back()
                 ->withInput()
-                ->with('delete', $e->getMessage());
+                ->with('delete', 'Failed...!');
         }
     }
+    /**
+     * Today's Appointment for the current doctor
+     * @return \Illuminate\Contracts\View\View
+     */
     public function today()
     {
         $appointments = $this->appointmentServices->today();

@@ -16,7 +16,9 @@
                     box-shadow:0 2px 8px rgba(0,0,0,0.1);
                     padding:25px;">
 
-            <form action="{{ route('prescriptions.store') }}" method="POST">
+        @can('manage prescriptions')
+
+            <form action="{{ route('doctor.prescriptions.store') }}" method="POST">
                 @csrf
 
                 <div style="margin-bottom:15px;">
@@ -91,7 +93,7 @@
                     </button>
 
 
-<a href="{{ route('prescriptions.index') }}"
+<a href="{{ route('doctor.prescriptions.index') }}"
                        style="background-color:#6c757d; color:#fff;
                               padding:10px 20px; text-decoration:none;
                               border-radius:6px;">
@@ -104,6 +106,7 @@
         </div>
 
     </div>
+    @endcan
 
 </div>
 @endsection
