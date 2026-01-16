@@ -72,7 +72,7 @@ class DoctorController extends Controller
             $this->doctorService->store($data);
             DB::commit();
 
-            return redirect()->route('doctors.index')
+            return redirect()->route('admin.doctors.index')
                              ->with('success', 'Doctor added successfully.');
         } 
         catch (\Throwable $e) {
@@ -157,7 +157,7 @@ class DoctorController extends Controller
             $this->doctorService->delete($doctor);
             DB::commit();
 
-            return redirect()->route('doctors.index')
+            return redirect()->route('admin.doctors.index')
                              ->with('success', 'Doctor deleted successfully.');
         }
          catch (\Throwable $e) {

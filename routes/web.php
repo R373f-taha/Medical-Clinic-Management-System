@@ -87,12 +87,6 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:clinicManager'
 });
 
 
-
-
-
-
-
-
 ///////////////////////////////////////////////
 Route::prefix('employee')->name('employee.')->middleware(['auth'])->group(function () {
 

@@ -1,85 +1,98 @@
 <?php
 
 namespace App\Services\Patient;
+
 use Illuminate\Http\Request;
-use App\Http\Requests\Store\StorePatientRequest;
-use App\Models\Patient;
-use App\Models\User;
-//use Illuminate\Container\Attributes\DB;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB ;
-use Illuminate\Support\Facades\Hash;
+use App\Models\Appointment;
 
-use RequestParseBodyException;
-use Tymon\JWTAuth\Facades\JWTAuth;
-
-class PatientService
+class AppointmentService
 {
-    public function registerPatient($data){
+    /**
+     * Checks if the authenticated user has patient access and specific permission.
+     *
+     * @param mixed $request The request object or appointment instance
+     * @param string|null $permission Optional permission to check
+     * @return \Illuminate\Http\JsonResponse|null Error response if checks fail, otherwise null
+     */
+    public function checkPatientAccess($request, $permission = null)
+    {
+        $user = $request->user();
 
-        DB::beginTransaction();
-        $user=User::create([
-            'name'=>$data['name'],
-            'email'=>$data['email'],
-            'password'=>Hash::make($data['password']),
-        ]);
-        $user->assignRole('patient');
-
-        $patient=Patient::create([
-            'user_id'=>$user->id,
-            'blood_type'=>$data['blood_type']??'A+',
-            'height'=>$data['height']??'160',
-            'gender'=>$data['gender']??'other',
-            'weight'=>$data['weight']??'60',
-            'allergies'=>$data['allergies']??'']);
-
-            $token=JWTAuth::fromUser($user);//token generation
-            DB::commit();
-
-            return[
-                'user'=> $user,
-                'patient'=>$patient,
-                'token'=>$token
-            ];
-
+        if (!$user) {
+            return response()->json([
+                'status' => 'error 😑',
+                'message' => 'Register First 🙄'
+            ], 401);
         }
 
+        if (!$user->hasRole('patient', 'api')) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'this page only for patient'
+            ], 403);
+        }
 
+        if ($permission && !$user->hasPermissionTo($permission, 'api')) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'it is not allowed to do that'
+            ], 403);
+        }
+
+        if (!$user->patient) {
+            return response()->json([
+                'message' => 'you must ba a patient person to take an appointment 😑',
+                'instruction' => 'make a patient account 🧐'
+            ], 403);
+        }
+
+        return null;
+    }
+
+    /**
+     * Retrieves all appointments with patient and doctor relations.
+     *
+     * @return \Illuminate\Database\Eloquent\Collection List of appointments
+     */
     public function getAll()
     {
-        return Patient::all();
+        return Appointment::with(['patient', 'doctor'])
+            ->latest()
+            ->get();
     }
 
+    /**
+     * Creates a new appointment record.
+     *
+     * @param array $data Appointment data
+     * @return \App\Models\Appointment The created appointment instance
+     */
     public function store(array $data)
     {
-        $currentUser = Auth::user();
-
-    if (!$currentUser) {
-
-        return response()->json(['error' =>'you must reqister first'], 401);
-
+        return Appointment::create($data);
     }
 
-    $patient = Patient::create([
-
-        'user_id' => $currentUser->id,
-
-        'blood_type' => $data['blood_type'],
-
-        'height' => $data['height'],
-
-        'weight' => $data['weight'],
-
-        'gender' => $data['gender'],
-
-        'allergies' => $data['allergies'],
-
-    ]);
-        return Patient::create($data);
-    }
-    public function update(Patient $patient, array $data)
+    /**
+     * Updates an existing appointment.
+     *
+     * @param \App\Models\Appointment $appointment Appointment to update
+     * @param array $data New appointment data
+     * @return \App\Models\Appointment The updated appointment instance
+     */
+    public function update(Appointment $appointment, array $data)
     {
-        $patient->update($data);
-        return $patient;
+        $appointment->update($data);
+        return $appointment;
+    }
+
+    /**
+     * Deletes an appointment record.
+     *
+     * @param \App\Models\Appointment $appointment Appointment to delete
+     * @return bool|null Deletion result
+     */
+    public function delete(Appointment $appointment)
+    {
+        return $appointment->delete();
     }
 }

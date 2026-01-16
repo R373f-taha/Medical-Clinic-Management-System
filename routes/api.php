@@ -10,64 +10,94 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Spatie\Permission\Models\Role;
 
-
+/**
+ * ========================================================
+ * PUBLIC ROUTES (No Authentication Required)
+ * ========================================================
+ */
 Route::prefix('patient')->name('patient.')->group(function () {
-
+    /**
+     * Patient registration endpoint.
+     */
     Route::post('/register', [PatientController::class, 'register']);
 
-    Route::post('/login', [PatientController::class,'login']);
+    /**
+     * Patient login endpoint.
+     */
+    Route::post('/login', [PatientController::class, 'login']);
 
-    Route::post('/refresh', [PatientController::class,'refresh']);
+    /**
+     * Refresh JWT token endpoint.
+     */
+    Route::post('/refresh', [PatientController::class, 'refresh']);
 
-    Route::get('invoice/for/{id}/appointment', [AppointmentController::class,'invoice']);
-
-
+    /**
+     * View invoice for a specific appointment (public?).
+     */
+    Route::get('invoice/for/{id}/appointment', [AppointmentController::class, 'invoice']);
 });
 
-
+/**
+ * ========================================================
+ * AUTHENTICATED ROUTES (Requires API Authentication)
+ * ========================================================
+ */
 Route::prefix('patient')->middleware(['auth:api'])->group(function () {
-    Route::get('/me', [PatientController::class,'me']);
+    /**
+     * Get authenticated patient's profile.
+     */
+    Route::get('/me', [PatientController::class, 'me']);
 });
 
+/**
+ * ========================================================
+ * PATIENT-SPECIFIC ROUTES (Requires Patient Role)
+ * ========================================================
+ */
 Route::prefix('patient')->middleware('auth:api')->group(function () {
-
+    /**
+     * Patient logout endpoint.
+     */
     Route::middleware(['role:patient'])->group(function () {
+        Route::get('/logout', [PatientController::class, 'logout']);
+    });
 
+    /**
+     * Book a new appointment (requires specific permission).
+     */
+    Route::post('/take/appointment', [AppointmentController::class, 'takeAppointment'])->middleware(['role:patient', 'permission:api:book appointment']);
 
-    Route::get('/logout', [PatientController::class,'logout']);});
+    /**
+     * View patient's appointments.
+     */
+    Route::middleware(['auth:api'])->group(function () {
+        Route::get('show/appointments', [AppointmentController::class, 'show_appointments']);
+    });
 
+    /**
+     * Cancel appointment(s) (requires specific permission).
+     */
+    Route::middleware(['role:patient', 'permission:api:cancel own appointments'])->group(function () {
+        Route::get('cancel/{id}/appointment', [AppointmentController::class, 'cancel_appointment']);
+        Route::get('cancel/appointments', [AppointmentController::class, 'cancel_all_appointments']);
+    });
 
-    Route::post('/take/appointment', [AppointmentController::class,'takeAppointment'])->middleware(['role:patient','permission:api:book appointment']);
+    /**
+     * View medical record (requires specific permission).
+     */
+    Route::middleware(['role:patient', 'permission:api:view own medical record'])->group(function () {
+        Route::get('/medicalRecord', [AppointmentController::class, 'showMedicalRecord']);
+    });
 
+    /**
+     * View prescriptions for a medical record (requires specific permission).
+     */
+    Route::middleware(['role:patient', 'permission:api:view own prescriptions'])->group(function () {
+        Route::get('get/prescriptions/for/{id}/medical/record', [AppointmentController::class, 'prescriptions']);
+    });
 
-
-Route::middleware(['auth:api'])->group(function () {
-    Route::get('show/appointments', [AppointmentController::class,'show_appointments']);
-});
-
-    Route::middleware(['role:patient','permission:api:cancel own appointments'])->group(function () {
-
-
-    Route::get('cancel/{id}/appointment', [AppointmentController::class,'cancel_appointment']);
-
-    Route::get('cancel/appointments', [AppointmentController::class,'cancel_all_appointments']);});
-
-    Route::middleware(['role:patient' ,'permission:api:view own medical record'])->group(function () {
-
-
-    Route::get('/medicalRecord', [AppointmentController::class,'showMedicalRecord']);});
-
-    Route::middleware(['role:patient','permission:api:view own prescriptions'])->group(function () {
-
-
-    Route::get('get/prescriptions/for/{id}/medical/record', [AppointmentController::class,'prescriptions']);});
-
-    Route::middleware(['role:patient','permission:create rating'])->group(function () {
-
-
-  });
-
-      Route::post('add/rating', [RatingController::class,'addRating'])->middleware(['role:patient','permission:api:book appointment']);
-
-
+    /**
+     * Add rating (requires specific permission).
+     */
+    Route::post('add/rating', [RatingController::class, 'addRating'])->middleware(['role:patient', 'permission:api:book appointment']);
 });

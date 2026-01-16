@@ -32,7 +32,8 @@
 }
 </style>
 
-<body class="g-sidenav-show bg-gray-100">
+<body class="g-sidenav-show bg-gray-100
+    @if(Auth::user()?->hasrole('employee')) employee-dashboard @endif">
     @if (Auth::user()->hasRole('doctor'))
         @include('doctor.partials.sidebar')
     @elseif(Auth::user()->hasRole('employee'))
