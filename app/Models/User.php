@@ -8,12 +8,13 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Traits\HasRoles;
+use Symfony\Component\Routing\Loader\ProtectedPhpFileLoader;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class User extends Authenticatable implements JWTSubject
-{
-    use HasFactory, Notifiable, HasRoles;
+{ Protected $guard_name= 'web';
 
+    use HasFactory, Notifiable, HasRoles;
 
     protected $fillable = [
         'name',

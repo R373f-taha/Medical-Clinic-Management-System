@@ -7,10 +7,10 @@ use App\Models\Appointment;
 
 class AppointmentSeeder extends Seeder
 {
-    public function run()
+    public function run(): void
     {
         Appointment::factory()->count(20)->create();
 
-        $this->command->info('Appointments seeded successfully using factory!');
+        $this->command->info('Appointments seeded successfully!');
     }
 }
