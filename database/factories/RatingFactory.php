@@ -5,6 +5,7 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\Patient;
 use App\Models\Doctor;
+use Carbon\Carbon;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Rating>
@@ -19,7 +20,10 @@ class RatingFactory extends Factory
             'patient_id' => Patient::factory(),
             'doctor_id' => Doctor::factory(),
             'rating' => $this->faker->numberBetween(1, 5),
-            'date' => $this->faker->date(),
+            'date' => $this->faker->dateTimeBetween(
+                Carbon::now()->startOfWeek(),
+                Carbon::now()->endOfWeek()
+            ),
             'notes' => $this->faker->sentence(),
         ];
     }
