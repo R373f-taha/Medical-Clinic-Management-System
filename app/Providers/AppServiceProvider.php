@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Invoice;
 use App\Models\Rating;
-use App\Models\Notification;
+use App\Models\Appointment;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -20,68 +20,80 @@ class AppServiceProvider extends ServiceProvider
     {
         View::composer('*', function ($view) {
 
-            $view->with([
-                'notifications' => collect(),
-                'notificationsCount' => 0,
-                'doctorNotifications' => collect(),
-                'doctorUnreadCount' => 0,
-            ]);
+            $bellNotifications = collect();
+            $bellUnreadCount = 0;
 
-            if (!Auth::check()) return;
+            if (!Auth::check()) {
+                $view->with(compact('bellNotifications', 'bellUnreadCount'));
+                return;
+            }
 
             $user = Auth::user();
 
-            // إشعارات المدير
+            // ================== Clinic Manager (Invoices + Ratings) ==================
             if ($user->hasRole('clinicManager')) {
-                $invoices = Invoice::with('patient')
+
+                $invoices = Invoice::with('patient.user')
                     ->where('status', 'paid')
-                    ->orderBy('invoice_date', 'desc')
-                    ->take(5)
-                    ->get()
-                    ->map(fn($invoice) => [
-                        'type' => 'invoice',
-                        'title' => 'Invoice Paid',
-                        'message' => 'Patient ' . $invoice->patient->name . ' paid ' . $invoice->total_amount,
-                        'date' => $invoice->invoice_date,
-                        'link' => '#' // ضع الرابط الصحيح لاحقاً
-                    ]);
-
-                $ratings = Rating::with('doctor')
-                    ->orderBy('created_at', 'desc')
-                    ->take(5)
-                    ->get()
-                    ->map(fn($rating) => [
-                        'type' => 'rating',
-                        'title' => 'New Doctor Rating',
-                        'message' => 'Dr. ' . $rating->doctor->name . ' received rating ' . $rating->rating,
-                        'date' => $rating->created_at,
-                        'link' => '#' // ضع الرابط الصحيح لاحقاً
-                    ]);
-
-                $allNotifications = $invoices->merge($ratings)->sortByDesc('date')->take(10);
-
-                $view->with([
-                    'notifications' => $allNotifications,
-                    'notificationsCount' => $allNotifications->count(),
-                ]);
-            }
-
-            // إشعارات الدكتور
-            if ($user->hasRole('doctor') && $user->can('view notifications')) {
-                $doctorNotifications = Notification::where('user_id', $user->id)
                     ->latest()
                     ->take(5)
-                    ->get();
+                    ->get()
+                    ->map(fn ($i) => [
+                        'type' => 'invoice',
+                        'title' => 'Paid Invoice',
+                        'date' => $i->created_at,
+                        'patient' => $i->patient->user->name ?? '---',
+                        'amount'  => $i->total_amount,
+                        'status'  => $i->status,
+                        'details' => 'Invoice paid: ' . $i->total_amount,
+                    ]);
 
-                $doctorUnreadCount = Notification::where('user_id', $user->id)
-                    ->where('is_read', false)
-                    ->count();
+                $ratings = Rating::with('doctor.user')
+                    ->latest()
+                    ->take(5)
+                    ->get()
+                    ->map(fn ($r) => [
+                        'type' => 'rating',
+                        'title' => 'New Rating',
+                        'date' => $r->created_at,
+                        'doctor' => $r->doctor->user->name ?? '---',
+                        'rating' => $r->rating,
+                        'comment'=> $r->comment ?? 'No comment',
+                        'details'=> 'Doctor rated: ' . $r->rating,
+                    ]);
 
-                $view->with([
-                    'doctorNotifications' => $doctorNotifications,
-                    'doctorUnreadCount' => $doctorUnreadCount,
-                ]);
+                $bellNotifications = $invoices
+                    ->merge($ratings)
+                    ->sortByDesc('date')
+                    ->values();
+
+                $bellUnreadCount = $bellNotifications->count();
             }
+
+            // ================== Doctor (Appointments) ==================
+            if ($user->hasRole('doctor')) {
+
+                $appointments = Appointment::with(['patient.user'])
+                    ->where('doctor_id', $user->doctor->id)
+                    ->latest()
+                    ->take(10)
+                    ->get()
+                    ->map(fn ($a) => [
+                        'type' => 'appointment',
+                        'title' => 'Book an Appointment',
+                        'date' => $a->created_at,  // للإشعارات فقط
+                        'patient' => $a->patient->user->name ?? '---',
+                        'appointment_date' => $a->appointment_date, // هذا التاريخ الوحيد
+                        'reason' => $a->reason ?? '---',
+                        'status' => $a->status,
+                        'details'=> '', // أي ملاحظات إضافية يمكن تركها فارغة
+                    ]);
+
+                $bellNotifications = $appointments;
+                $bellUnreadCount  = $appointments->count();
+            }
+
+            $view->with(compact('bellNotifications', 'bellUnreadCount'));
         });
     }
 }

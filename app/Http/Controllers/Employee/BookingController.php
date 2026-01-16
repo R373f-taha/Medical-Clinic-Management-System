@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Employee;
+
 use Illuminate\Validation\ValidationException;
 use App\Http\Controllers\Controller;
 use App\Models\Appointment;
@@ -59,40 +60,36 @@ class BookingController extends Controller
      * @param StoreBookingRequest $request
      * @return \Illuminate\Http\RedirectResponse
      */
+    public function store(StoreBookingRequest $request)
+    {
+        DB::beginTransaction();
 
-public function store(StoreBookingRequest $request)
-{
-    DB::beginTransaction();
+        try {
+            // الموظف ينشئ الحجز → إشعار للدكتور مباشرة
+            $this->service->createBooking($request->validated());
+            DB::commit();
 
-    try {
-        $this->service->createBooking($request->validated());
-        DB::commit();
+            return redirect()
+                ->route('employee.bookings.index')
+                ->with('success', 'Booking created successfully.');
+        }
+        catch (ValidationException $e) {
+            DB::rollBack();
+            return back()
+                ->withErrors($e->errors())
+                ->withInput();
+        }
+        catch (\Throwable $e) {
+            DB::rollBack();
+            Log::error('Create booking failed', [
+                'error' => $e->getMessage()
+            ]);
 
-        return redirect()
-            ->route('employee.bookings.index')
-            ->with('success', 'Booking created successfully.');
+            return back()
+                ->withErrors(['error' => 'Something went wrong. Please try again.'])
+                ->withInput();
+        }
     }
-    catch (ValidationException $e) {
-        DB::rollBack();
-
-        // This keeps errors under the correct input fields
-        return back()
-            ->withErrors($e->errors())
-            ->withInput();
-    }
-    catch (\Throwable $e) {
-        DB::rollBack();
-
-        Log::error('Create booking failed', [
-            'error' => $e->getMessage()
-        ]);
-
-        return back()
-            ->withErrors(['error' => 'Something went wrong. Please try again.'])
-            ->withInput();
-    }
-}
-
 
     /**
      * Show the form for editing the specified booking.
@@ -113,44 +110,41 @@ public function store(StoreBookingRequest $request)
      * @param int $id
      * @return \Illuminate\Http\RedirectResponse
      */
+    public function update(UpdateBookingRequest $request, $id)
+    {
+        DB::beginTransaction();
 
-public function update(UpdateBookingRequest $request, $id)
-{
-    DB::beginTransaction();
+        try {
+            $this->service->updateBooking(
+                $id,
+                $request->appointment_date,
+                $request->reason
+            );
 
-    try {
-        $this->service->updateBooking(
-            $id,
-            $request->appointment_date,
-            $request->reason
-        );
+            DB::commit();
 
-        DB::commit();
+            return redirect()
+                ->route('employee.bookings.index')
+                ->with('success', 'Booking updated successfully.');
+        }
+        catch (ValidationException $e) {
+            DB::rollBack();
+            return back()
+                ->withErrors($e->errors())
+                ->withInput();
+        }
+        catch (\Throwable $e) {
+            DB::rollBack();
+            Log::error('Update booking failed', [
+                'id'    => $id,
+                'error' => $e->getMessage()
+            ]);
 
-        return redirect()
-            ->route('employee.bookings.index')
-            ->with('success', 'Booking updated successfully.');
+            return back()
+                ->withErrors(['error' => 'Something went wrong. Please try again.'])
+                ->withInput();
+        }
     }
-    catch (ValidationException $e) {
-        DB::rollBack();
-
-        return back()
-            ->withErrors($e->errors())
-            ->withInput();
-    }
-    catch (\Throwable $e) {
-        DB::rollBack();
-
-        Log::error('Update booking failed', [
-            'id'    => $id,
-            'error' => $e->getMessage()
-        ]);
-
-        return back()
-            ->withErrors(['error' => 'Something went wrong. Please try again.'])
-            ->withInput();
-    }
-}
 
     /**
      * Approve the specified booking.
@@ -208,7 +202,7 @@ public function update(UpdateBookingRequest $request, $id)
     {
         DB::beginTransaction();
         try {
-            Appointment::findOrFail($id)->delete();
+            $this->service->deleteBooking($id);
             DB::commit();
 
             return back()->with('success', 'Booking deleted successfully.');

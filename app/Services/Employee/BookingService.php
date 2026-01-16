@@ -10,8 +10,8 @@ use Illuminate\Validation\ValidationException;
 class BookingService
 {
     /**
-     * Create a new booking with status 'hold'
-     * and notify doctor & patient.
+     * Create a new booking with status 'scheduled'
+     * and notify doctor.
      *
      * @param array $data
      * @throws ValidationException
@@ -33,10 +33,11 @@ class BookingService
             'doctor_id'        => $data['doctor_id'],
             'appointment_date' => $data['appointment_date'],
             'reason'           => $data['reason'] ?? null,
-            'status'           => 'hold',
+            'status'           => 'scheduled',
         ]);
 
-        $this->notify($appointment, 'New appointment created');
+        // إشعار الدكتور فقط عند الحجز بواسطة الموظف
+        $this->notifyDoctor($appointment, 'New appointment created');
     }
 
     /**
@@ -72,7 +73,8 @@ class BookingService
             'reason'           => $reason,
         ]);
 
-        $this->notify($booking, 'Appointment updated');
+        // إشعار الدكتور عند تعديل الحجز
+        $this->notifyDoctor($booking, 'Appointment updated');
     }
 
     /**
@@ -94,7 +96,7 @@ class BookingService
         );
 
         $booking->update(['status' => 'scheduled']);
-        $this->notify($booking, 'Appointment approved');
+        $this->notifyDoctor($booking, 'Appointment approved');
     }
 
     /**
@@ -107,7 +109,7 @@ class BookingService
     {
         $booking = Appointment::findOrFail($id);
         $booking->update(['status' => 'cancelled']);
-        $this->notify($booking, 'Appointment rejected');
+        $this->notifyDoctor($booking, 'Appointment rejected');
     }
 
     /**
@@ -120,7 +122,7 @@ class BookingService
     {
         $booking = Appointment::findOrFail($id);
         $booking->update(['status' => 'completed']);
-        $this->notify($booking, 'Appointment completed');
+        $this->notifyDoctor($booking, 'Appointment completed');
     }
 
     /**
@@ -132,7 +134,7 @@ class BookingService
     public function deleteBooking(int $id): void
     {
         $booking = Appointment::findOrFail($id);
-        $this->notify($booking, 'Appointment deleted');
+        $this->notifyDoctor($booking, 'Appointment deleted');
         $booking->delete();
     }
 
@@ -200,33 +202,20 @@ class BookingService
     }
 
     /**
-     * Notify doctor and patient about the appointment.
+     * Notify doctor about the appointment.
      *
      * @param Appointment $appointment
      * @param string $title
      * @return void
      */
-    private function notify(Appointment $appointment, string $title): void
+    private function notifyDoctor(Appointment $appointment, string $title): void
     {
         $message =
-            $title .
-            ' on ' .
-            Carbon::parse($appointment->appointment_date)
-                ->format('Y-m-d H:i');
+            $title . ' on ' . Carbon::parse($appointment->appointment_date)->format('Y-m-d H:i');
 
-        // Notify doctor
         if ($appointment->doctor?->user) {
             Notification::create([
                 'user_id' => $appointment->doctor->user->id,
-                'title'   => $title,
-                'message' => $message,
-            ]);
-        }
-
-        // Notify patient
-        if ($appointment->patient?->user) {
-            Notification::create([
-                'user_id' => $appointment->patient->user->id,
                 'title'   => $title,
                 'message' => $message,
             ]);
