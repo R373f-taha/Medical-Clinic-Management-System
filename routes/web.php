@@ -43,7 +43,7 @@ Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard
 
 
 
-Route::middleware('auth')->group(function () {
+Route::middleware('auth:web')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
@@ -51,12 +51,8 @@ Route::middleware('auth')->group(function () {
 
 
 
-
-
-
-
 //  Admin Routes
-Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:clinicManager'])->group(function () {
+Route::prefix('admin')->name('admin.')->middleware(['auth:web', 'role:clinicManager'])->group(function () {
 
     // manage resourcse
     Route::resources([
@@ -88,7 +84,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:clinicManager'
 
 
 ///////////////////////////////////////////////
-Route::prefix('employee')->name('employee.')->middleware(['auth'])->group(function () {
+Route::prefix('employee')->name('employee.')->middleware(['auth:web'])->group(function () {
 
     // ===== إدارة الحجوزات =====
     Route::middleware('permission:manage appointments')->group(function () {
@@ -112,19 +108,10 @@ Route::prefix('employee')->name('employee.')->middleware(['auth'])->group(functi
 
 
 
-Route::prefix('patient')->name('patient.')->middleware(['auth', 'role:patient'])->group(function () {
-    Route::resources([
-        'profile'      => PatientController::class,
-        'appointments' => PatientAppointmentController::class,
-        'ratings'      => RatingController::class,
-        'images'       => ImageController::class,
-    ]);
-});
-
 /**/
 Route::prefix('doctor')
     ->name('doctor.')
-    ->middleware(['auth', 'role:doctor'])
+    ->middleware(['auth:web', 'role:doctor'])
     ->group(function () {
 
         // ================== Patients ==================
@@ -177,7 +164,7 @@ Route::prefix('doctor')
         )->name('prescriptions.download');
     });
         // ================== Notifications ==================
-Route::prefix('doctor')->name('doctor.')->middleware(['auth'])->group(function () {
+Route::prefix('doctor')->name('doctor.')->middleware(['auth:web'])->group(function () {
     Route::get('/notifications', [NotificationController::class, 'index'])
         ->name('notifications.index');
 
@@ -205,7 +192,7 @@ Route::prefix('doctor')->name('doctor.')->middleware(['auth', 'role:doctor'])->g
 
 
 Route::prefix('employee')->name('employee.')
-    ->middleware(['auth', 'role:employee'])->group(function () {
+    ->middleware(['auth:web', 'role:employee'])->group(function () {
         Route::resource('invoices', EmployeeInvoiceController::class);
     });
 
