@@ -19,8 +19,8 @@ class ComposerStaticInitb90ce3130f082fb52779a6b880e9a36a
         'ec07570ca5a812141189b1fa81503674' => __DIR__ . '/..' . '/phpunit/phpunit/src/Framework/Assert/Functions.php',
         'a4a119a56e50fbb293281d9a48007e0e' => __DIR__ . '/..' . '/symfony/polyfill-php80/bootstrap.php',
         '35a6ad97d21e794e7e22a17d806652e4' => __DIR__ . '/..' . '/nunomaduro/termwind/src/Functions.php',
-        '606a39d89246991a373564698c2d8383' => __DIR__ . '/..' . '/symfony/polyfill-php85/bootstrap.php',
         '662a729f963d39afe703c9d9b7ab4a8c' => __DIR__ . '/..' . '/symfony/polyfill-php83/bootstrap.php',
+        '606a39d89246991a373564698c2d8383' => __DIR__ . '/..' . '/symfony/polyfill-php85/bootstrap.php',
         '7b11c4dc42b3b3023073cb14e519683c' => __DIR__ . '/..' . '/ralouphie/getallheaders/src/getallheaders.php',
         '2203a247e6fda86070a5e4e07aed533a' => __DIR__ . '/..' . '/symfony/clock/Resources/now.php',
         'a1105708a18b76903365ca1c4aa61b02' => __DIR__ . '/..' . '/symfony/translation/Resources/functions.php',
@@ -164,6 +164,7 @@ class ComposerStaticInitb90ce3130f082fb52779a6b880e9a36a
             'Symfony\\Polyfill\\Ctype\\' => 23,
             'Symfony\\Contracts\\Translation\\' => 30,
             'Symfony\\Contracts\\Service\\' => 26,
+            'Symfony\\Contracts\\HttpClient\\' => 29,
             'Symfony\\Contracts\\EventDispatcher\\' => 34,
             'Symfony\\Component\\Yaml\\' => 23,
             'Symfony\\Component\\VarDumper\\' => 28,
@@ -173,9 +174,11 @@ class ComposerStaticInitb90ce3130f082fb52779a6b880e9a36a
             'Symfony\\Component\\Routing\\' => 26,
             'Symfony\\Component\\Process\\' => 26,
             'Symfony\\Component\\Mime\\' => 23,
+            'Symfony\\Component\\Mailer\\Bridge\\Mailgun\\' => 40,
             'Symfony\\Component\\Mailer\\' => 25,
             'Symfony\\Component\\HttpKernel\\' => 29,
             'Symfony\\Component\\HttpFoundation\\' => 33,
+            'Symfony\\Component\\HttpClient\\' => 29,
             'Symfony\\Component\\Finder\\' => 25,
             'Symfony\\Component\\EventDispatcher\\' => 34,
             'Symfony\\Component\\ErrorHandler\\' => 31,
@@ -382,6 +385,13 @@ class ComposerStaticInitb90ce3130f082fb52779a6b880e9a36a
         array (
             0 => __DIR__ . '/..' . '/symfony/service-contracts',
         ),
+<<<<<<< HEAD
+        'Symfony\\Contracts\\HttpClient\\' =>
+        array (
+            0 => __DIR__ . '/..' . '/symfony/http-client-contracts',
+        ),
+=======
+>>>>>>> b5fe06a717c20405f3597425aa23e206641803c7
         'Symfony\\Contracts\\EventDispatcher\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/event-dispatcher-contracts',
@@ -418,6 +428,13 @@ class ComposerStaticInitb90ce3130f082fb52779a6b880e9a36a
         array (
             0 => __DIR__ . '/..' . '/symfony/mime',
         ),
+<<<<<<< HEAD
+        'Symfony\\Component\\Mailer\\Bridge\\Mailgun\\' =>
+        array (
+            0 => __DIR__ . '/..' . '/symfony/mailgun-mailer',
+        ),
+=======
+>>>>>>> b5fe06a717c20405f3597425aa23e206641803c7
         'Symfony\\Component\\Mailer\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/mailer',
@@ -430,6 +447,13 @@ class ComposerStaticInitb90ce3130f082fb52779a6b880e9a36a
         array (
             0 => __DIR__ . '/..' . '/symfony/http-foundation',
         ),
+<<<<<<< HEAD
+        'Symfony\\Component\\HttpClient\\' =>
+        array (
+            0 => __DIR__ . '/..' . '/symfony/http-client',
+        ),
+=======
+>>>>>>> b5fe06a717c20405f3597425aa23e206641803c7
         'Symfony\\Component\\Finder\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/finder',
@@ -454,10 +478,13 @@ class ComposerStaticInitb90ce3130f082fb52779a6b880e9a36a
         array (
             0 => __DIR__ . '/..' . '/symfony/clock',
         ),
+<<<<<<< HEAD
+=======
         'Svg\\' =>
         array (
             0 => __DIR__ . '/..' . '/dompdf/php-svg-lib/src/Svg',
         ),
+>>>>>>> b5fe06a717c20405f3597425aa23e206641803c7
         'StellaMaris\\Clock\\' =>
         array (
             0 => __DIR__ . '/..' . '/stella-maris/clock/src',
@@ -466,10 +493,13 @@ class ComposerStaticInitb90ce3130f082fb52779a6b880e9a36a
         array (
             0 => __DIR__ . '/..' . '/spatie/laravel-permission/src',
         ),
+<<<<<<< HEAD
+=======
         'Sabberworm\\CSS\\' =>
         array (
             0 => __DIR__ . '/..' . '/sabberworm/php-css-parser/src',
         ),
+>>>>>>> b5fe06a717c20405f3597425aa23e206641803c7
         'Ramsey\\Uuid\\' =>
         array (
             0 => __DIR__ . '/..' . '/ramsey/uuid/src',
@@ -568,10 +598,13 @@ class ComposerStaticInitb90ce3130f082fb52779a6b880e9a36a
         array (
             0 => __DIR__ . '/..' . '/mockery/mockery/library/Mockery',
         ),
+<<<<<<< HEAD
+=======
         'Masterminds\\' =>
         array (
             0 => __DIR__ . '/..' . '/masterminds/html5/src',
         ),
+>>>>>>> b5fe06a717c20405f3597425aa23e206641803c7
         'League\\Uri\\' =>
         array (
             0 => __DIR__ . '/..' . '/league/uri',
@@ -672,10 +705,13 @@ class ComposerStaticInitb90ce3130f082fb52779a6b880e9a36a
         array (
             0 => __DIR__ . '/..' . '/fruitcake/php-cors/src',
         ),
+<<<<<<< HEAD
+=======
         'FontLib\\' =>
         array (
             0 => __DIR__ . '/..' . '/dompdf/php-font-lib/src/FontLib',
         ),
+>>>>>>> b5fe06a717c20405f3597425aa23e206641803c7
         'Fidry\\CpuCoreCounter\\' =>
         array (
             0 => __DIR__ . '/..' . '/fidry/cpu-core-counter/src',
@@ -692,10 +728,13 @@ class ComposerStaticInitb90ce3130f082fb52779a6b880e9a36a
         array (
             0 => __DIR__ . '/..' . '/vlucas/phpdotenv/src',
         ),
+<<<<<<< HEAD
+=======
         'Dompdf\\' =>
         array (
             0 => __DIR__ . '/..' . '/dompdf/dompdf/src',
         ),
+>>>>>>> b5fe06a717c20405f3597425aa23e206641803c7
         'Doctrine\\Inflector\\' =>
         array (
             0 => __DIR__ . '/..' . '/doctrine/inflector/src',
@@ -742,10 +781,13 @@ class ComposerStaticInitb90ce3130f082fb52779a6b880e9a36a
         array (
             0 => __DIR__ . '/..' . '/brick/math/src',
         ),
+<<<<<<< HEAD
+=======
         'Barryvdh\\DomPDF\\' =>
         array (
             0 => __DIR__ . '/..' . '/barryvdh/laravel-dompdf/src',
         ),
+>>>>>>> b5fe06a717c20405f3597425aa23e206641803c7
         'App\\' =>
         array (
             0 => __DIR__ . '/../..' . '/app',
@@ -754,6 +796,10 @@ class ComposerStaticInitb90ce3130f082fb52779a6b880e9a36a
     );
 
     public static $classMap = array (
+<<<<<<< HEAD
+        'App\\Events\\AppointmentCreated' => __DIR__ . '/../..' . '/app/Events/AppointmentCreated.php',
+=======
+>>>>>>> b5fe06a717c20405f3597425aa23e206641803c7
         'App\\Http\\Controllers\\Admin\\AdminMedicalRecordController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/AdminMedicalRecordController.php',
         'App\\Http\\Controllers\\Admin\\AppointmentMonitorController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/AppointmentMonitorController.php',
         'App\\Http\\Controllers\\Admin\\ClinicController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/ClinicController.php',
@@ -803,6 +849,8 @@ class ComposerStaticInitb90ce3130f082fb52779a6b880e9a36a
         'App\\Http\\Requests\\Update\\UpdateEmployeeRequest' => __DIR__ . '/../..' . '/app/Http/Requests/Update/UpdateEmployeeRequest.php',
         'App\\Http\\Requests\\Update\\UpdateMedicalRecordRequest' => __DIR__ . '/../..' . '/app/Http/Requests/Update/UpdateMedicalRecordRequest.php',
         'App\\Http\\Requests\\Update\\UpdatePrescriptionRequest' => __DIR__ . '/../..' . '/app/Http/Requests/Update/UpdatePrescriptionRequest.php',
+        'App\\Listeners\\SendAppointmentEmail' => __DIR__ . '/../..' . '/app/Listeners/SendAppointmentEmail.php',
+        'App\\Mail\\AppointmentMail' => __DIR__ . '/../..' . '/app/Mail/AppointmentMail.php',
         'App\\Models\\Appointment' => __DIR__ . '/../..' . '/app/Models/Appointment.php',
         'App\\Models\\Clinic' => __DIR__ . '/../..' . '/app/Models/Clinic.php',
         'App\\Models\\Doctor' => __DIR__ . '/../..' . '/app/Models/Doctor.php',
@@ -7358,6 +7406,79 @@ class ComposerStaticInitb90ce3130f082fb52779a6b880e9a36a
         'Symfony\\Component\\Finder\\Iterator\\SortableIterator' => __DIR__ . '/..' . '/symfony/finder/Iterator/SortableIterator.php',
         'Symfony\\Component\\Finder\\Iterator\\VcsIgnoredFilterIterator' => __DIR__ . '/..' . '/symfony/finder/Iterator/VcsIgnoredFilterIterator.php',
         'Symfony\\Component\\Finder\\SplFileInfo' => __DIR__ . '/..' . '/symfony/finder/SplFileInfo.php',
+        'Symfony\\Component\\HttpClient\\AmpHttpClient' => __DIR__ . '/..' . '/symfony/http-client/AmpHttpClient.php',
+        'Symfony\\Component\\HttpClient\\AsyncDecoratorTrait' => __DIR__ . '/..' . '/symfony/http-client/AsyncDecoratorTrait.php',
+        'Symfony\\Component\\HttpClient\\CachingHttpClient' => __DIR__ . '/..' . '/symfony/http-client/CachingHttpClient.php',
+        'Symfony\\Component\\HttpClient\\Caching\\Freshness' => __DIR__ . '/..' . '/symfony/http-client/Caching/Freshness.php',
+        'Symfony\\Component\\HttpClient\\Chunk\\DataChunk' => __DIR__ . '/..' . '/symfony/http-client/Chunk/DataChunk.php',
+        'Symfony\\Component\\HttpClient\\Chunk\\ErrorChunk' => __DIR__ . '/..' . '/symfony/http-client/Chunk/ErrorChunk.php',
+        'Symfony\\Component\\HttpClient\\Chunk\\FirstChunk' => __DIR__ . '/..' . '/symfony/http-client/Chunk/FirstChunk.php',
+        'Symfony\\Component\\HttpClient\\Chunk\\InformationalChunk' => __DIR__ . '/..' . '/symfony/http-client/Chunk/InformationalChunk.php',
+        'Symfony\\Component\\HttpClient\\Chunk\\LastChunk' => __DIR__ . '/..' . '/symfony/http-client/Chunk/LastChunk.php',
+        'Symfony\\Component\\HttpClient\\Chunk\\ServerSentEvent' => __DIR__ . '/..' . '/symfony/http-client/Chunk/ServerSentEvent.php',
+        'Symfony\\Component\\HttpClient\\CurlHttpClient' => __DIR__ . '/..' . '/symfony/http-client/CurlHttpClient.php',
+        'Symfony\\Component\\HttpClient\\DataCollector\\HttpClientDataCollector' => __DIR__ . '/..' . '/symfony/http-client/DataCollector/HttpClientDataCollector.php',
+        'Symfony\\Component\\HttpClient\\DecoratorTrait' => __DIR__ . '/..' . '/symfony/http-client/DecoratorTrait.php',
+        'Symfony\\Component\\HttpClient\\DependencyInjection\\HttpClientPass' => __DIR__ . '/..' . '/symfony/http-client/DependencyInjection/HttpClientPass.php',
+        'Symfony\\Component\\HttpClient\\EventSourceHttpClient' => __DIR__ . '/..' . '/symfony/http-client/EventSourceHttpClient.php',
+        'Symfony\\Component\\HttpClient\\Exception\\ChunkCacheItemNotFoundException' => __DIR__ . '/..' . '/symfony/http-client/Exception/ChunkCacheItemNotFoundException.php',
+        'Symfony\\Component\\HttpClient\\Exception\\ClientException' => __DIR__ . '/..' . '/symfony/http-client/Exception/ClientException.php',
+        'Symfony\\Component\\HttpClient\\Exception\\EventSourceException' => __DIR__ . '/..' . '/symfony/http-client/Exception/EventSourceException.php',
+        'Symfony\\Component\\HttpClient\\Exception\\HttpExceptionTrait' => __DIR__ . '/..' . '/symfony/http-client/Exception/HttpExceptionTrait.php',
+        'Symfony\\Component\\HttpClient\\Exception\\InvalidArgumentException' => __DIR__ . '/..' . '/symfony/http-client/Exception/InvalidArgumentException.php',
+        'Symfony\\Component\\HttpClient\\Exception\\JsonException' => __DIR__ . '/..' . '/symfony/http-client/Exception/JsonException.php',
+        'Symfony\\Component\\HttpClient\\Exception\\RedirectionException' => __DIR__ . '/..' . '/symfony/http-client/Exception/RedirectionException.php',
+        'Symfony\\Component\\HttpClient\\Exception\\ServerException' => __DIR__ . '/..' . '/symfony/http-client/Exception/ServerException.php',
+        'Symfony\\Component\\HttpClient\\Exception\\TimeoutException' => __DIR__ . '/..' . '/symfony/http-client/Exception/TimeoutException.php',
+        'Symfony\\Component\\HttpClient\\Exception\\TransportException' => __DIR__ . '/..' . '/symfony/http-client/Exception/TransportException.php',
+        'Symfony\\Component\\HttpClient\\HttpClient' => __DIR__ . '/..' . '/symfony/http-client/HttpClient.php',
+        'Symfony\\Component\\HttpClient\\HttpClientTrait' => __DIR__ . '/..' . '/symfony/http-client/HttpClientTrait.php',
+        'Symfony\\Component\\HttpClient\\HttpOptions' => __DIR__ . '/..' . '/symfony/http-client/HttpOptions.php',
+        'Symfony\\Component\\HttpClient\\HttplugClient' => __DIR__ . '/..' . '/symfony/http-client/HttplugClient.php',
+        'Symfony\\Component\\HttpClient\\Internal\\AmpBodyV4' => __DIR__ . '/..' . '/symfony/http-client/Internal/AmpBodyV4.php',
+        'Symfony\\Component\\HttpClient\\Internal\\AmpBodyV5' => __DIR__ . '/..' . '/symfony/http-client/Internal/AmpBodyV5.php',
+        'Symfony\\Component\\HttpClient\\Internal\\AmpClientStateV4' => __DIR__ . '/..' . '/symfony/http-client/Internal/AmpClientStateV4.php',
+        'Symfony\\Component\\HttpClient\\Internal\\AmpClientStateV5' => __DIR__ . '/..' . '/symfony/http-client/Internal/AmpClientStateV5.php',
+        'Symfony\\Component\\HttpClient\\Internal\\AmpListenerV4' => __DIR__ . '/..' . '/symfony/http-client/Internal/AmpListenerV4.php',
+        'Symfony\\Component\\HttpClient\\Internal\\AmpListenerV5' => __DIR__ . '/..' . '/symfony/http-client/Internal/AmpListenerV5.php',
+        'Symfony\\Component\\HttpClient\\Internal\\AmpResolverV4' => __DIR__ . '/..' . '/symfony/http-client/Internal/AmpResolverV4.php',
+        'Symfony\\Component\\HttpClient\\Internal\\AmpResolverV5' => __DIR__ . '/..' . '/symfony/http-client/Internal/AmpResolverV5.php',
+        'Symfony\\Component\\HttpClient\\Internal\\Canary' => __DIR__ . '/..' . '/symfony/http-client/Internal/Canary.php',
+        'Symfony\\Component\\HttpClient\\Internal\\ClientState' => __DIR__ . '/..' . '/symfony/http-client/Internal/ClientState.php',
+        'Symfony\\Component\\HttpClient\\Internal\\CurlClientState' => __DIR__ . '/..' . '/symfony/http-client/Internal/CurlClientState.php',
+        'Symfony\\Component\\HttpClient\\Internal\\DnsCache' => __DIR__ . '/..' . '/symfony/http-client/Internal/DnsCache.php',
+        'Symfony\\Component\\HttpClient\\Internal\\HttplugWaitLoop' => __DIR__ . '/..' . '/symfony/http-client/Internal/HttplugWaitLoop.php',
+        'Symfony\\Component\\HttpClient\\Internal\\NativeClientState' => __DIR__ . '/..' . '/symfony/http-client/Internal/NativeClientState.php',
+        'Symfony\\Component\\HttpClient\\Internal\\PushedResponse' => __DIR__ . '/..' . '/symfony/http-client/Internal/PushedResponse.php',
+        'Symfony\\Component\\HttpClient\\Messenger\\PingWebhookMessage' => __DIR__ . '/..' . '/symfony/http-client/Messenger/PingWebhookMessage.php',
+        'Symfony\\Component\\HttpClient\\Messenger\\PingWebhookMessageHandler' => __DIR__ . '/..' . '/symfony/http-client/Messenger/PingWebhookMessageHandler.php',
+        'Symfony\\Component\\HttpClient\\MockHttpClient' => __DIR__ . '/..' . '/symfony/http-client/MockHttpClient.php',
+        'Symfony\\Component\\HttpClient\\NativeHttpClient' => __DIR__ . '/..' . '/symfony/http-client/NativeHttpClient.php',
+        'Symfony\\Component\\HttpClient\\NoPrivateNetworkHttpClient' => __DIR__ . '/..' . '/symfony/http-client/NoPrivateNetworkHttpClient.php',
+        'Symfony\\Component\\HttpClient\\Psr18Client' => __DIR__ . '/..' . '/symfony/http-client/Psr18Client.php',
+        'Symfony\\Component\\HttpClient\\Response\\AmpResponseV4' => __DIR__ . '/..' . '/symfony/http-client/Response/AmpResponseV4.php',
+        'Symfony\\Component\\HttpClient\\Response\\AmpResponseV5' => __DIR__ . '/..' . '/symfony/http-client/Response/AmpResponseV5.php',
+        'Symfony\\Component\\HttpClient\\Response\\AsyncContext' => __DIR__ . '/..' . '/symfony/http-client/Response/AsyncContext.php',
+        'Symfony\\Component\\HttpClient\\Response\\AsyncResponse' => __DIR__ . '/..' . '/symfony/http-client/Response/AsyncResponse.php',
+        'Symfony\\Component\\HttpClient\\Response\\CommonResponseTrait' => __DIR__ . '/..' . '/symfony/http-client/Response/CommonResponseTrait.php',
+        'Symfony\\Component\\HttpClient\\Response\\CurlResponse' => __DIR__ . '/..' . '/symfony/http-client/Response/CurlResponse.php',
+        'Symfony\\Component\\HttpClient\\Response\\HttplugPromise' => __DIR__ . '/..' . '/symfony/http-client/Response/HttplugPromise.php',
+        'Symfony\\Component\\HttpClient\\Response\\JsonMockResponse' => __DIR__ . '/..' . '/symfony/http-client/Response/JsonMockResponse.php',
+        'Symfony\\Component\\HttpClient\\Response\\MockResponse' => __DIR__ . '/..' . '/symfony/http-client/Response/MockResponse.php',
+        'Symfony\\Component\\HttpClient\\Response\\NativeResponse' => __DIR__ . '/..' . '/symfony/http-client/Response/NativeResponse.php',
+        'Symfony\\Component\\HttpClient\\Response\\ResponseStream' => __DIR__ . '/..' . '/symfony/http-client/Response/ResponseStream.php',
+        'Symfony\\Component\\HttpClient\\Response\\StreamWrapper' => __DIR__ . '/..' . '/symfony/http-client/Response/StreamWrapper.php',
+        'Symfony\\Component\\HttpClient\\Response\\StreamableInterface' => __DIR__ . '/..' . '/symfony/http-client/Response/StreamableInterface.php',
+        'Symfony\\Component\\HttpClient\\Response\\TraceableResponse' => __DIR__ . '/..' . '/symfony/http-client/Response/TraceableResponse.php',
+        'Symfony\\Component\\HttpClient\\Response\\TransportResponseTrait' => __DIR__ . '/..' . '/symfony/http-client/Response/TransportResponseTrait.php',
+        'Symfony\\Component\\HttpClient\\Retry\\GenericRetryStrategy' => __DIR__ . '/..' . '/symfony/http-client/Retry/GenericRetryStrategy.php',
+        'Symfony\\Component\\HttpClient\\Retry\\RetryStrategyInterface' => __DIR__ . '/..' . '/symfony/http-client/Retry/RetryStrategyInterface.php',
+        'Symfony\\Component\\HttpClient\\RetryableHttpClient' => __DIR__ . '/..' . '/symfony/http-client/RetryableHttpClient.php',
+        'Symfony\\Component\\HttpClient\\ScopingHttpClient' => __DIR__ . '/..' . '/symfony/http-client/ScopingHttpClient.php',
+        'Symfony\\Component\\HttpClient\\Test\\HarFileResponseFactory' => __DIR__ . '/..' . '/symfony/http-client/Test/HarFileResponseFactory.php',
+        'Symfony\\Component\\HttpClient\\ThrottlingHttpClient' => __DIR__ . '/..' . '/symfony/http-client/ThrottlingHttpClient.php',
+        'Symfony\\Component\\HttpClient\\TraceableHttpClient' => __DIR__ . '/..' . '/symfony/http-client/TraceableHttpClient.php',
+        'Symfony\\Component\\HttpClient\\UriTemplateHttpClient' => __DIR__ . '/..' . '/symfony/http-client/UriTemplateHttpClient.php',
         'Symfony\\Component\\HttpFoundation\\AcceptHeader' => __DIR__ . '/..' . '/symfony/http-foundation/AcceptHeader.php',
         'Symfony\\Component\\HttpFoundation\\AcceptHeaderItem' => __DIR__ . '/..' . '/symfony/http-foundation/AcceptHeaderItem.php',
         'Symfony\\Component\\HttpFoundation\\BinaryFileResponse' => __DIR__ . '/..' . '/symfony/http-foundation/BinaryFileResponse.php',
@@ -7640,6 +7761,13 @@ class ComposerStaticInitb90ce3130f082fb52779a6b880e9a36a
         'Symfony\\Component\\HttpKernel\\Profiler\\ProfilerStorageInterface' => __DIR__ . '/..' . '/symfony/http-kernel/Profiler/ProfilerStorageInterface.php',
         'Symfony\\Component\\HttpKernel\\RebootableInterface' => __DIR__ . '/..' . '/symfony/http-kernel/RebootableInterface.php',
         'Symfony\\Component\\HttpKernel\\TerminableInterface' => __DIR__ . '/..' . '/symfony/http-kernel/TerminableInterface.php',
+        'Symfony\\Component\\Mailer\\Bridge\\Mailgun\\RemoteEvent\\MailgunPayloadConverter' => __DIR__ . '/..' . '/symfony/mailgun-mailer/RemoteEvent/MailgunPayloadConverter.php',
+        'Symfony\\Component\\Mailer\\Bridge\\Mailgun\\Transport\\MailgunApiTransport' => __DIR__ . '/..' . '/symfony/mailgun-mailer/Transport/MailgunApiTransport.php',
+        'Symfony\\Component\\Mailer\\Bridge\\Mailgun\\Transport\\MailgunHeadersTrait' => __DIR__ . '/..' . '/symfony/mailgun-mailer/Transport/MailgunHeadersTrait.php',
+        'Symfony\\Component\\Mailer\\Bridge\\Mailgun\\Transport\\MailgunHttpTransport' => __DIR__ . '/..' . '/symfony/mailgun-mailer/Transport/MailgunHttpTransport.php',
+        'Symfony\\Component\\Mailer\\Bridge\\Mailgun\\Transport\\MailgunSmtpTransport' => __DIR__ . '/..' . '/symfony/mailgun-mailer/Transport/MailgunSmtpTransport.php',
+        'Symfony\\Component\\Mailer\\Bridge\\Mailgun\\Transport\\MailgunTransportFactory' => __DIR__ . '/..' . '/symfony/mailgun-mailer/Transport/MailgunTransportFactory.php',
+        'Symfony\\Component\\Mailer\\Bridge\\Mailgun\\Webhook\\MailgunRequestParser' => __DIR__ . '/..' . '/symfony/mailgun-mailer/Webhook/MailgunRequestParser.php',
         'Symfony\\Component\\Mailer\\Command\\MailerTestCommand' => __DIR__ . '/..' . '/symfony/mailer/Command/MailerTestCommand.php',
         'Symfony\\Component\\Mailer\\DataCollector\\MessageDataCollector' => __DIR__ . '/..' . '/symfony/mailer/DataCollector/MessageDataCollector.php',
         'Symfony\\Component\\Mailer\\DelayedEnvelope' => __DIR__ . '/..' . '/symfony/mailer/DelayedEnvelope.php',
@@ -8101,6 +8229,18 @@ class ComposerStaticInitb90ce3130f082fb52779a6b880e9a36a
         'Symfony\\Component\\Yaml\\Yaml' => __DIR__ . '/..' . '/symfony/yaml/Yaml.php',
         'Symfony\\Contracts\\EventDispatcher\\Event' => __DIR__ . '/..' . '/symfony/event-dispatcher-contracts/Event.php',
         'Symfony\\Contracts\\EventDispatcher\\EventDispatcherInterface' => __DIR__ . '/..' . '/symfony/event-dispatcher-contracts/EventDispatcherInterface.php',
+        'Symfony\\Contracts\\HttpClient\\ChunkInterface' => __DIR__ . '/..' . '/symfony/http-client-contracts/ChunkInterface.php',
+        'Symfony\\Contracts\\HttpClient\\Exception\\ClientExceptionInterface' => __DIR__ . '/..' . '/symfony/http-client-contracts/Exception/ClientExceptionInterface.php',
+        'Symfony\\Contracts\\HttpClient\\Exception\\DecodingExceptionInterface' => __DIR__ . '/..' . '/symfony/http-client-contracts/Exception/DecodingExceptionInterface.php',
+        'Symfony\\Contracts\\HttpClient\\Exception\\ExceptionInterface' => __DIR__ . '/..' . '/symfony/http-client-contracts/Exception/ExceptionInterface.php',
+        'Symfony\\Contracts\\HttpClient\\Exception\\HttpExceptionInterface' => __DIR__ . '/..' . '/symfony/http-client-contracts/Exception/HttpExceptionInterface.php',
+        'Symfony\\Contracts\\HttpClient\\Exception\\RedirectionExceptionInterface' => __DIR__ . '/..' . '/symfony/http-client-contracts/Exception/RedirectionExceptionInterface.php',
+        'Symfony\\Contracts\\HttpClient\\Exception\\ServerExceptionInterface' => __DIR__ . '/..' . '/symfony/http-client-contracts/Exception/ServerExceptionInterface.php',
+        'Symfony\\Contracts\\HttpClient\\Exception\\TimeoutExceptionInterface' => __DIR__ . '/..' . '/symfony/http-client-contracts/Exception/TimeoutExceptionInterface.php',
+        'Symfony\\Contracts\\HttpClient\\Exception\\TransportExceptionInterface' => __DIR__ . '/..' . '/symfony/http-client-contracts/Exception/TransportExceptionInterface.php',
+        'Symfony\\Contracts\\HttpClient\\HttpClientInterface' => __DIR__ . '/..' . '/symfony/http-client-contracts/HttpClientInterface.php',
+        'Symfony\\Contracts\\HttpClient\\ResponseInterface' => __DIR__ . '/..' . '/symfony/http-client-contracts/ResponseInterface.php',
+        'Symfony\\Contracts\\HttpClient\\ResponseStreamInterface' => __DIR__ . '/..' . '/symfony/http-client-contracts/ResponseStreamInterface.php',
         'Symfony\\Contracts\\Service\\Attribute\\Required' => __DIR__ . '/..' . '/symfony/service-contracts/Attribute/Required.php',
         'Symfony\\Contracts\\Service\\Attribute\\SubscribedService' => __DIR__ . '/..' . '/symfony/service-contracts/Attribute/SubscribedService.php',
         'Symfony\\Contracts\\Service\\ResetInterface' => __DIR__ . '/..' . '/symfony/service-contracts/ResetInterface.php',
