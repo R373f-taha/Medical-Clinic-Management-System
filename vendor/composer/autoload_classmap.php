@@ -6,10 +6,6 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
-<<<<<<< HEAD
-    'App\\Events\\AppointmentCreated' => $baseDir . '/app/Events/AppointmentCreated.php',
-=======
->>>>>>> b5fe06a717c20405f3597425aa23e206641803c7
     'App\\Http\\Controllers\\Admin\\AdminMedicalRecordController' => $baseDir . '/app/Http/Controllers/Admin/AdminMedicalRecordController.php',
     'App\\Http\\Controllers\\Admin\\AppointmentMonitorController' => $baseDir . '/app/Http/Controllers/Admin/AppointmentMonitorController.php',
     'App\\Http\\Controllers\\Admin\\ClinicController' => $baseDir . '/app/Http/Controllers/Admin/ClinicController.php',

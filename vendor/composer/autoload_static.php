@@ -385,13 +385,6 @@ class ComposerStaticInitb90ce3130f082fb52779a6b880e9a36a
         array (
             0 => __DIR__ . '/..' . '/symfony/service-contracts',
         ),
-<<<<<<< HEAD
-        'Symfony\\Contracts\\HttpClient\\' =>
-        array (
-            0 => __DIR__ . '/..' . '/symfony/http-client-contracts',
-        ),
-=======
->>>>>>> b5fe06a717c20405f3597425aa23e206641803c7
         'Symfony\\Contracts\\EventDispatcher\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/event-dispatcher-contracts',
@@ -428,13 +421,6 @@ class ComposerStaticInitb90ce3130f082fb52779a6b880e9a36a
         array (
             0 => __DIR__ . '/..' . '/symfony/mime',
         ),
-<<<<<<< HEAD
-        'Symfony\\Component\\Mailer\\Bridge\\Mailgun\\' =>
-        array (
-            0 => __DIR__ . '/..' . '/symfony/mailgun-mailer',
-        ),
-=======
->>>>>>> b5fe06a717c20405f3597425aa23e206641803c7
         'Symfony\\Component\\Mailer\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/mailer',
@@ -447,13 +433,6 @@ class ComposerStaticInitb90ce3130f082fb52779a6b880e9a36a
         array (
             0 => __DIR__ . '/..' . '/symfony/http-foundation',
         ),
-<<<<<<< HEAD
-        'Symfony\\Component\\HttpClient\\' =>
-        array (
-            0 => __DIR__ . '/..' . '/symfony/http-client',
-        ),
-=======
->>>>>>> b5fe06a717c20405f3597425aa23e206641803c7
         'Symfony\\Component\\Finder\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/finder',
@@ -478,13 +457,10 @@ class ComposerStaticInitb90ce3130f082fb52779a6b880e9a36a
         array (
             0 => __DIR__ . '/..' . '/symfony/clock',
         ),
-<<<<<<< HEAD
-=======
         'Svg\\' =>
         array (
             0 => __DIR__ . '/..' . '/dompdf/php-svg-lib/src/Svg',
         ),
->>>>>>> b5fe06a717c20405f3597425aa23e206641803c7
         'StellaMaris\\Clock\\' =>
         array (
             0 => __DIR__ . '/..' . '/stella-maris/clock/src',
@@ -493,13 +469,10 @@ class ComposerStaticInitb90ce3130f082fb52779a6b880e9a36a
         array (
             0 => __DIR__ . '/..' . '/spatie/laravel-permission/src',
         ),
-<<<<<<< HEAD
-=======
         'Sabberworm\\CSS\\' =>
         array (
             0 => __DIR__ . '/..' . '/sabberworm/php-css-parser/src',
         ),
->>>>>>> b5fe06a717c20405f3597425aa23e206641803c7
         'Ramsey\\Uuid\\' =>
         array (
             0 => __DIR__ . '/..' . '/ramsey/uuid/src',
@@ -598,13 +571,10 @@ class ComposerStaticInitb90ce3130f082fb52779a6b880e9a36a
         array (
             0 => __DIR__ . '/..' . '/mockery/mockery/library/Mockery',
         ),
-<<<<<<< HEAD
-=======
         'Masterminds\\' =>
         array (
             0 => __DIR__ . '/..' . '/masterminds/html5/src',
         ),
->>>>>>> b5fe06a717c20405f3597425aa23e206641803c7
         'League\\Uri\\' =>
         array (
             0 => __DIR__ . '/..' . '/league/uri',
@@ -705,13 +675,10 @@ class ComposerStaticInitb90ce3130f082fb52779a6b880e9a36a
         array (
             0 => __DIR__ . '/..' . '/fruitcake/php-cors/src',
         ),
-<<<<<<< HEAD
-=======
         'FontLib\\' =>
         array (
             0 => __DIR__ . '/..' . '/dompdf/php-font-lib/src/FontLib',
         ),
->>>>>>> b5fe06a717c20405f3597425aa23e206641803c7
         'Fidry\\CpuCoreCounter\\' =>
         array (
             0 => __DIR__ . '/..' . '/fidry/cpu-core-counter/src',
@@ -728,13 +695,10 @@ class ComposerStaticInitb90ce3130f082fb52779a6b880e9a36a
         array (
             0 => __DIR__ . '/..' . '/vlucas/phpdotenv/src',
         ),
-<<<<<<< HEAD
-=======
         'Dompdf\\' =>
         array (
             0 => __DIR__ . '/..' . '/dompdf/dompdf/src',
         ),
->>>>>>> b5fe06a717c20405f3597425aa23e206641803c7
         'Doctrine\\Inflector\\' =>
         array (
             0 => __DIR__ . '/..' . '/doctrine/inflector/src',
@@ -781,13 +745,10 @@ class ComposerStaticInitb90ce3130f082fb52779a6b880e9a36a
         array (
             0 => __DIR__ . '/..' . '/brick/math/src',
         ),
-<<<<<<< HEAD
-=======
         'Barryvdh\\DomPDF\\' =>
         array (
             0 => __DIR__ . '/..' . '/barryvdh/laravel-dompdf/src',
         ),
->>>>>>> b5fe06a717c20405f3597425aa23e206641803c7
         'App\\' =>
         array (
             0 => __DIR__ . '/../..' . '/app',
@@ -796,10 +757,6 @@ class ComposerStaticInitb90ce3130f082fb52779a6b880e9a36a
     );
 
     public static $classMap = array (
-<<<<<<< HEAD
-        'App\\Events\\AppointmentCreated' => __DIR__ . '/../..' . '/app/Events/AppointmentCreated.php',
-=======
->>>>>>> b5fe06a717c20405f3597425aa23e206641803c7
         'App\\Http\\Controllers\\Admin\\AdminMedicalRecordController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/AdminMedicalRecordController.php',
         'App\\Http\\Controllers\\Admin\\AppointmentMonitorController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/AppointmentMonitorController.php',
         'App\\Http\\Controllers\\Admin\\ClinicController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/ClinicController.php',
