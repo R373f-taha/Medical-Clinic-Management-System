@@ -1,59 +1,305 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 🏥 Medical Clinic Management System
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+> A robust backend system for managing medical clinics, providing dashboards for clinic staff (admin, doctor, employee) via Blade templates and API access for patients.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 👤 Team & Logo
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+<div align="center">
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+![Project Logo](/public/images/X2%20Team.png)
 
-## Learning Laravel
+**Team Members:**
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+* Rahaf Taha
+* Kheder Alkhateeb
+* Rama Yousfan
+* Yara Sleten
+* Kinda Ghanem
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+</div>
 
-## Laravel Sponsors
+---
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## 📸 Screenshots
 
-### Premium Partners
+<div align="center">
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+![Admin Dashboard](public/images/screenShots/admin-dashboard.png)
+![Doctor Dashboard](public/images/screenShots/doctor-dashboard.png)
+![Employee Dashboard](public/images/screenShots/employee-dashboard.png)
+![Patient API](public/images/screenShots/patient-api.png)
+![Before Login](public/images/screenShots/beforeLogin.png)
+![Login](public/images/screenShots/Login.png)
+</div>
 
-## Contributing
+---
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## 📚 Table of Contents
 
-## Code of Conduct
+* [Project Overview](#-project-overview)
+* [Team & Logo](#-team--logo)
+* [Screenshots](#-screenshots)
+* [Requirements](#-requirements)
+* [Installation & Setup](#-installation--setup)
+* [System Roles](#-system-roles)
+* [Database Structure](#-database-structure)
+* [Interfaces & Routes](#-interfaces--routes)
+* [API Documentation](#-api-documentation)
+* [Sample Credentials](#-sample-credentials)
+* [Support & Contributions](#-support--contributions)
+* [Acknowledgments](#-acknowledgments)
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+---
 
-## Security Vulnerabilities
+## 🚀 Project Overview
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+The **Medical Clinic Management System** is a backend Laravel application that provides:
 
-## License
+* ✅ Clinic staff dashboards using Blade templates
+* 🏥 API access for patients
+* 📊 Role-based access control for Admin, Doctor, Employee, and Patient
+* 🔐 Secure authentication and data management
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+---
+
+## ⚙️ Requirements
+
+| Component | Version |
+| --------- | ------- |
+| PHP       | ≥ 8.2   |
+| Composer  | Latest  |
+| Laravel   | 12.x    |
+| Database  | MySQL   |
+
+
+---
+
+## 🛠 Installation & Setup
+
+### 1. Clone the Repository
+
+```bash
+git clone <https://github.com/R373f-taha/Medical-Clinic-Management-System.git>
+cd medical_clinic_management
+```
+
+### 2. Install Dependencies
+
+```bash
+composer install    # PHP dependencies
+npm install         # JS dependencies (for Blade assets)
+```
+
+### 3. Configure Environment
+
+```bash
+cp .env.example .env
+php artisan key:generate
+```
+
+### 4. Run the Application
+
+```bash
+php artisan serve    # Start Laravel server
+npm run dev          # Compile frontend assets
+```
+
+---
+
+## 👥 System Roles
+
+| Role         | Access & Permissions                              |
+| ------------ | ------------------------------------------------- |
+| Clinic Admin | Full control over the system, manage users & data |
+| Doctor       | Manage appointments, view patients                |
+| Employee     | Assist admin, manage schedules & records          |
+| Patient      | Access personal data via API, view appointments   |
+
+---
+
+## 🗄 Database Structure
+
+> The system contains 10+ tables. Below are the major ones with columns:
+
+### `users`
+
+* `id` (PK)
+* `name`
+* `email`
+* `password`
+* `email_verified_at` 
+* `remember_token` 
+* `created_at`, `updated_at`
+
+### `patients`
+
+* `id` (PK)
+* `user_id` (FK → users.id)
+* `blood_type`
+* `	height`
+* `	weight`
+* `	gender`
+* `	allergies`
+* `created_at`, `updated_at`
+
+### `doctors`
+
+* `id` (PK)
+* `user_id` (FK → users.id)
+* `specialization`
+* `qualifications`
+* `available_hours`
+* `experience_years`
+* `services`
+* `created_at`, `updated_at`
+
+### `employees`
+
+* `id` (PK)
+* `user_id` (FK → users.id)
+* `name`
+* `qualifications`
+* `age`
+* `phone`
+* `email`
+* `date_of_birth`
+* `created_at`, `updated_at`
+
+### `appointments`
+
+* `id` (PK)
+* `patient_id` (FK → patients.id)
+* `doctor_id` (FK → doctors.id)
+* `appointment_date`
+* `hold_expires_at`
+* `reason`
+* `notes`
+* `status` (scheduled, completed, canceled)
+* `created_at`, `updated_at`
+
+### `medical_records`
+
+* `id` (PK)
+* `patient_id` (FK → patients.id)
+* `doctor_id` (FK → doctors.id)
+* `notes`
+* `diagnosis`
+* `treatment_plan`
+* `follow_up_date`
+* `date`
+* `created_at`, `updated_at`
+
+### `ratings`
+
+* `id` (PK)
+* `patient_id` (FK → patients.id)
+* `doctor_id` (FK → doctors.id)
+* `rating`
+* `date`
+* `notes`
+* `created_at`, `updated_at`
+
+---
+
+## 🔗 Interfaces & Routes
+
+| Page / API         | Route                       | Description                            |
+| ------------------ | -----------                 | ------------------------------         |
+| Admin Dashboard    | `/admin`                    | Full system management                 |
+| Doctor Dashboard   | `/doctor`                   | Manage appointments & patients         |
+| Employee Dashboard | `/employee`                 | Assist with admin tasks                |
+
+
+---
+
+## 📚 API Documentation
+
+### Authentication
+
+| Method | Endpoint                                   | Description                         |
+| ------ | ---------------                            | --------------------------          |
+| POST   | `/api/patient/register`                    | Register a new patient              |
+| POST   | `/api/patient/login`                       | Patient login                       |
+| GET    | `/api/patient/logout`                      | Logout (token-based)                |
+| POST   | `/api/patient/refresh`                     |  Token Refresh (token-based)        |
+
+### Appointments
+
+| Method | Endpoint                                   | Description                          |
+| ------ | ------------------------                   | ----------------------               |
+| GET    | `/api/patient/take/appointment`            | Get patient details                  |
+| GET    |`/api/patient/cancel/{id}/appointment`      | Cancel appointments(token based)     |
+| POST   | `/api/patient/cancel/appointments`         | Cancel all appointments(token-based) |
+| GET    |`/api/patient/cancel/{id}/appointment`      | Cancel appointments(token based)     |
+| GET    |`/api/patient/show/appointments      `      | Show appointments  (token based)     |
+| GET    | `/api/patient/invoice/for/{id}/appointment`| invoice (token based)                |
+
+### other procedures
+
+| Method | Endpoint                                   | Description                          |
+| ------ | ------------------------                   | ----------------------               |
+| GET    | `/api/patient/me`                          | show patient info   (token based)    |
+| POST   | `/api/patient/medicalRecord`               | show medical record  (token-based)   |
+| GET    |`/api/patient/cancel/{id}/appointment`      | Cancel appointments(token based)     |
+| GET    |`/api/patient/add/rating             `      | Add Rating         (token based)     |
+
+
+---
+
+## 🔑 Sample Credentials
+
+### Clinic Admin
+
+```
+Email: admin@clinic.com
+Password: password123
+```
+
+### Doctor
+
+```
+Email:Test Email from the seeder
+Password: password
+
+```
+
+### Employee
+
+
+```
+Email:Test Email from the seeder
+Password: password
+
+```
+
+---
+
+### Email settings that send emails to patients regarding appointment booking and cancellation
+
+MAIL_MAILER=smtp
+MAIL_HOST=smtp.gmail.com
+MAIL_PORT=587
+MAIL_USERNAME=rahaftaha594@gmail.com
+#bvvc wdnd sfif tlvf
+MAIL_PASSWORD=bvvcwdndsfiftlvf
+MAIL_ENCRYPTION=tls
+MAIL_FROM_ADDRESS="rahahtaha594@gmail.com"
+MAIL_FROM_NAME="Together to heal your pain"
+
+---
+
+## 📞 Support & Contributions
+
+* Open an issue on the [GitHub repository](https://github.com/R373f-taha/Medical-Clinic-Management-System.git)
+
+* Fork the repository and submit a pull request
+* Contact the team for questions or collaboration
+
+---
+
+## 🏆 Acknowledgments
+
+* Thanks to **Clinic Mentors** and instructors
+* Special recognition to the **development team**: Rahaf Taha, Kheder Alkhateeb, Rama Yousfan, Yara Sleten, Kinda Ghanem

@@ -13,8 +13,6 @@ return new class extends Migration
 
             $table->foreignId('patient_id')->nullable()->constrained('patients')->nullOnDelete();
             $table->foreignId('doctor_id')->constrained('doctors')->cascadeOnDelete();
-            $table->foreignId('medical_record_id')->nullable()->constrained('medical_records')->nullOnDelete();
-
             $table->dateTime('appointment_date');
 
             $table->enum('status', [
