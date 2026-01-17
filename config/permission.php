@@ -199,4 +199,26 @@ return [
 
         'store' => 'default',
     ],
+     'defaults' => [
+        'guard' => 'web', // افتراضي لجميع الواجهات
+        'passwords' => 'users',
+    ],
+    'guards' => [
+        'web' => [
+            'driver' => 'session',
+            'provider' => 'users',
+        ],
+        'api' => [
+            'driver' => 'jwt',
+            'provider' => 'users',
+            'hash' => false,
+        ],
+    ],
+
+    'providers' => [
+        'users' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\User::class,
+        ],
+    ],
 ];

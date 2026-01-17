@@ -12,9 +12,9 @@ use Symfony\Component\Routing\Loader\ProtectedPhpFileLoader;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class User extends Authenticatable implements JWTSubject
-{ Protected $guard_name= 'web';
-
+{
     use HasFactory, Notifiable, HasRoles;
+
 
     protected $fillable = [
         'name',
