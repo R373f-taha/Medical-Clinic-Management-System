@@ -14,6 +14,12 @@ class AdminMedicalRecordController extends Controller
     {
         $this->medicalRecordService = $medicalRecordService;
     }
+    public function getAll()
+{
+    return MedicalRecord::with(['patient.user', 'doctor.user', 'images'])
+        ->paginate(10);
+}
+
 
     /**
      * Show all medical records
