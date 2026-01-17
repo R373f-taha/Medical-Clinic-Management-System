@@ -5,6 +5,7 @@ namespace Database\Factories;
 use App\Models\Invoice;
 use App\Models\Patient;
 use App\Models\Appointment;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class InvoiceFactory extends Factory
@@ -22,7 +23,10 @@ class InvoiceFactory extends Factory
             'tax' => $this->faker->numberBetween(0, 50),
             'discount' => $this->faker->numberBetween(0, 30),
             'status' => $this->faker->randomElement(['paid', 'unpaid']),
-            'invoice_date' => $this->faker->date(),
+            'invoice_date' => $this->faker->dateTimeBetween(
+                Carbon::now()->startOfMonth(),
+                Carbon::now()->endOfMonth()
+            ),
             'total_amount' => $this->faker->numberBetween(100, 1000),
             'payment_method' => $this->faker->randomElement(['cash', 'card', 'online', 'bank_transfer']),
         ];

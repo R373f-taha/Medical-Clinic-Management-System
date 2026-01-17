@@ -28,7 +28,6 @@ class AppointmentFactory extends Factory
         return [
             'patient_id'       => $patient->id,
             'doctor_id'        => $doctor->id,
-            'medical_record_id'=> null,
             'appointment_date' => $date->setTime($hour, $minute),
             'status'           => $this->faker->randomElement([
                 'hold', 'scheduled', 'completed', 'cancelled'

@@ -120,7 +120,6 @@ class AppointmentService
                 'doctor_id'         => $doctorId,
                 'patient_id'        => $patientId,
                 'appointment_date'  => $appointmentTime->format('Y-m-d H:i:s'),
-                'medical_record_id' => $data['medical_record_id'] ?? null,
                 'status'            => 'scheduled',
                 'notes'             => $data['notes'] ?? null,
                 'reason'            => $data['reason'] ?? null,
