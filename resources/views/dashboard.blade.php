@@ -29,7 +29,7 @@
                 <div class="pb-0 card-header">
                     <h6>Profits During the Weeks of the Current Month</h6>
                     <p class="text-sm">
-                        <span class="font-weight-bold">Weekly Profit Percentage</span>
+                        <span class="font-weight-bold">Weekly Profit</span>
                     </p>
                 </div>
                 <div class="p-3 card-body">
@@ -164,7 +164,7 @@
             data: {
                 labels: ["Week 1", "Week 2", "Week 3", "Week 4"],
                 datasets: [{
-                    label: "Profit Percentage %",
+                    label: "Profit",
                     data: {!! $profits !!},
                     borderColor: "#2dce89",
                     backgroundColor: "rgba(45,206,137,0.2)",
