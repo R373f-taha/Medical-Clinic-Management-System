@@ -89,14 +89,30 @@
                             </td>
 
                             {{-- Action --}}
-                            <td>
-                                <form action="{{ route('admin.medical-records.destroy', $record->id) }}"
-                                      method="POST"
-                                      onsubmit="return confirm('Delete this record?')">
+                            <td class="text-center">
+                                <form
+                                    id="delete-form-{{ $record->id }}"
+                                    action="{{ route('admin.medical-records.destroy', $record->id) }}"
+                                    method="POST"
+                                    style="display:inline;"
+                                >
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-sm px-2 py-1">
-                                        Delete
+
+                                    <button
+                                        type="button"
+                                        class="action-icon danger"
+                                        title="Delete"
+                                        style="
+                                            font-size:1.5rem;
+                                            color:#dc3545;
+                                            border:none;
+                                            background:none;
+                                            cursor:pointer;
+                                        "
+                                        onclick="confirmDelete({{ $record->id }})"
+                                    >
+                                        <i class="fas fa-trash"></i>
                                     </button>
                                 </form>
                             </td>
@@ -126,4 +142,30 @@
 @endcan
 
 </div>
+
+{{-- SweetAlert --}}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+function confirmDelete(id) {
+    Swal.fire({
+        title: 'Are you sure?',
+        text: 'This action will permanently delete this medical record!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete it',
+        cancelButtonText: 'Cancel',
+        reverseButtons: true
+    }).then((result) => {
+        if (result.isConfirmed) {
+            document.getElementById('delete-form-' + id).submit();
+        }
+    });
+}
+</script>
+
+<style>
+.action-icon { font-size: 1.5rem; cursor: pointer; }
+.action-icon.danger:hover { opacity: 0.7; }
+</style>
+
 @endsection

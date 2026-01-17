@@ -19,8 +19,8 @@ class Patient extends Model
         'gender',
         'allergies',
     ];
-    protected $table = 'patients';
-    protected $guarded=[];
+    protected $table = 'patients'; 
+    // protected $guarded=[];
     public function user(){
         return $this->belongsTo(User::class);
     }

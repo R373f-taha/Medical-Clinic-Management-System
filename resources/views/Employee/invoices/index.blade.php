@@ -13,101 +13,78 @@
     </div>
 
     {{-- Table --}}
-    <div class="table-responsive">
-        <table class="table table-bordered table-striped align-middle text-center mb-0">
-            <thead class="table-dark">
-                <tr>
-                    <th>#</th>
-                    <th>Patient</th>
-                    <th>Total</th>
-                    <th>Status</th>
-                    <th>Date</th>
-                    <th style="width:80px;">Action</th>
-                </tr>
-            </thead>
+    <div class="card shadow-sm">
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped align-middle text-center mb-0">
+                <thead class="table-dark">
+                    <tr>
+                        <th>#</th>
+                        <th>Patient</th>
+                        <th>Appointment</th>
+                        <th>Total</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                        <th style="width:90px;">Action</th>
+                    </tr>
+                </thead>
 
-            <tbody>
-            @forelse($invoices as $invoice)
-                <tr>
-                    <td>#{{ $invoice->id }}</td>
+                <tbody>
+                @forelse($invoices as $invoice)
+                    <tr>
+                        <td>#{{ $invoice->id }}</td>
 
-                    <td class="text-truncate" style="max-width:140px;">
-                        {{ $invoice->patient->name }}
-                    </td>
+                        {{-- Patient --}}
+                        <td>
+                            {{ $invoice->patient->user->name ?? '---' }}
+                        </td>
 
-                    <td>
-                        {{ $invoice->total_amount }}
-                    </td>
+                        {{-- Appointment --}}
+                        <td>
+                            {{ $invoice->appointment->appointment_date->format('Y-m-d H:i') ?? '-' }}
+                        </td>
 
-                    <td>
-                        @if($invoice->status === 'paid')
-                            <span class="badge bg-success">Paid</span>
-                        @else
-                            <span class="badge bg-danger">Unpaid</span>
-                        @endif
-                    </td>
+                        {{-- Total --}}
+                        <td>
+                            {{ number_format($invoice->total_amount, 2) }} $
+                        </td>
 
-                    <td>
-                        {{ $invoice->invoice_date }}
-                    </td>
+                        {{-- Status --}}
+                        <td>
+                            @if($invoice->status === 'paid')
+                                <span class="badge bg-success">Paid</span>
+                            @else
+                                <span class="badge bg-danger">Unpaid</span>
+                            @endif
+                        </td>
 
-                    {{-- ACTION --}}
-                    <td>
-                        <a href="{{ route('employee.invoices.show', $invoice->id) }}">
-                            <i class="fas fa-eye action-icon info" title="Show Invoice"></i>
-                        </a>
-                    </td>
-                </tr>
-            @empty
-                <tr>
-                    <td colspan="6" class="text-muted py-3">
-                        No invoices found.
-                    </td>
-                </tr>
-            @endforelse
-            </tbody>
-        </table>
+                        {{-- Date --}}
+                        <td>
+                            {{ $invoice->invoice_date }}
+                        </td>
+
+                        {{-- Action --}}
+                        <td>
+                            <a href="{{ route('employee.invoices.show', $invoice->id) }}"
+                               class="text-info me-2" title="View">
+                                <i class="fas fa-eye"></i>
+                            </a>
+                        </td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="7" class="text-muted py-3">
+                            No invoices found.
+                        </td>
+                    </tr>
+                @endforelse
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    {{-- Pagination --}}
+    <div class="mt-3">
+        {{ $invoices->links() }}
     </div>
 </div>
-
-{{-- STYLE --}}
-<style>
-.table {
-    font-size: 0.85rem;
-}
-
-.table th, .table td {
-    padding: 0.4rem;
-    white-space: nowrap;
-}
-
-.text-truncate {
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.container-fluid {
-    max-width: calc(100vw - 260px);
-}
-
-/* ICON STYLE (same as bookings) */
-.action-icon {
-    font-size: 1.1rem;
-    cursor: pointer;
-}
-
-.action-icon.info {
-    color: #0dcaf0;
-}
-
-.action-icon:hover {
-    opacity: 0.7;
-}
-
-@media (max-width: 768px) {
-    .container-fluid {
-        max-width: 100vw;
-    }
-}
-</style>
 @endsection

@@ -22,31 +22,46 @@ class ScheduleService
             ->join('doctors', 'appointments.doctor_id', '=', 'doctors.id')
             ->join('users as doctors_user', 'doctors.user_id', '=', 'doctors_user.id')
             ->leftJoin('patients', 'appointments.patient_id', '=', 'patients.id')
-            ->leftJoin('users as patients_user', 'patients.user_id', '=', 'patients_user.id');
+            ->leftJoin('users as patients_user', 'patients.user_id', '=', 'patients_user.id')
 
-        // Filter by doctor name if provided
-        if ($request->filled('doctor_name')) {
-            $name = strtolower($request->doctor_name);
-            $query->whereRaw('LOWER(doctors_user.name) LIKE ?', ["%{$name}%"]);
-        }
+            // Filter by doctor name when provided
+            ->when(
+                $request->filled('doctor_name'),
+                function ($q) use ($request) {
+                    $name = strtolower($request->doctor_name);
+                    $q->whereRaw(
+                        'LOWER(doctors_user.name) LIKE ?',
+                        ["%{$name}%"]
+                    );
+                }
+            );
 
         // Determine closest appointment to filter by period
         $firstAppointment = Appointment::orderBy('appointment_date')->first();
 
-        if ($firstAppointment) {
-            if ($request->period === 'daily') {
+        when(
+            $firstAppointment && $request->period === 'daily',
+            function () use ($query, $firstAppointment) {
                 $day = Carbon::parse($firstAppointment->appointment_date)->toDateString();
                 $query->whereDate('appointments.appointment_date', $day);
             }
+        );
 
-            if ($request->period === 'weekly') {
+        when(
+            $firstAppointment && $request->period === 'weekly',
+            function () use ($query, $firstAppointment) {
                 $firstDay = Carbon::parse($firstAppointment->appointment_date)->startOfWeek();
                 $lastDay  = Carbon::parse($firstAppointment->appointment_date)->endOfWeek();
-                $query->whereBetween('appointments.appointment_date', [$firstDay, $lastDay]);
+                $query->whereBetween(
+                    'appointments.appointment_date',
+                    [$firstDay, $lastDay]
+                );
             }
-        }
+        );
 
-        return $query->orderBy('appointments.appointment_date')->get();
+        return $query
+            ->orderBy('appointments.appointment_date')
+            ->get();
     }
 
     /**

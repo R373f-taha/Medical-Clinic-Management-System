@@ -19,16 +19,16 @@ class UpdatePrescriptionRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
-    public function rules(): array
-    {
-        return [
-            //'medical_record_id' => 'nullable|exists:medical_records,id',
-            'medicine_name'     => 'nullable|string|max:255',
-            'dosage'            => 'nullable|integer|min:1',
-            'frequency'         => 'nullable|integer|min:1',
-            'refills'           => 'nullable|string|max:50',
-            'instructions'      => 'nullable|string',
-            'duration'          => 'nullable|integer|min:1',
-        ];
-    }
+  public function rules(): array
+{
+    return [
+        'medical_record_id' => 'nullable|exists:medical_records,id',
+        'medicine_name'     => 'nullable|string|max:255',
+        'dosage'            => 'nullable|integer|min:1',      
+        'frequency'         => 'nullable|integer|min:1',    
+        'refills'           => 'nullable|string|max:50',
+        'instructions'      => 'nullable|string',
+        'duration'          => 'nullable|integer|min:1',     
+    ];
+}
 }
