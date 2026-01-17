@@ -8,7 +8,7 @@
 
 <div align="center">
 
-![Project Logo](/public/images/X2%20Team.png)
+![Project Logo](/public/images/screenshots/X2%20Team.png)
 
 **Team Members:**
 
@@ -26,12 +26,12 @@
 
 <div align="center">
 
-![Admin Dashboard](public/images/screenShots/admin-dashboard.png)
-![Doctor Dashboard](public/images/screenShots/doctor-dashboard.png)
-![Employee Dashboard](public/images/screenShots/employee-dashboard.png)
-![Patient API](public/images/screenShots/patient-api.png)
-![Before Login](public/images/screenShots/beforeLogin.png)
-![Login](public/images/screenShots/Login.png)
+![Admin Dashboard](public/images/screenshots/admin-dashboard.png)
+![Doctor Dashboard](public/images/screenshots/doctor-dashboard.png)
+![Employee Dashboard](public/images/screenshots/employee-dashboard.png)
+![Patient API](public/images/screenshots/patient-api.png)
+![Before Login](public/images/screenshots/beforeLogin.png)
+![Login](public/images/screenshots/Login.png)
 </div>
 
 ---
@@ -253,7 +253,7 @@ npm run dev          # Compile frontend assets
 ### Clinic Admin
 
 ```
-Email: admin@clinic.com
+Email: admin@example.com
 Password: password123
 ```
 
