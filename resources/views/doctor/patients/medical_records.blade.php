@@ -35,6 +35,7 @@
                         <th style="padding:12px; text-align:left;">Notes</th>
                         <th style="padding:12px; text-align:left;">Treatment Plan</th>
                         <th style="padding:12px; text-align:left;">Follow Up Date</th>
+                        <th style="padding:12px; text-align:left;">Images</th>
                         <th style="padding:12px; text-align:left;">Actions</th>
                     </tr>
                 </thead>
@@ -47,6 +48,27 @@
                             <td style="padding:10px;">{{ $record->notes ?? 'N/A' }}</td>
                             <td style="padding:10px;">{{ $record->treatment_plan ?? 'N/A' }}</td>
                             <td style="padding:10px;">{{ $record->follow_up_date ?? '-' }}</td>
+                            {{-- Images --}}
+                            <td>
+                                @if($record->images->count())
+                                    <div class="d-flex flex-wrap justify-content-center gap-1">
+                                        @foreach($record->images as $image)
+                                            <a href="{{ asset($image->image) }}" target="_blank">
+                                                <img
+                                                    src="{{ asset($image->image) }}"
+                                                    alt="medical image"
+                                                    width="36"
+                                                    height="36"
+                                                    class="rounded border"
+                                                    style="object-fit: cover;"
+                                                >
+                                            </a>
+                                        @endforeach
+                                    </div>
+                                @else
+                                    <span class="text-muted fst-italic">No images</span>
+                                @endif
+                            </td>
 
                             <!-- Actions -->
                             <td style="padding:10px;">

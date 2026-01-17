@@ -38,7 +38,7 @@
                         <option value="">Select Patient</option>
                         @foreach($patients as $patient)
                             <option value="{{ $patient->id }}">
-                                Patient #{{ $patient->id }}
+                                Patient #{{ $patient->id }} : {{ $patient->user-> name }}
                             </option>
                         @endforeach
                     </select>
