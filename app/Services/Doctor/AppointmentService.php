@@ -133,7 +133,11 @@ class AppointmentService
     {
         return $appointment->delete();
     }
-
+    /**
+     * Helper function for validate time
+     * @param string $date
+     * @return void
+     */
     public static function validate(string $date): void
     {
         $time = Carbon::parse($date);
@@ -153,7 +157,13 @@ class AppointmentService
         }
     }
 
-
+    /**
+     * Helper function for validate date
+     * @param int $doctorId
+     * @param Carbon $date
+     * @param mixed $ignoreId
+     * @return void
+     */
     private function ensureNoConflict(
         int $doctorId,
         Carbon $date,
