@@ -119,12 +119,12 @@ class AppointmentService
             );
 
             $appointment = Appointment::create([
-                'doctor_id'        => $doctorId,
-                'patient_id'       => $patientId,
-                'appointment_date' => $appointmentTime->format('Y-m-d H:i:s'),
-                'status'           => 'scheduled',
-                'notes'            => $data['notes'] ?? null,
-                'reason'           => $data['reason'] ?? null,
+                'doctor_id'         => $doctorId,
+                'patient_id'        => $patientId,
+                'appointment_date'  => $appointmentTime->format('Y-m-d H:i:s'),
+                'status'            => 'scheduled',
+                'notes'             => $data['notes'] ?? null,
+                'reason'            => $data['reason'] ?? null,
             ]);
 
             DB::commit();
