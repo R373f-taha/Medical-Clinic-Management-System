@@ -49,7 +49,7 @@ class AppointmentController extends Controller
             return redirect()
                 ->back()
                 ->withInput()
-                ->with('delete', 'invalid date...!');
+                ->with('delete', 'Date must be in the future Hours: 10 - 6 minutes: 00 or 30...!');
         }
     }
     /**
@@ -86,7 +86,7 @@ class AppointmentController extends Controller
             return redirect()
                 ->back()
                 ->withInput()
-                ->with('delete', 'invalid date...!');
+                ->with('delete', 'Date must be in the future Hours: 10 - 6 minutes: 00 or 30...!');
         }
     }
     /**
