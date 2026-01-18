@@ -30,8 +30,8 @@
                     @forelse ($appointments as $appointment)
                         <tr style="border-bottom:1px solid #ddd;">
                             <td style="padding:10px;">{{ $appointment->id }}</td>
-                            <td style="padding:10px;">Patient #{{ $appointment->patient_id }}</td>
-                            <td style="padding:10px;">Doctor #{{ $appointment->doctor_id }}</td>
+                            <td style="padding:10px;">{{ $appointment->patient->user->name }}</td>
+                            <td style="padding:10px;">Doctor : {{ $appointment->doctor->user->name }}</td>
                             <td style="padding:10px;">{{ $appointment->appointment_date }}</td>
                             <td style="padding:10px;">
                                 <span style="
