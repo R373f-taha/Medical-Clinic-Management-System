@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Employee')
+@section('title', 'Dashboard')
 
 @section('content')
 @if(Auth::user()->hasrole('doctor'))
