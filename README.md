@@ -286,5 +286,15 @@ Password: password
 
 ## 🏆 Acknowledgments
 
-* Thanks to **Clinic Mentors** and instructors
-* Special recognition to the **development team**: Rahaf Taha, Kheder Alkhateeb, Rama Yousfan, Yara Sleten, Kinda Ghanem
+*                     💛💛🎉 Special Thanks  
+                          Focal X Agency
+        For their commitment to student growth and learning opportunities.
+
+                    
+
+*                        💛development team :
+                             Rahaf Taha, 
+                            Kheder Alkhateeb,
+                             Rama Yousfan   
+                             Yara Sleten, 
+                             Kinda Ghanem
