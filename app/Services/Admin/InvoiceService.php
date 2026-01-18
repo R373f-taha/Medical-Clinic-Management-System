@@ -8,19 +8,20 @@ use App\Models\Appointment;
 
 class InvoiceService
 {
-    public function getAll()
-    {
-        return Invoice::with(['patient', 'appointment'])->latest();
-    }
-
     public function getPatients()
     {
-        return Patient::all();
+        return Patient::with('user')->get();
     }
 
-    public function getAppointments()
+    public function getAvailableAppointments(?int $ignoreInvoiceId = null)
     {
-        return Appointment::all();
+        return Appointment::with('patient.user')
+            ->whereDoesntHave('invoice', function ($q) use ($ignoreInvoiceId) {
+                if ($ignoreInvoiceId) {
+                    $q->where('id', '!=', $ignoreInvoiceId);
+                }
+            })
+            ->get();
     }
 
     public function store(array $data)
@@ -32,9 +33,5 @@ class InvoiceService
     {
         return $invoice->update($data);
     }
-
-    public function delete(Invoice $invoice)
-    {
-        return $invoice->delete();
-    }
 }
+

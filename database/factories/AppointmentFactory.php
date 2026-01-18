@@ -14,16 +14,22 @@ class AppointmentFactory extends Factory
 
     public function definition()
     {
-        $patient = Patient::inRandomOrder()->first();
-        $doctor  = Doctor::inRandomOrder()->first();
+        $patient = Patient::inRandomOrder()->first()
+            ?? Patient::factory()->create();
 
-        // توليد يوم عشوائي بين 1 و30 يوم من اليوم
-        $dayOffset = $this->faker->numberBetween(1, 30);
-        $date = Carbon::now()->addDays($dayOffset);
+        $doctor  = Doctor::inRandomOrder()->first()
+            ?? Doctor::factory()->create();
 
-        // توليد وقت عشوائي بين 10 صباحًا و5 مساءً
-        $hour = $this->faker->numberBetween(10, 17);
-        $minute = $this->faker->randomElement([0, 30]);
+        // 👇 unique لمنع تكرار (doctor + datetime)
+        $dateTime = $this->faker->unique()->numberBetween(1, 30) . '-' .
+                    $this->faker->numberBetween(10, 17) . '-' .
+                    $this->faker->randomElement([0, 30]);
+
+        [$dayOffset, $hour, $minute] = explode('-', $dateTime);
+
+        $date = Carbon::now()
+            ->addDays((int) $dayOffset)
+            ->setTime((int) $hour, (int) $minute);
 
         return [
             'patient_id'       => $patient->id,

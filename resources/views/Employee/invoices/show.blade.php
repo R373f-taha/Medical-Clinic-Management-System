@@ -1,32 +1,36 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container mt-5">
-    <div class="card border-0 shadow-lg p-5" id="printableArea">
+<div class="container mt-4">
+    <div class="card shadow-lg p-4" id="printableArea">
+
         <div class="row mb-4">
-            <div class="col-sm-6">
-                <h3 class="text-primary">Clinic Logo</h3>
-                <div>Address: Health Street, City</div>
-                <div>Phone: +123 456 789</div>
+            <div class="col-md-6">
+                <h4 class="text-primary">Medical Clinic</h4>
+                <div>Phone: 123456789</div>
+                <div>Address: Main Street</div>
             </div>
-            <div class="col-sm-6 text-end">
-                <h2 class="fw-bold">Medical Invoice</h2>
-                <div>Reference #: #{{ $invoice->id }}</div>
-                <div>Issue Date: {{ $invoice->invoice_date }}</div>
+
+            <div class="col-md-6 text-end">
+                <h3>Invoice #{{ $invoice->id }}</h3>
+                <div>Date: {{ $invoice->invoice_date }}</div>
+                <div>Status: <strong>{{ ucfirst($invoice->status) }}</strong></div>
             </div>
         </div>
 
         <hr>
 
-        <div class="row mb-4">
-            <div class="col-sm-6">
-                <h6 class="mb-3 text-muted">To Patient:</h6>
-                <div><strong>{{ $invoice->patient->name }}</strong></div>
-                <div>Phone: {{ $invoice->patient->phone ?? '---' }}</div>
-            </div>
+        <div class="mb-4">
+            <h6>Patient Information</h6>
+            <p>
+                <strong>Name:</strong>
+                {{ $invoice->patient->user->name ?? '---' }} <br>
+                <strong>Appointment:</strong>
+                {{ $invoice->appointment->appointment_date->format('Y-m-d H:i') }}
+            </p>
         </div>
 
-        <table class="table table-striped">
+        <table class="table table-bordered">
             <thead>
                 <tr>
                     <th>Description</th>
@@ -35,44 +39,45 @@
             </thead>
             <tbody>
                 <tr>
-                    <td>Medical Checkup Service - Appointment #{{ $invoice->appointment_id }}</td>
-                    <td class="text-end">{{ number_format($invoice->total_amount, 2) }} $</td>
+                    <td>Medical Service</td>
+                    <td class="text-end">{{ number_format($invoice->subtotal, 2) }} $</td>
                 </tr>
             </tbody>
         </table>
 
-        <div class="row">
-            <div class="col-lg-4 col-sm-5 ms-auto">
-                <table class="table table-clear">
-                    <tbody>
-                        <tr>
-                            <td class="left"><strong>Tax</strong></td>
-                            <td class="text-end">{{ $invoice->tax }}%</td>
-                        </tr>
-                        <tr>
-                            <td class="left"><strong>Discount</strong></td>
-                            <td class="text-end">-{{ $invoice->discount }} $</td>
-                        </tr>
-                        <tr class="table-info">
-                            <td class="left"><strong>Grand Total</strong></td>
-                            <td class="text-end"><strong>{{ number_format($invoice->total_amount, 2) }} $</strong></td>
-                        </tr>
-                    </tbody>
+        <div class="row justify-content-end">
+            <div class="col-md-4">
+                <table class="table">
+                    <tr>
+                        <td>Tax (%)</td>
+                        <td class="text-end">{{ $invoice->tax }}%</td>
+                    </tr>
+                    <tr>
+                        <td>Discount</td>
+                        <td class="text-end">- {{ number_format($invoice->discount, 2) }} $</td>
+                    </tr>
+                    <tr class="table-info">
+                        <td><strong>Total</strong></td>
+                        <td class="text-end">
+                            <strong>{{ number_format($invoice->total_amount, 2) }} $</strong>
+                        </td>
+                    </tr>
                 </table>
             </div>
         </div>
 
-        <div class="mt-4 no-print text-center">
-            <button onclick="window.print()" class="btn btn-dark btn-lg">Print Invoice</button>
+        <div class="text-center mt-4 no-print">
+            <button onclick="window.print()" class="btn btn-dark">
+                Print Invoice
+            </button>
         </div>
     </div>
 </div>
 
 <style>
 @media print {
-    .no-print { display: none !important; }
-    body { background: white; }
-    .card { border: none !important; box-shadow: none !important; }
+    .no-print { display: none; }
+    body { background: #fff; }
 }
 </style>
 @endsection

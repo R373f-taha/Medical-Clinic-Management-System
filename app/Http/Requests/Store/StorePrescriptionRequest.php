@@ -19,16 +19,16 @@ class StorePrescriptionRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
-    public function rules(): array
-    {
-        return [
-            'medical_record_id' => 'required|exists:medical_records,id',
-            'medicine_name'     => 'required|string|max:255',
-            'dosage'            => 'required|integer|min:1',
-            'frequency'         => 'required|integer|min:1',
-            'refills'           => 'required|string|max:50',
-            'instructions'      => 'required|string',
-            'duration'          => 'required|integer|min:1',
-        ];
-    }
+  public function rules(): array
+{
+    return [
+        'medical_record_id' => 'required|exists:medical_records,id',
+        'medicine_name'     => 'required|string|max:255',
+        'dosage'            => 'required|integer|min:1',
+        'frequency'         => 'required|integer|min:1',
+        'refills'           => 'required|string|max:50',
+        'instructions'      => 'required|string',
+        'duration'          => 'required|integer|min:1', 
+    ];
+}
 }

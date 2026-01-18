@@ -13,7 +13,7 @@ class Employee extends Model
     protected $guard_name = 'web';
 
     protected $fillable = [
-        'user_id', 'name', 'qualifications', 'age', 
+        'user_id', 'name', 'qualifications', 'age',
         'phone', 'email', 'gender', 'date_of_birth'
     ];
 
@@ -21,4 +21,10 @@ class Employee extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function invoices()
+    {
+        return $this->hasMany(Invoice::class);
+    }
 }
+
