@@ -18,10 +18,10 @@ class StoreEmployeeRequest extends FormRequest
             'name'          => 'required|string|max:255',
             'qualifications' => 'required|string|max:255',
             'age'           => 'required|integer|min:18',
-            'phone'         => 'required|string|max:20|unique:employees,phone',
+            'phone' => 'required|digits:10|unique:employees,phone',
             'email'         => 'required|email|unique:employees,email',
             'gender'        => 'required|in:Male,Female',
-            'date_of_birth' => 'nullable|date',
+            'date_of_birth' => 'nullable|date|before_or_equal:today',
         ];
     }
 }

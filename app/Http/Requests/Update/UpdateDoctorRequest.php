@@ -30,7 +30,7 @@ class UpdateDoctorRequest extends FormRequest
             ],
             'specialization'   => 'nullable|string|max:255',
             'qualifications'   => 'nullable|string|max:255',
-            'available_hours'  => 'nullable|integer|min:0',
+             'available_hours' => 'required|integer|min:1|max:45',
             'experience_years' => 'nullable|integer|min:0',
             'Current_rate'     => 'nullable|numeric|min:0|max:5',
             'services'         => 'nullable|string',

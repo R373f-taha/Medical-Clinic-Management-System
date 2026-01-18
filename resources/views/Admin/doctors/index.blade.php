@@ -71,9 +71,9 @@
     </div>
 
     {{-- Back Button --}}
-    <a href="{{ url()->previous() }}" class="btn btn-warning btn-sm mt-3">
-        Go Back
-    </a>
+ <a href="{{ route('dashboard') }}" class="btn btn-warning btn-sm mt-3">
+    Go Back
+</a>
 
     @else
     <div class="alert alert-danger">
