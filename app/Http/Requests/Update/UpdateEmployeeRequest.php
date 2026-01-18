@@ -24,9 +24,8 @@ class UpdateEmployeeRequest extends FormRequest
             'qualifications' => 'nullable|string|max:255',
             'age'           => 'nullable|integer|min:18',
             'phone' => [
-                'nullable',
-                'string',
-                'max:20',
+                 'nullable',
+                 'digits:10',
                 Rule::unique('employees', 'phone')->ignore($this->route('employee')),
             ],
             'email' => [
@@ -35,7 +34,7 @@ class UpdateEmployeeRequest extends FormRequest
                 Rule::unique('employees', 'email')->ignore($this->route('employee')),
             ],
             'gender'        => 'nullable|in:Male,Female',
-            'date_of_birth' => 'nullable|date',
+'date_of_birth' => 'nullable|date|before_or_equal:today',
         ];
     }
 }

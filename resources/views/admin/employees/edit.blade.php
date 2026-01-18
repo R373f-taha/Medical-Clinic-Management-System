@@ -52,15 +52,7 @@
             >
         </div>
 
-        {{-- Age --}}
-        <div class="mb-3">
-            <label class="form-label">Age</label>
-            <input
-                type="number"
-                name="age"
-                class="form-control"
-                value="{{ old('age', $employee->age) }}"
-            >
+ 
         </div>
 
         {{-- Buttons --}}

@@ -25,7 +25,7 @@ class StoreDoctorRequest extends FormRequest
             'user_id' => 'required|exists:users,id|unique:doctors,user_id',
             'specialization'    => 'required|string|max:255',
             'qualifications'    => 'required|string|max:255',
-            'available_hours'   => 'required|integer|min:0',
+             'available_hours' => 'required|integer|min:1|max:45',
             'experience_years'  => 'nullable|integer|min:0',
             'services'         => 'nullable|string',
            
