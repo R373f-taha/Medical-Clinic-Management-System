@@ -6,13 +6,12 @@ use App\Models\Appointment;
 use App\Models\Patient;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
 class AppointmentService
 {
     /**
-     * get All Appointment
+     * get All Appointments
      * @return \Illuminate\Database\Eloquent\Collection<int, Appointment>
      */
     public function getAll()
@@ -23,7 +22,7 @@ class AppointmentService
     }
 
     /**
-     * get current_doctor's Appointments
+     * get current doctor's Appointments
      * @return \Illuminate\Database\Eloquent\Collection<int, Appointment>
      */
     public function doctorAppointments()
@@ -35,7 +34,7 @@ class AppointmentService
     }
 
     /**
-     * get today's Appointment for the current doctor
+     * get today's Appointments for the current doctor
      * @return \Illuminate\Database\Eloquent\Collection<int, Appointment>
      */
     public function today()
@@ -51,7 +50,7 @@ class AppointmentService
     }
 
     /**
-     * Create an Appointment
+     * Create an Appointment (patients without scheduled appointments)
      */
     public function createAppointment()
     {
@@ -68,159 +67,119 @@ class AppointmentService
     /**
      * Store an Appointment
      * @param array $data
-     * @throws \DomainException
      * @return Appointment
      */
-    public function store(array $data)
+    public function store(array $data): Appointment
     {
-        try {
-            DB::beginTransaction();
+        $doctorId = Auth::user()->doctor->id;
+        $appointmentTime = Carbon::parse($data['appointment_date']);
 
-            $doctorId = Auth::user()->doctor->id;
-            $patientId = $data['patient_id'];
-            $appointmentTime = Carbon::parse($data['appointment_date']);
+        // validate working hours
+        self::validate($appointmentTime->toDateTimeString());
 
-            Appointment::query()->when(
-                $appointmentTime->lessThanOrEqualTo(now()),
-                fn() => throw new \DomainException(
-                    'Appointment time must be in the future'
-                )
-            );
+        // ensure no doctor conflict
+        $this->ensureNoConflict($doctorId, $appointmentTime);
 
-            self::validate($appointmentTime->toDateTimeString());
-
-            $patientConflict = Appointment::where('patient_id', $patientId)
-                ->where('status', 'scheduled')
-                ->where('appointment_date', $appointmentTime)
-                ->lockForUpdate()
-                ->exists();
-
-            Appointment::query()->when(
-                $patientConflict,
-                fn() => throw new \DomainException(
-                    'This patient already has an appointment at this time'
-                )
-            );
-
-            $doctorConflict = Appointment::where('doctor_id', $doctorId)
-                ->where('status', 'scheduled')
-                ->where('appointment_date', $appointmentTime)
-                ->lockForUpdate()
-                ->exists();
-
-            Appointment::query()->when(
-                $doctorConflict,
-                fn() => throw new \DomainException(
-                    'This doctor already has an appointment at this time'
-                )
-            );
-
-            $appointment = Appointment::create([
-                'doctor_id'        => $doctorId,
-                'patient_id'       => $patientId,
-                'appointment_date' => $appointmentTime->format('Y-m-d H:i:s'),
-                'status'           => 'scheduled',
-                'notes'            => $data['notes'] ?? null,
-                'reason'           => $data['reason'] ?? null,
-            ]);
-
-            DB::commit();
-            return $appointment;
-        } catch (\Throwable $e) {
-            DB::rollBack();
-            throw $e;
-        }
+        return Appointment::create([
+            'doctor_id'        => $doctorId,
+            'patient_id'       => $data['patient_id'],
+            'appointment_date' => $appointmentTime->format('Y-m-d H:i:s'),
+            'status'           => 'scheduled',
+            'notes'            => $data['notes'] ?? null,
+            'reason'           => $data['reason'] ?? null,
+        ]);
     }
 
     /**
      * Update an Appointment
      * @param Appointment $appointment
      * @param array $data
-     * @throws \DomainException
      * @return Appointment
      */
-    public function update(Appointment $appointment, array $data)
+    public function update(Appointment $appointment, array $data): Appointment
     {
-        try {
-            DB::beginTransaction();
+        $appointmentTime = Carbon::parse($data['appointment_date']);
 
-            $doctorId = Auth::user()->doctor->id;
-            $patientId = $appointment->patient_id;
-            $appointmentTime = Carbon::parse($data['appointment_date']);
+        // validate working hours
+        self::validate($appointmentTime->toDateTimeString());
 
-            Appointment::query()->when(
-                $appointmentTime->lessThanOrEqualTo(now()),
-                fn() => throw new \DomainException(
-                    'Appointment time must be in the future'
-                )
+        // ensure no conflict if date changed
+        if (Carbon::parse($appointment->appointment_date)->ne($appointmentTime)) {
+            $this->ensureNoConflict(
+                $appointment->doctor_id,
+                $appointmentTime,
+                $appointment->id
             );
-
-            self::validate($appointmentTime->toDateTimeString());
-
-            $patientConflict = Appointment::where('patient_id', $patientId)
-                ->where('status', 'scheduled')
-                ->where('id', '!=', $appointment->id)
-                ->where('appointment_date', $appointmentTime)
-                ->lockForUpdate()
-                ->exists();
-
-            Appointment::query()->when(
-                $patientConflict,
-                fn() => throw new \DomainException(
-                    'This patient has another appointment at this time'
-                )
-            );
-
-            $doctorConflict = Appointment::where('doctor_id', $doctorId)
-                ->where('status', 'scheduled')
-                ->where('id', '!=', $appointment->id)
-                ->where('appointment_date', $appointmentTime)
-                ->lockForUpdate()
-                ->exists();
-
-            Appointment::query()->when(
-                $doctorConflict,
-                fn() => throw new \DomainException(
-                    'This doctor has another appointment at this time'
-                )
-            );
-
-            $appointment->update([
-                'appointment_date' => $appointmentTime->format('Y-m-d H:i:s'),
-                'status'           => $data['status'],
-                'notes'            => $data['notes'] ?? null,
-                'reason'           => $data['reason'] ?? null,
-            ]);
-
-            DB::commit();
-            return $appointment;
-        } catch (\Throwable $e) {
-            DB::rollBack();
-            throw $e;
         }
+
+        $appointment->update([
+            'appointment_date' => $appointmentTime->format('Y-m-d H:i:s'),
+            'status'           => $data['status'],
+            'notes'            => $data['notes'] ?? null,
+            'reason'           => $data['reason'] ?? null,
+        ]);
+
+        return $appointment;
     }
 
-
+    /**
+     * Delete an Appointment
+     */
     public function delete(Appointment $appointment)
     {
         return $appointment->delete();
     }
 
+    /**
+     * Helper function for validating time
+     * @param string $date
+     * @return void
+     */
     public static function validate(string $date): void
     {
         $time = Carbon::parse($date);
 
-        if ($time->hour < 10 || $time->hour >= 14) {
+        if ($time->hour < 10 || $time->hour >= 18) {
             throw ValidationException::withMessages([
                 'appointment_date' =>
-                'Appointments are available from 10:00 to 14:00 only.',
+                    'Appointments are available from 10:00 to 18:00 only.',
             ]);
         }
 
         if (!in_array($time->minute, [0, 30])) {
             throw ValidationException::withMessages([
                 'appointment_date' =>
-                'Appointments must be scheduled every 30 minutes.',
+                    'Appointments must be scheduled every 30 minutes.',
+            ]);
+        }
+    }
+
+    /**
+     * Helper function to ensure no appointment conflict
+     * @param int $doctorId
+     * @param Carbon $date
+     * @param int|null $ignoreId
+     * @return void
+     */
+    private function ensureNoConflict(
+        int $doctorId,
+        Carbon $date,
+        ?int $ignoreId = null
+    ): void {
+        $start = $date->copy()->startOfMinute();
+        $end   = $date->copy()->endOfMinute();
+
+        $query = Appointment::where('doctor_id', $doctorId)
+            ->whereBetween('appointment_date', [$start, $end]);
+
+        if ($ignoreId) {
+            $query->where('id', '!=', $ignoreId);
+        }
+
+        if ($query->exists()) {
+            throw ValidationException::withMessages([
+                'appointment_date' =>
+                    'This appointment time is already booked.',
             ]);
         }
     }
