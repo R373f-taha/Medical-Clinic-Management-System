@@ -42,6 +42,11 @@
                         value="{{ $medicalRecord->follow_up_date }}"
                         style="width:100%; padding:10px; border:1px solid #ccc; border-radius:5px;">
             </div>
+            @error('follow_up_date')
+                    <span style="color: red; font-size: 14px;">
+                        {{ $message }}
+                    </span>
+                @enderror
 
             <!-- Buttons -->
             <div style="display:flex; gap:10px;">
