@@ -274,21 +274,6 @@ Password: password
 
 ```
 
----
-
-### Email settings that send emails to patients regarding appointment booking and cancellation
-
-MAIL_MAILER=smtp
-MAIL_HOST=smtp.gmail.com
-MAIL_PORT=587
-MAIL_USERNAME=rahaftaha594@gmail.com
-#bvvc wdnd sfif tlvf
-MAIL_PASSWORD=bvvcwdndsfiftlvf
-MAIL_ENCRYPTION=tls
-MAIL_FROM_ADDRESS="rahahtaha594@gmail.com"
-MAIL_FROM_NAME="Together to heal your pain"
-
----
 
 ## 📞 Support & Contributions
 
