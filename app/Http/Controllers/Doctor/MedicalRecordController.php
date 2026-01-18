@@ -52,10 +52,7 @@ class MedicalRecordController extends Controller
             return redirect()->route('doctor.medical_records.index')
                 ->with('success', 'Medical_Record Created...!');
         } catch (Throwable $e) {
-            return redirect()
-                ->back()
-                ->withInput()
-                ->with('delete', "Failed...!");
+            return redirect()->route('doctor.medical_records.create')->with('delete','invalid date...!');
         }
     }
     /**

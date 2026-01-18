@@ -49,7 +49,7 @@ class AppointmentController extends Controller
             return redirect()
                 ->back()
                 ->withInput()
-                ->with('delete', 'Failed...!');
+                ->with('delete', 'invalid date...!');
         }
     }
     /**
@@ -86,7 +86,7 @@ class AppointmentController extends Controller
             return redirect()
                 ->back()
                 ->withInput()
-                ->with('delete', 'Failed...!');
+                ->with('delete', 'invalid date...!');
         }
     }
     /**
