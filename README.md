@@ -248,8 +248,7 @@ npm run dev          # Compile frontend assets
 
 ### api collection
 
-<pre>[(https://img.shields.io/badge/Postman-API_Collection-FF6C37?logo=postman&logoColor=white)](https://documenter.getpostman.com/view/50321677/2sBXVigUyL)</pre>
-
+https://documenter.getpostman.com/view/50321677/2sBXVigUyL
 ---
 
 ## 🔑 Sample Credentials
