@@ -75,19 +75,18 @@ class AppointmentController extends Controller
                     ->send(new AppointmentMail($appointment, 'new'));
 
                 return response()->json([
-                    'message' => 'Welcome 🤗💛',
+                    'message' => 'Welcome 🤗💛We will send a confirmation email to your email address. Please stay tuned.',
                     'result' => 'Yes, this appointment is registered 😎✅',
                     'patient' => $patient,
-                    'appointment' => $appointment,
-                    'mail' => 'We will send a confirmation email to your email address. Please stay tuned.'
+                    'appointment' => $appointment
+
                 ]);
             } catch (Exception $e) {
                 return response()->json([
-                    'message' => 'Welcome 🤗💛',
+                    'message' => 'Welcome 🤗💛Failed to send email, but appointment saved',
                     'result' => 'Yes, this appointment is registered 😎✅',
                     'patient' => $patient,
                     'appointment' => $appointment,
-                    'mail' => 'Failed to send email, but appointment saved',
                     'mail_error' => $e->getMessage()
                 ]);
             }

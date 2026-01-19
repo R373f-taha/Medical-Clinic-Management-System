@@ -8,7 +8,7 @@
 
 <div align="center">
 
-![Project Logo](/public/images/screenshots/X2%20Team.png)
+![Project Logo](images/screenshots/X2-Team.png)
 
 **Team Members:**
 
@@ -26,13 +26,15 @@
 
 <div align="center">
 
-![Admin Dashboard](public/images/screenshots/admin-dashboard.png)
-![Doctor Dashboard](public/images/screenshots/doctor-dashboard.png)
-![Employee Dashboard](public/images/screenshots/employee-dashboard.png)
-![Patient API](public/images/screenshots/patient-api.png)
-![Before Login](public/images/screenshots/beforeLogin.png)
-![Login](public/images/screenshots/Login.png)
+![Admin Dashboard](images/screenshots/admin-dashboard.png)
+![Doctor Dashboard](images/screenshots/doctor-dashboard.png)
+![Employee Dashboard](images/screenshots/employee-dashboard.png)
+![Patient API](images/screenshots/patient-api.png)
+![Before Login](images/screenshots/beforeLogin.png)
+![Login](images/screenshots/Login.png)
+
 </div>
+
 
 ---
 
@@ -255,7 +257,9 @@ npm run dev          # Compile frontend assets
 | GET    |`/api/patient/cancel/{id}/appointment`      | Cancel appointments(token based)     |
 | GET    |`/api/patient/add/rating             `      | Add Rating         (token based)     |
 
+### api collection
 
+https://documenter.getpostman.com/view/50321677/2sBXVigUyL
 ---
 
 ## 🔑 Sample Credentials
@@ -283,6 +287,29 @@ Email:Test Email from the seeder
 Password: password
 
 ```
+
+### To activate the email responsible for sending appointment-related emails to patients (for new bookings or cancellations):
+
+Prerequisites💛:
+
+The email must have two-factor authentication enabled.
+
+Access Gmail settings and navigate to "App Passwords" under security settings.
+
+Generate a new app password by specifying the app name and copying the generated password.
+
+Email Configuration Settings:
+
+env
+MAIL_MAILER=smtp
+MAIL_HOST=smtp.gmail.com
+MAIL_PORT=587
+MAIL_USERNAME=[Your Email]
+MAIL_PASSWORD=[Generated App Password Here]
+MAIL_ENCRYPTION=tls
+MAIL_FROM_ADDRESS=[Your Email]
+MAIL_FROM_NAME=[App Name]
+
 
 
 ## 📞 Support & Contributions
