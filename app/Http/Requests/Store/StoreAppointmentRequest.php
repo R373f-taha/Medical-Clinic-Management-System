@@ -21,13 +21,24 @@ class StoreAppointmentRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            'doctor_id'         => 'required|exists:doctors,id',
-          //  'patient_id'         => 'required|exists:patients,id',
-            'appointment_date'  => 'required|date',
-            'status'            => 'required|in:scheduled,completed,cancelled',
-            'notes'             => 'nullable|string',
-            'reason'            => 'nullable|string',
-        ];
+        if ($this->is('api/*')) {
+            return [
+                'doctor_id'         => 'required|exists:doctors,id',
+                //  'patient_id'         => 'required|exists:patients,id',
+                'appointment_date'  => 'required|date',
+                'status'            => 'required|in:scheduled,completed,cancelled',
+                'notes'             => 'nullable|string',
+                'reason'            => 'nullable|string',
+            ];
+        } else {
+            return [
+                'doctor_id'         => 'required|exists:doctors,id',
+                'patient_id'         => 'required|exists:patients,id',
+                'appointment_date'  => 'required|date',
+                'status'            => 'required|in:scheduled,completed,cancelled',
+                'notes'             => 'nullable|string',
+                'reason'            => 'nullable|string',
+            ];
+        }
     }
 }

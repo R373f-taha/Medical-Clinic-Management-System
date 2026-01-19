@@ -16,7 +16,7 @@ class PatientService
 
         $patients = Patient::whereIn('id', function ($query) use ($doctor) {
             $query->select('patient_id')
-                ->from('medical_records')
+                ->from('appointments')
                 ->where('doctor_id', $doctor->id);
         })->get();
         return $patients;
