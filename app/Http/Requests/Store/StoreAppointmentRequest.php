@@ -18,16 +18,22 @@ class StoreAppointmentRequest extends FormRequest
      * Get the validation rules that apply to the request.
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
-    public function rules(): array
+     */    public function rules(): array
     {
-        return [
-            'doctor_id'         => 'required|exists:doctors,id',
-          //  'patient_id'         => 'required|exists:patients,id',
-            'appointment_date'  => 'required|date',
-            'status'            => 'required|in:scheduled,completed,cancelled',
-            'notes'             => 'nullable|string',
-            'reason'            => 'nullable|string',
+        $rules = [
+            'doctor_id'        => 'required|exists:doctors,id',
+            'appointment_date' => 'required|date',
+            'status'           => 'required|in:scheduled,completed,cancelled',
+            'notes'            => 'nullable|string',
+            'reason'           => 'nullable|string',
         ];
+
+        if ($this->is('api/*')) {
+            $rules['patient_id'] = 'required|numeric';
+        } else {
+            $rules['patient_id'] = 'required|exists:patients,id';
+        }
+
+        return $rules;
     }
 }
