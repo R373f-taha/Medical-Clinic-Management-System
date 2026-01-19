@@ -37,6 +37,16 @@
 
 ---
 
+## 🎥 Demo Video
+
+[![Demo Video](public/assets/img/preview.jpg)](https://www.youtube.com/watch?v=QW68QjYDebQ)
+
+---
+
+
+## 📚 Table of Contents
+
+
 ## 📚 Table of Contents
 
 * [Project Overview](#-project-overview)
