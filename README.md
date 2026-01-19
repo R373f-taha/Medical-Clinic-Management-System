@@ -8,7 +8,7 @@
 
 <div align="center">
 
-![Project Logo](screenshots/X2-Team.png)
+![Project Logo](images/screenshots/X2-Team.png)
 
 **Team Members:**
 
@@ -26,14 +26,15 @@
 
 <div align="center">
 
-![Admin Dashboard](screenshots/admin-dashboard.png)
-![Doctor Dashboard](screenshots/doctor-dashboard.png)
-![Employee Dashboard](screenshots/employee-dashboard.png)
-![Patient API](screenshots/patient-api.png)
-![Before Login](screenshots/beforeLogin.png)
-![Login](screenshots/Login.png)
+![Admin Dashboard](images/screenshots/admin-dashboard.png)
+![Doctor Dashboard](images/screenshots/doctor-dashboard.png)
+![Employee Dashboard](images/screenshots/employee-dashboard.png)
+![Patient API](images/screenshots/patient-api.png)
+![Before Login](images/screenshots/beforeLogin.png)
+![Login](images/screenshots/Login.png)
 
 </div>
+
 
 ---
 
@@ -44,7 +45,7 @@
 ---
 
 
-## 📚 Table of Contents
+
 
 
 ## 📚 Table of Contents
