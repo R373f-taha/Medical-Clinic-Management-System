@@ -8,7 +8,7 @@
 
 <div align="center">
 
-![Project Logo](screenshots/X2%20Team.png)
+![Project Logo](screenshots/X2-Team.png)
 
 **Team Members:**
 
