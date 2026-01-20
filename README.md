@@ -10,14 +10,6 @@
 
 ![Project Logo](images/screenshots/X2-Team.png)
 
-**Team Members:**
-
-* Rahaf Taha
-* Kheder Alkhateeb
-* Rama Yousfan
-* Yara Sleten
-* Kinda Ghanem
-
 </div>
 
 ---
@@ -329,7 +321,27 @@ MAIL_FROM_NAME=[App Name]
 
                     
 
-*                        💛development team :
+*   
+Mentors
+Mr. Hashim Othman
+
+Technical guidance
+Concept clarification
+Inspirational mentorship
+Mr. Ayham Ibrahim
+
+Support throughout development
+Supervisors
+
+Ms Nourhan almohammed & Ms Muna alrays Technical support and daily follow-up
+
+Focal X Team
+For building and supporting this educational journey
+
+ceo and founder Alaa Darwish
+
+
+                    💛development team :
                              Rahaf Taha, 
                             Kheder Alkhateeb,
                              Rama Yousfan   
