@@ -171,24 +171,7 @@ Route::prefix('doctor')->name('doctor.')->middleware(['auth:web'])->group(functi
     Route::post('/notifications/{notification}/read', [NotificationController::class, 'markAsRead'])
         ->name('notifications.read');
 });
-/*
-Route::prefix('doctor')->name('doctor.')->middleware(['auth', 'role:doctor'])->group(function () {
 
-    Route::get('doctor/patients', [App\Http\Controllers\Doctor\PatientController::class, 'index'])->name('patients.index');
-    Route::get('doctor/medical_records', [App\Http\Controllers\Doctor\MedicalRecordController::class, 'index'])->name('medical_records.index');
-    Route::get('doctor/create_medical_records', [App\Http\Controllers\Doctor\MedicalRecordController::class, 'create'])->name('medical_records.create');
-    Route::post('doctor/store_medical_records', [App\Http\Controllers\Doctor\MedicalRecordController::class, 'store'])->name('medical_records.store');
-    Route::get('doctor/{medicalRecord}/edit_medical_records', [App\Http\Controllers\Doctor\MedicalRecordController::class, 'edit'])->name('medical_records.edit');
-    Route::put('doctor/{medicalRecord}/update_medical_records', [App\Http\Controllers\Doctor\MedicalRecordController::class, 'update'])->name('medical_records.update');
-
-    Route::get('doctor/appointments', [App\Http\Controllers\Doctor\AppointmentController::class, 'doctorAppointments'])->name('appointments.doctorAppointments');
-    Route::get('doctor/today_appointments', [App\Http\Controllers\Doctor\AppointmentController::class, 'today'])->name('appointments.today');
-    Route::get('doctor/create_appointments', [App\Http\Controllers\Doctor\AppointmentController::class, 'create'])->name('appointments.create');
-    Route::post('doctor/store_appointments', [App\Http\Controllers\Doctor\AppointmentController::class, 'store'])->name('appointments.store');
-    Route::get('doctor/{appointment}/update_appointments', [App\Http\Controllers\Doctor\AppointmentController::class, 'update'])->name('appointments.update');
-    Route::put('doctor/{appointment}/edit_appointments', [App\Http\Controllers\Doctor\AppointmentController::class, 'edit'])->name('appointments.edit');
-});
-*/
 
 
 Route::prefix('employee')->name('employee.')
